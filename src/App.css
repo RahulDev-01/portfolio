@@ -1,3 +1,7 @@
-*{
-    background: black;
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background-color: #060010; /* app background */
 }

@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
+import { TextHoverEffect } from '@/components/ui/text-hover-effect';
 
 const DEFAULT_PARTICLE_COUNT = 12;
 const DEFAULT_SPOTLIGHT_RADIUS = 300;
@@ -285,6 +286,10 @@ const ParticleCard = ({
     element.addEventListener('mouseenter', handleMouseEnter);
     element.addEventListener('mouseleave', handleMouseLeave);
     element.addEventListener('mousemove', handleMouseMove);
+    // Add pointer events to support touch and pen input
+    element.addEventListener('pointerenter', handleMouseEnter);
+    element.addEventListener('pointerleave', handleMouseLeave);
+    element.addEventListener('pointermove', handleMouseMove);
     element.addEventListener('click', handleClick);
 
     return () => {
@@ -292,6 +297,9 @@ const ParticleCard = ({
       element.removeEventListener('mouseenter', handleMouseEnter);
       element.removeEventListener('mouseleave', handleMouseLeave);
       element.removeEventListener('mousemove', handleMouseMove);
+      element.removeEventListener('pointerenter', handleMouseEnter);
+      element.removeEventListener('pointerleave', handleMouseLeave);
+      element.removeEventListener('pointermove', handleMouseMove);
       element.removeEventListener('click', handleClick);
       clearAllParticles();
     };
@@ -407,10 +415,15 @@ const GlobalSpotlight = ({
 
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseleave', handleMouseLeave);
+    // Add pointer events so the effect works on touch/pen devices
+    document.addEventListener('pointermove', handleMouseMove);
+    document.addEventListener('pointerleave', handleMouseLeave);
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('pointermove', handleMouseMove);
+      document.removeEventListener('pointerleave', handleMouseLeave);
       spotlightRef.current?.parentNode?.removeChild(spotlightRef.current);
     };
   }, [gridRef, disableAnimations, enabled, spotlightRadius, glowColor]);
@@ -458,7 +471,8 @@ const MagicBento = ({
 }) => {
   const gridRef = useRef(null);
   const isMobile = useMobileDetection();
-  const shouldDisableAnimations = disableAnimations || isMobile;
+  // Always allow animations regardless of screen size
+  const shouldDisableAnimations = disableAnimations;
 
   return (
     <>
@@ -477,6 +491,9 @@ const MagicBento = ({
             --purple-glow: rgba(132, 0, 255, 0.2);
             --purple-border: rgba(132, 0, 255, 0.8);
           }
+          /* Hide scrollbar for nav on small screens */
+          .no-scrollbar::-webkit-scrollbar { display: none; }
+          .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
           
           .card-responsive {
             grid-template-columns: 1fr;
@@ -602,15 +619,16 @@ const MagicBento = ({
       <BentoCardGrid gridRef={gridRef}>
         <div className="w-full flex items-center justify-between py-1">
           <ParticleCard
-            className={`card group flex items-center justify-center relative px-3 py-1.5 h-10 rounded-[8px]   font-light cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_15px_rgba(0,0,0,0.15)]`}
+            className={`card group flex items-center justify-center relative px-2 py-0.5 h-12 md:px-3 md:py-1 md:h-14 rounded-[8px] font-light cursor-pointer transition-all duration-300 ease-in-out`}
             style={{
-              backgroundColor: '#000000',
+              backgroundColor: 'transparent',
               borderColor: '#000000c8',
               color: 'var(--white)',
               '--glow-x': '50%',
               '--glow-y': '50%',
               '--glow-intensity': '0',
-              '--glow-radius': '200px'
+              '--glow-radius': '200px',
+              overflow: 'visible'
             }}
             disableAnimations={shouldDisableAnimations}
             particleCount={particleCount}
@@ -619,13 +637,13 @@ const MagicBento = ({
             clickEffect={false}
             enableMagnetism={false}
           >
-            <div className=" flex items-center justify-center relative text-white group-hover:text-[white]">
-              <h3 className=" font-semibold text-2xl m-4 text-white">Portfolio</h3>
-            </div>
+              <div className="flex items-center justify-center h-10 w-40 md:h-12 md:w-48 overflow-visible">
+                <TextHoverEffect text="PORTFOLIO" auto intervalMs={5000} refreshEveryMs={5000} />
+              </div>
           </ParticleCard>
-          <div className="flex-1 flex items-center gap-10 justify-end mr-20">
+          <div className="flex-1 flex items-center gap-4 justify-end mr-2 overflow-x-auto no-scrollbar md:gap-8 md:mr-10">
           {cardData.map((card, index) => {
-            const baseClassName = `card group flex items-center justify-center relative px-5 py-2 h-10 rounded-[8px] border border-solid font-light cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_15px_rgba(0,0,0,0.15)] hover:border-[#274DA5]  ${
+            const baseClassName = `card group flex items-center justify-center relative px-3 py-1 h-9 md:px-5 md:py-2 md:h-10 rounded-[8px] border border-solid font-light cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_15px_rgba(0,0,0,0.15)] hover:border-[#274DA5]  ${
               enableBorderGlow ? 'card--border-glow' : ''
             }`;
 
@@ -653,7 +671,7 @@ const MagicBento = ({
                   enableMagnetism={enableMagnetism}
                 >
                   <div className="card__content flex items-center justify-center relative text-white group-hover:text-white">
-                    <h3 className={`card__title font-semibold text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''}`}>
+                    <h3 className={`card__title font-semibold text-sm md:text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''}`}>
                       {card.title}
                     </h3>
                   </div>
@@ -776,7 +794,7 @@ const MagicBento = ({
                 }}
               >
                 <div className="card__content flex items-center justify-center relative text-white group-hover:text-[#274DA5]">
-                  <h3 className={`card__title font-semibold text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''}`}>
+                  <h3 className={`card__title font-semibold text-sm md:text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''}`}>
                     {card.title}
                   </h3>
                 </div>
