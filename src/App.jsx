@@ -1,13 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useRef, useState } from 'react'
+// bg : #060010
 import './App.css'
+import Footer from './Components/Footer/Footer'
+import Header from './Components/Header/Header'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
   <>
+  <div className='h-full w-full bg-[#060010]'>
+    <Header />
+
+    
+ {/* <Footer /> */}
+ </div>
+   
   </>
   )
 }

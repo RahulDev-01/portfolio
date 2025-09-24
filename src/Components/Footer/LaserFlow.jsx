@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import './LaserFlow.css';
 
 const VERT = `
 precision highp float;
@@ -560,7 +559,7 @@ export const LaserFlow = ({
     color
   ]);
 
-  return <div ref={mountRef} className={`laser-flow-container ${className || ''}`} style={style} />;
+  return <div ref={mountRef} className={`w-full h-full relative ${className || ''}`} style={style} />;
 };
 
 export default LaserFlow;
