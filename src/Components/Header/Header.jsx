@@ -17,9 +17,7 @@ function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const glassWhenUp = isScrollingUp
-    ? 'backdrop-blur-md bg-white/10 border-b border-white/10 shadow-sm'
-    : 'backdrop-blur-0 bg-transparent border-b-0 shadow-none'
+  const glassWhenUp = 'backdrop-blur-0 bg-transparent border-b-0 shadow-none'
 
   return (
     <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${glassWhenUp}`}>

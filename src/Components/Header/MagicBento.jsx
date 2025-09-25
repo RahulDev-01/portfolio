@@ -648,8 +648,8 @@ const MagicBento = ({
             }`;
 
             const cardStyle = {
-              backgroundColor: card.color || 'var(--background-dark)',
-              borderColor: '#000000c8',
+              backgroundColor: 'transparent',
+              borderColor: 'transparent',
               color: 'var(--white)',
               '--glow-x': '50%',
               '--glow-y': '50%',
