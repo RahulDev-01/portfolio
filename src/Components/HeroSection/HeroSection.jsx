@@ -14,7 +14,7 @@ function HeroSection() {
     return () => clearInterval(interval);
   }, []);
   return (
-    <div className='text-white h-[700px] w-full relative'>
+    <div className='text-white w-full relative min-h-[500px] md:h-[700px] overflow-hidden'>
       <LiquidEther
         className={isVPHover ? '!pointer-events-none !touch-none' : '!pointer-events-auto !touch-auto'}
         style={{ pointerEvents: isVPHover ? 'none' : 'auto', touchAction: isVPHover ? 'none' : 'auto' }}
@@ -35,22 +35,22 @@ function HeroSection() {
         autoRampDuration={0.6}
       />
   {/* Overlay content above the effect */}
-  <div className="absolute inset-0 z-10 flex  items-center justify-center pointer-events-none">
+  <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none px-4">
     <div className="text-center px-6 ">
       {/* Main Div */}
-      <div className='flex  items-center justify-center gap-60 mb-20'>
+      <div className='flex flex-col-reverse md:flex-row items-center justify-center gap-8 md:gap-16 lg:gap-40 mb-10 md:mb-20'>
         {/* left section */}
-        <img src="./public/profile.png" alt="" className='w-[400px] h-[400px] rounded-full object-cover' />
+        <img src="/profile.png" alt="" className='w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-96 lg:h-96 rounded-full object-cover flex-shrink-0' />
 
         <div>
 
        {/* right section */}
-        <div className='mb-20 flex flex-col items-start'>
-          <SplitText key={reloadKey} text={"Hello ,"} className="text-3xl font-semibold text-left text-blue-300" delay={100} duration={0.6} ease="power3.out" splitType="chars" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" textAlign="left" />
+        <div className='mb-10 md:mb-20 flex flex-col items-start max-w-[90vw] sm:max-w-2xl md:max-w-3xl'>
+          <SplitText key={reloadKey} text={"Hello ,"} className="text-2xl sm:text-3xl font-semibold text-left text-blue-300" delay={100} duration={0.6} ease="power3.out" splitType="chars" from={{ opacity: 0, y: 40 }} to={{ opacity: 1, y: 0 }} threshold={0.1} rootMargin="-100px" textAlign="left" />
           <div className="pointer-events-auto mt-3" ref={containerRef}>
             <VariableProximity
               label={`I'm Savvana Rahul a `}
-              className={'variable-proximity-demo mt-5 text-6xl'}
+              className={'variable-proximity-demo mt-3 text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight'}
               fromFontVariationSettings="'wght' 400, 'opsz' 9"
               toFontVariationSettings="'wght' 1000, 'opsz' 40"
               containerRef={containerRef}
@@ -67,14 +67,14 @@ function HeroSection() {
   showCursor={true}
     textColors={["#00A9E5", "#00A9E5"]}
   cursorCharacter="|"
-  className='text-5xl mt-5 text-red-300 font-bold'
+  className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-3 md:mt-5 text-red-300 font-bold'
 />
             <div className="mt-2 w-full">
             </div>
     <div className="pointer-events-auto mt-10" ref={containerRef}>
             <VariableProximity
               label={`A personal portfolio is a collection of your work, achievements,`}
-              className={'variable-proximity-demo mt-5 text-base md:text-lg text-white/50 text-left w-full'}
+              className={'variable-proximity-demo mt-5 text-sm sm:text-base md:text-lg text-white/70 text-left w-full max-w-xl'}
               fromFontVariationSettings="'wght' 400, 'opsz' 9"
               toFontVariationSettings="'wght' 1000, 'opsz' 40"
               containerRef={containerRef}
@@ -87,7 +87,7 @@ function HeroSection() {
     <div className="pointer-events-auto " ref={containerRef}>
             <VariableProximity
               label={`and skills that highlights your and professional growth. It serves as`}
-              className={'variable-proximity-demo  text-base md:text-lg text-white/50 text-left w-full'}
+              className={'variable-proximity-demo text-sm sm:text-base md:text-lg text-white/70 text-left w-full max-w-xl'}
               fromFontVariationSettings="'wght' 400, 'opsz' 9"
               toFontVariationSettings="'wght' 1000, 'opsz' 40"
               containerRef={containerRef}
