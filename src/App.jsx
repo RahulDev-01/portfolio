@@ -9,7 +9,7 @@ import Skills from './Skills/Skills'
 function App() {
   return (
   <>
-  <div className='h-full w-full bg-[#060010]'>
+  <div className='h-full w-full bg-[#060010] overflow-x-hidden'>
     <Header />
     <HeroSection />
     <Skills />

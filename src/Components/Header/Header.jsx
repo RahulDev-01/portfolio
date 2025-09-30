@@ -20,7 +20,7 @@ function Header() {
   const glassWhenUp = 'backdrop-blur-0 bg-transparent border-b-0 shadow-none'
 
   return (
-    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${glassWhenUp}`}>
+    <header className={`relative z-50 w-full transition-all duration-300 ${glassWhenUp}`}>
       <div className="w-full flex justify-center py-2">
         <MagicBento
           textAutoHide={true}
