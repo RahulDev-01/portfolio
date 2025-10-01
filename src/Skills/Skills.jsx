@@ -22,7 +22,6 @@ const imageUrls = [
   '../public/Logos/postgres1.png',
   '../public/Logos/docker.png',
   '../public/Logos/aws.png',
-  '../public/Logos/blank.png',
 
 ];
 

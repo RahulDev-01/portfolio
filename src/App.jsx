@@ -6,6 +6,8 @@ import Header from './Components/Header/Header'
 import HeroSection from './Components/HeroSection/HeroSection'
 import Skills from './Skills/Skills'
 import Software from './Softwares/Software'
+import Paralax from './Projects/Paralax.jsx'
+import Projects from './Projects/Projects'
 
 function App() {
   return (
@@ -14,9 +16,10 @@ function App() {
     <Header />
     <HeroSection />
     <Skills />
-    <Software />
+    {/* <Software /> */}
+    {/* <Paralax /> */}
+    <Projects />
 
-    
  {/* <Footer /> */}
  </div>
    
