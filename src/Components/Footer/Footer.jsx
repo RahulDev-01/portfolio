@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import LaserFlow from './LaserFlow'
-import github from '../../../public/image.png'
+// import github from '../../../public/image.png'
 function Footer() {
      const revealImgRef = useRef(null);
   return (
@@ -66,7 +66,7 @@ function Footer() {
 
       <img
         ref={revealImgRef}
-        src={github}
+        src="/image.png"
         alt="Reveal effect"
         style={{
 
