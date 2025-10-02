@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
-import { TextHoverEffect } from '@/components/ui/text-hover-effect';
+import { TextHoverEffect } from '../ui/text-hover-effect';
 
 const DEFAULT_PARTICLE_COUNT = 12;
 const DEFAULT_SPOTLIGHT_RADIUS = 300;
