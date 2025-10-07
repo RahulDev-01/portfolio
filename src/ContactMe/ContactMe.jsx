@@ -488,7 +488,7 @@ function ContactMe() {
                     </div>
                 </div>
             )}
-            <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent md:px-10 lg:px-12 pt-40 mb-6' style={{
+            <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent px-4 sm:px-6 md:px-10 lg:px-12 pt-20 sm:pt-32 md:pt-40 mb-4 sm:mb-6 text-center' style={{
               backgroundImage: 'linear-gradient(135deg, #3b82f6, #06b6d4, #00d9ff, #3b82f6)',
               backgroundSize: '200% 200%',
               animation: 'gradientShift 1s ease infinite',
@@ -542,25 +542,26 @@ function ContactMe() {
                     {/* <Lanyard gravity={[0, -40, 0]} /> */}
                 </div>
 
-                 {/* Contact Content - Overlay like Hero Section */}
-                 <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-auto p-[10px]">
-                    <div className='flex justify-center items-center gap-40 w-full h-full'>
-                         <div className='pointer-events-auto relative overflow-hidden w-[500px] h-[500px]'>
-                             <Suspense fallback={<div className="flex items-center justify-center h-full text-white">Loading Globe...</div>}>
-                                 <World data={sampleArcs} globeConfig={globeConfig} />
-                             </Suspense>
-                         </div>
-                        <ElectricBorder
-                            color="#7df9ff"
-                            speed={1}
-                            chaos={0.5}
-                            thickness={2}
-                            style={{ borderRadius: 16 }}
-                        >
-                            <div className=' pt-[30px] pr-[30px] pl-[30px] w-[700px] '>
+                  {/* Contact Content - Overlay like Hero Section */}
+                  <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-auto p-[10px]">
+                     <div className='flex flex-col lg:flex-row justify-center items-center gap-8 lg:gap-40 w-full h-full'>
+                          {/* Globe - Hidden on tablet and smaller screens */}
+                          <div className='hidden lg:block pointer-events-auto relative overflow-hidden w-[500px] h-[500px]'>
+                              <Suspense fallback={<div className="flex items-center justify-center h-full text-white">Loading Globe...</div>}>
+                                  <World data={sampleArcs} globeConfig={globeConfig} />
+                              </Suspense>
+                          </div>
+                         <ElectricBorder
+                             color="#7df9ff"
+                             speed={1}
+                             chaos={0.5}
+                             thickness={2}
+                             style={{ borderRadius: 16 }}
+                         >
+                             <div className='pt-4 pr-4 pl-4 sm:pt-[30px] sm:pr-[30px] sm:pl-[30px] w-full max-w-[700px] sm:w-[700px]'>
  
-      <form className="my-8 h-[350px]" onSubmit={handleSubmit}>
-        <div className="mb-4 flex flex-col  space-y-2 md:flex-row md:space-y-0 md:space-x-2 ">
+      <form className="my-4 sm:my-8 min-h-[350px] sm:h-[350px]" onSubmit={handleSubmit}>
+        <div className="mb-4 flex flex-col space-y-2 sm:space-y-2 md:flex-row md:space-y-0 md:space-x-2">
             <LabelInputContainer>
              {/* <Label htmlFor="name" className='text-white'>Name</Label> */}
              <Input 
@@ -583,7 +584,7 @@ function ContactMe() {
              />
             </LabelInputContainer>
         </div>
-        <div className="mb-4 flex flex-col  md:flex-row md:space-y-0 md:space-x-2 ">
+        <div className="mb-4 flex flex-col space-y-2 sm:space-y-2 md:flex-row md:space-y-0 md:space-x-2">
           <LabelInputContainer className="mb-4">
           {/* <Label htmlFor="email" className='text-white'>Email Address</Label> */}
           <Input 
@@ -609,19 +610,19 @@ function ContactMe() {
         
          <LabelInputContainer className="mb-4">
            {/* <Label htmlFor="password" className='text-white'>Password</Label> */}
-           <textarea 
-             id="message" 
-             placeholder="Message" 
-             value={formData.message}
-             onChange={handleInputChange}
-             className="flex h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 focus-visible:ring-offset-2 hover:ring-2 hover:ring-blue-400 disabled:cursor-not-allowed disabled:opacity-50 resize-none transition-all duration-200 text-black"
-             style={{ paddingTop: '8px' }}
-           />
+            <textarea 
+              id="message" 
+              placeholder="Message" 
+              value={formData.message}
+              onChange={handleInputChange}
+              className="flex h-24 sm:h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 focus-visible:ring-offset-2 hover:ring-2 hover:ring-blue-400 disabled:cursor-not-allowed disabled:opacity-50 resize-none transition-all duration-200 text-black"
+              style={{ paddingTop: '8px' }}
+            />
          </LabelInputContainer>
 
  
         <button
-          className="group/btn relative block h-13 w-full rounded-md bg-gradient-to-bl from-blue-100 to-blue-00 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] cursor-pointer "
+          className="group/btn relative block h-10 sm:h-13 w-full rounded-md bg-gradient-to-bl from-blue-100 to-blue-00 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] cursor-pointer text-sm sm:text-base"
           type="submit"
         >
           Submit {" "} &rarr;
