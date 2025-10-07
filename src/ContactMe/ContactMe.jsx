@@ -7,7 +7,7 @@ import { Input } from "../Components/ui/input";
 import { cn } from "../lib/utils";
 import { useState } from "react";
 import { motion } from "motion/react";
-import { World } from "../Components/ui/globe";
+import { World } from "../Components/ui/Globe";
 const globeConfig = {
   pointSize: 4,
   globeColor: "#062056",
