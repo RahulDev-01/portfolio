@@ -544,7 +544,7 @@ function ContactMe() {
 
                  {/* Contact Content - Overlay like Hero Section */}
                  <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-auto p-[10px]">
-                    <div className='flex justify-center items-center gap-20 w-full h-full'>
+                    <div className='flex justify-center items-center gap-40 w-full h-full'>
                          <div className='pointer-events-auto relative overflow-hidden w-[500px] h-[500px]'>
                              <Suspense fallback={<div className="flex items-center justify-center h-full text-white">Loading Globe...</div>}>
                                  <World data={sampleArcs} globeConfig={globeConfig} />
