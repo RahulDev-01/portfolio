@@ -8,6 +8,7 @@ import Skills from './Skills/Skills'
 import Software from './Softwares/Software'
 import Paralax from './Projects/Paralax.jsx'
 import Projects from './Projects/Projects'
+import ContactMe from './ContactMe/ContactMe'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
     {/* <Software /> */}
     {/* <Paralax /> */}
     <Projects />
+    <ContactMe />
 
  {/* <Footer /> */}
  </div>

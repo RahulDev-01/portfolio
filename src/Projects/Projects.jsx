@@ -100,7 +100,7 @@ function Projects() {
             {/* Right Section */}
             <div className='bg-black/20 backdrop-blur-sm w-full flex h-[400px] md:h-[450px] p-4 md:p-6 lg:p-10 rounded-xl border border-purple-400/30 mt-4 lg:mt-8 hover:shadow-2xl hover:shadow-purple-500/[0.3] transition-all duration-300 hover:scale-102 hover:-translate-y-1'>
             <div className="flex justify-center items-center h-full flex-col px-2 md:px-4">
-      <p className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
+      <div className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
         <LinkPreview
           url="https://destinai-rahul.vercel.app/"
           className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-purple-500 to-pink-500"
@@ -108,8 +108,8 @@ function Projects() {
           Destin-AI
         </LinkPreview>{" "}
          an intelligent travel planning application with AI-Powered Destination Suggestions 🏝️, Custom Itinerary Creation 🗺️, Google OAuth Integration 🔒. Plan smarter with powerful features Everything you need to craft the perfect trip—without the spreadsheets.
-      </p>
-      <p className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10 ">
+      </div>
+      <div className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10 ">
         Technologies Used 🧰: React.js, React Router, Sonner, Tailwind, Google OAuth, Vite ⚡, Version Management {" "}
         <LinkPreview url="https://github.com/RahulDev-01/Destin-ai" className="font-bold text-blue-400">
           Git-Hub 
@@ -118,7 +118,7 @@ function Projects() {
         <LinkPreview url="https://github.com/RahulDev-01" className="font-bold text-red-700">
           RahulDev-01 
         </LinkPreview>{" "}, Website is also hosted in Vercel Platform.       
-      </p>
+      </div>
     </div>
             </div>
           </div>
@@ -158,7 +158,7 @@ function Projects() {
         </CardContainer>
         <div className='bg-black/20 backdrop-blur-sm w-full flex h-[400px] md:h-[450px] p-4 md:p-6 lg:p-10 rounded-xl border border-purple-400/30 mt-4 lg:mt-8 hover:shadow-2xl hover:shadow-purple-500/[0.3] transition-all duration-300 hover:scale-102 hover:-translate-y-1'>
           <div className="flex justify-center items-center h-full flex-col px-2 md:px-4">
-            <p className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
+            <div className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
               <LinkPreview
                 url="https://gemini-clone-six-ruby.vercel.app/"
                 className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-purple-500 to-pink-500"
@@ -169,8 +169,8 @@ function Projects() {
 Prompt Submission: Users can type a prompt in the search box or click on predefined prompt cards. 💬
 Responsive Design: The app adjusts to various screen sizes. 📱
 Result Display: The app shows the results once the prompt is sent, including a loading state until the response is ready.
-            </p>
-            <p className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
+            </div>
+            <div className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
               Technologies Used 🧰: React.js, React Router, Sonner, Tailwind, Google OAuth, Vite ⚡, Version Management {" "}
         <LinkPreview url="https://github.com/RahulDev-01/Gemini-clone" className="font-bold text-blue-400">
           Git-Hub 
@@ -179,7 +179,7 @@ Result Display: The app shows the results once the prompt is sent, including a l
         <LinkPreview url="https://github.com/RahulDev-01" className="font-bold text-red-700">
           RahulDev-01 
         </LinkPreview>{" "}, Website is also hosted in Vercel Platform.       
-            </p>
+            </div>
           </div>
 
         </div>
@@ -217,7 +217,7 @@ Result Display: The app shows the results once the prompt is sent, including a l
         </CardContainer>
         <div className='bg-black/20 backdrop-blur-sm w-full flex h-[400px] md:h-[450px] p-4 md:p-6 lg:p-10 rounded-xl border border-purple-400/30 mt-4 lg:mt-8 hover:shadow-2xl hover:shadow-purple-500/[0.3] transition-all duration-300 hover:scale-102 hover:-translate-y-1'>
           <div className="flex justify-center items-center h-full flex-col px-2 md:px-4">
-            <p className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
+            <div className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
               <LinkPreview
                 url="https://map-rahul.netlify.app/"
                 className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-purple-500 to-pink-500"
@@ -229,8 +229,8 @@ Markers for Delhi, Mumbai, Kolkata, Bengaluru, and New York 🏙️,  with info 
 Zoom Controls on the top left 🔍
 Satellite View Toggle Button positioned directly below the zoom controls 🌐
 Button icon is fetched dynamically from an API 🔄 .
-            </p>
-            <p className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
+            </div>
+            <div className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
               Technologies Used 🧰: React.js, React Router, Sonner, Tailwind, Google OAuth, Vite ⚡, Version Management {" "}
         <LinkPreview url="https://github.com/RahulDev-01/interactive-map-design" className="font-bold text-blue-400">
           Git-Hub 
@@ -239,7 +239,7 @@ Button icon is fetched dynamically from an API 🔄 .
         <LinkPreview url="https://github.com/RahulDev-01" className="font-bold text-red-700">
           RahulDev-01 
         </LinkPreview>{" "}, Website is also hosted in Vercel Platform.       
-            </p>
+            </div>
           </div>
 
         </div>
