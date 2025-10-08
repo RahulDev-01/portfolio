@@ -127,19 +127,19 @@ function Footer() {
                 </div>
               </div>
            </nav>
-                     <Dock
-                       items={items}
-                       panelHeight={60}
-                       baseItemSize={40}
-                       magnification={60}
-                       itemAlignment='items-center'
-                       className='max-w-fit cursor-pointer mb-3'
-                       style={{ 
-                         position: 'relative',
-                         top: '0px',
-                         transform: 'translateY(0px)'
-                       }}
-                     />
+                      <Dock
+                        items={items}
+                        panelHeight={60}
+                        baseItemSize={40}
+                        magnification={60}
+                        itemAlignment='items-center'
+                        className='max-w-fit cursor-pointer mb-25 sm:mb-25 md:mb-34 lg:mb-3'
+                        style={{ 
+                          position: 'relative',
+                          top: '0px',
+                          transform: 'translateY(0px)'
+                        }}
+                      />
         </div>
 
         <img
