@@ -74,7 +74,7 @@ const HeroSection = memo(() => {
           <div className='flex flex-col-reverse md:flex-row items-center justify-center gap-4 sm:gap-8 md:gap-16 lg:gap-40 mb-6 sm:mb-10 md:mb-20'>
             {/* left section */}
             <img 
-              src="/profile.png" 
+              src="/profile.jpg" 
               alt="Profile" 
               className='w-32 h-32 sm:w-40 sm:h-40 md:w-72 md:h-72 lg:w-96 lg:h-96 rounded-full object-cover flex-shrink-0' 
               loading="lazy"
@@ -122,10 +122,44 @@ const HeroSection = memo(() => {
                 
                 <div className="pointer-events-auto" ref={containerRef}>
                   <VariableProximity
-                    label={`and skills that highlights your and professional growth. It serves as`}
+                    label={`and skills that highlights your and professional growth.`}
                     className={'variable-proximity-demo text-xs sm:text-sm md:text-base lg:text-lg text-white/70 text-center md:text-left w-full max-w-full md:max-w-xl'}
                     {...variableProximityProps}
                   />
+                  
+                </div>
+                
+                {/* Download Resume Button */}
+                <div className="pointer-events-auto mt-6 sm:mt-8 w-full flex justify-center md:justify-start">
+                  <button
+                    onClick={() => {
+                      try {
+                        const link = document.createElement('a');
+                        link.href = '/Savvana_Rahul_Resume.pdf';
+                        link.download = 'Savvana_Rahul_Resume.pdf';
+                        link.style.display = 'none';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                      } catch (error) {
+                        console.error('Download error:', error);
+                      }
+                    }}
+                    className="group relative px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 hover:from-blue-500 hover:via-purple-500 hover:to-cyan-400 text-white font-semibold text-sm sm:text-base rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out overflow-hidden  cursor-pointer"
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Download My Resume
+                    </span>
+                    
+                    {/* Animated background gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    {/* Shine effect */}
+                    <div className="absolute inset-0 -top-2 -left-2 w-0 h-0 bg-white/20 rounded-full group-hover:w-full group-hover:h-full group-hover:top-0 group-hover:left-0 transition-all duration-500 ease-out"></div>
+                  </button>
                 </div>
               </div>
             </div>

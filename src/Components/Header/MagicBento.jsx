@@ -433,8 +433,8 @@ const GlobalSpotlight = ({
 
 const BentoCardGrid = ({ children, gridRef }) => (
   <div
-    className="bento-section w-screen grid gap-2 px-4 py-2 select-none relative"
-    style={{ fontSize: 'clamp(1rem, 0.9rem + 0.5vw, 1.5rem)' }}
+    className="bento-section w-screen grid gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-2 select-none relative"
+    style={{ fontSize: 'clamp(0.8rem, 0.7rem + 0.5vw, 1.2rem)' }}
     ref={gridRef}
   >
     {children}
@@ -619,7 +619,7 @@ const MagicBento = ({
       <BentoCardGrid gridRef={gridRef}>
         <div className="w-full flex items-center justify-between py-1">
           <ParticleCard
-            className={`card group flex items-center justify-center relative px-2 py-0.5 h-12 md:px-3 md:py-1 md:h-14 rounded-[8px] font-light cursor-pointer transition-all duration-300 ease-in-out`}
+            className={`card group flex items-center justify-center relative px-1 py-0.5 h-10 sm:px-2 sm:py-0.5 sm:h-12 md:px-3 md:py-1 md:h-14 rounded-[6px] sm:rounded-[8px] font-light cursor-pointer transition-all duration-300 ease-in-out`}
             style={{
               backgroundColor: 'transparent',
               borderColor: '#000000c8',
@@ -637,13 +637,13 @@ const MagicBento = ({
             clickEffect={false}
             enableMagnetism={false}
           >
-              <div className="flex items-center justify-center h-10 w-40 md:h-12 md:w-48 overflow-visible">
+              <div className="flex items-center justify-center h-8 w-32 sm:h-10 sm:w-40 md:h-12 md:w-48 overflow-visible">
                 <TextHoverEffect text="PORTFOLIO" auto intervalMs={5000} refreshEveryMs={5000} />
               </div>
           </ParticleCard>
-          <div className="flex-1 flex items-center gap-4 justify-end mr-2 overflow-x-auto no-scrollbar md:gap-8 md:mr-10">
+          <div className="flex-1 flex items-center gap-2 sm:gap-4 justify-end mr-1 sm:mr-2 overflow-x-auto no-scrollbar md:gap-8 md:mr-10">
           {cardData.map((card, index) => {
-            const baseClassName = `card group flex items-center justify-center relative px-3 py-1 h-9 md:px-5 md:py-2 md:h-10 rounded-[8px] border border-solid font-light cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_15px_rgba(0,0,0,0.15)] hover:border-[#274DA5]  ${
+            const baseClassName = `card group flex items-center justify-center relative px-2 py-1 h-8 sm:px-3 sm:py-1 sm:h-9 md:px-5 md:py-2 md:h-10 rounded-[6px] sm:rounded-[8px] border border-solid font-light cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_15px_rgba(0,0,0,0.15)] hover:border-[#274DA5]  ${
               enableBorderGlow ? 'card--border-glow' : ''
             }`;
 
@@ -671,7 +671,7 @@ const MagicBento = ({
                   enableMagnetism={enableMagnetism}
                 >
                   <div className="card__content flex items-center justify-center relative text-white group-hover:text-white">
-                    <h3 className={`card__title font-semibold text-sm md:text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''}`}>
+                    <h3 className={`card__title font-semibold text-xs sm:text-sm md:text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''}`}>
                       {card.title}
                     </h3>
                   </div>
@@ -794,7 +794,7 @@ const MagicBento = ({
                 }}
               >
                 <div className="card__content flex items-center justify-center relative text-white group-hover:text-[#274DA5]">
-                  <h3 className={`card__title font-semibold text-sm md:text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''}`}>
+                  <h3 className={`card__title font-semibold text-xs sm:text-sm md:text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''}`}>
                     {card.title}
                   </h3>
                 </div>

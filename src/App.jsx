@@ -118,9 +118,42 @@ const OptimizedComponent = memo(({ children, fallback = <LoadingSpinner /> }) =>
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false)
+  const [skillsLoaded, setSkillsLoaded] = useState(false)
+  const [projectsLoaded, setProjectsLoaded] = useState(false)
+  const [contactLoaded, setContactLoaded] = useState(false)
+  const [footerLoaded, setFooterLoaded] = useState(false)
   const skillsRef = React.useRef(null)
   const projectsRef = React.useRef(null)
   const contactRef = React.useRef(null)
+
+  // Progressive loading with delays
+  useEffect(() => {
+    const timers = []
+    
+    // Load skills after 500ms
+    timers.push(setTimeout(() => {
+      setSkillsLoaded(true)
+    }, 500))
+    
+    // Load projects after 1000ms
+    timers.push(setTimeout(() => {
+      setProjectsLoaded(true)
+    }, 1000))
+    
+    // Load contact after 1500ms
+    timers.push(setTimeout(() => {
+      setContactLoaded(true)
+    }, 1500))
+    
+    // Load footer after 2000ms
+    timers.push(setTimeout(() => {
+      setFooterLoaded(true)
+    }, 2000))
+
+    return () => {
+      timers.forEach(clearTimeout)
+    }
+  }, [])
 
   // Preload critical components after initial load
   useEffect(() => {
@@ -130,11 +163,6 @@ function App() {
 
     return () => clearTimeout(timer)
   }, [])
-
-  // Intersection observers for progressive loading
-  const skillsVisible = useIntersectionObserver(skillsRef)
-  const projectsVisible = useIntersectionObserver(projectsRef)
-  const contactVisible = useIntersectionObserver(contactRef)
 
   return (
     <ErrorBoundary>
@@ -148,15 +176,17 @@ function App() {
           <HeroSection />
         </OptimizedComponent>
 
-        {/* Skills loads immediately */}
+        {/* Progressive loading for below-the-fold components */}
         <div ref={skillsRef}>
-          <OptimizedComponent>
-            <Skills />
-          </OptimizedComponent>
+          {skillsLoaded && (
+            <OptimizedComponent>
+              <Skills />
+            </OptimizedComponent>
+          )}
         </div>
 
         <div ref={projectsRef}>
-          {projectsVisible && (
+          {projectsLoaded && (
             <OptimizedComponent>
               <Projects />
             </OptimizedComponent>
@@ -164,7 +194,7 @@ function App() {
         </div>
 
         <div ref={contactRef}>
-          {contactVisible && (
+          {contactLoaded && (
             <OptimizedComponent>
               <ContactMe />
             </OptimizedComponent>
@@ -172,7 +202,7 @@ function App() {
         </div>
 
         {/* Footer loads last */}
-        {isLoaded && (
+        {footerLoaded && (
           <OptimizedComponent>
             <Footer />
           </OptimizedComponent>

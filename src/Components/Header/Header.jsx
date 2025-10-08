@@ -21,17 +21,17 @@ function Header() {
 
   return (
     <header className={`relative z-50 w-full transition-all duration-300 ${glassWhenUp}`}>
-      <div className="w-full flex justify-center py-2">
+      <div className="w-full flex justify-center py-1 sm:py-2">
         <MagicBento
           textAutoHide={true}
           enableStars={true}
           enableSpotlight={true}
           enableBorderGlow={true}
-          enableTilt={true}
-          enableMagnetism={true}
+          enableTilt={false}
+          enableMagnetism={false}
           clickEffect={true}
-          spotlightRadius={300}
-          particleCount={12}
+          spotlightRadius={200}
+          particleCount={8}
           glowColor="132, 0, 255"
         />
       </div>
