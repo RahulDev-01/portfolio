@@ -27,7 +27,7 @@ function Footer() {
       try {
         const link = document.createElement('a');
         link.href = resume;
-        link.download = resume;
+        link.download = resumement;
         link.style.display = 'none';
         document.body.appendChild(link);
         link.click();
