@@ -22,7 +22,7 @@ function App() {
     <Projects />
     <ContactMe />
 
- {/* <Footer /> */}
+ <Footer />
  </div>
    
   </>
