@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import LaserFlow from './LaserFlow'
 import Dock from '../ui/Dock'
-import resume from '../../../public/Savvana_Rahul.pdf'
+// import resume from '../../../public/Savvana_Rahul.pdf'
 import { IconBrandLinkedin, IconMail, IconBrandGithub, IconFileText } from '@tabler/icons-react'
 // import github from '../../../public/image.png'
 function Footer() {
@@ -25,16 +25,18 @@ function Footer() {
     { icon: <IconBrandGithub size={18} />, label: 'GitHub', onClick: () => window.open('https://github.com/RahulDev-01', '_blank') },
     { icon: <IconFileText size={18} />, label: 'Resume', onClick: () => {
       try {
+        // Direct download without opening in new tab
         const link = document.createElement('a');
-        link.href = resume;
-        link.download = resumement;
+        link.href = '/Savvana_Rahul_Resume.pdf';
+        link.download = 'Savvana_Rahul_Resume.pdf';
         link.style.display = 'none';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         showToast('Resume download started!');
       } catch (error) {
-        showToast('Resume file not found. Please contact me directly.');
+        console.error('Download error:', error);
+        showToast('Resume file not accessible. Please contact me directly.');
       }
     } },
   ];
