@@ -6,6 +6,9 @@ import TextType from '../ui/TextType';
 
 const HeroSection = memo(() => {
   const containerRef = useRef(null);
+  const titleRef = useRef(null);
+  const desc1Ref = useRef(null);
+  const desc2Ref = useRef(null);
   const [reloadKey, setReloadKey] = useState(0);
   const [isVPHover, setIsVPHover] = useState(false);
   
@@ -46,7 +49,6 @@ const HeroSection = memo(() => {
   const variableProximityProps = useMemo(() => ({
     fromFontVariationSettings: "'wght' 400, 'opsz' 9",
     toFontVariationSettings: "'wght' 1000, 'opsz' 40",
-    containerRef,
     radius: 100,
     falloff: 'linear',
     onMouseEnter: handleVPMouseEnter,
@@ -56,11 +58,11 @@ const HeroSection = memo(() => {
   // Memoize TextType props
   const textTypeProps = useMemo(() => ({
     text: ["Full Stack Developer", "Figma Designer", "Web Designer", "Freelancer ."],
-    typingSpeed: 75,
-    pauseDuration: 1500,
+    typingSpeed: 90,
+    pauseDuration: 900,
     showCursor: true,
     textColors: ["#00A9E5", "#00A9E5"],
-    cursorCharacter: "|",
+    cursorCharacter: "⚡",
     className: 'text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 sm:mt-3 md:mt-5 text-red-300 font-bold text-center md:text-left'
   }), []);
   return (
@@ -98,12 +100,15 @@ const HeroSection = memo(() => {
                   textAlign="center" 
                 />
                 
-                <div className="pointer-events-auto mt-2 sm:mt-3" ref={containerRef}>
-                  <VariableProximity
-                    label={`I'm Savvana Rahul a `}
-                    className={'variable-proximity-demo mt-2 sm:mt-3 text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center md:text-left'}
-                    {...variableProximityProps}
-                  />
+                <div className="mt-2 sm:mt-3">
+                  <div ref={titleRef} style={{ position: 'relative', display: 'inline-block' }}>
+                    <VariableProximity
+                      label={`I'm Savvana Rahul a `}
+                      className={'mt-2 sm:mt-3 text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center md:text-left'}
+                      containerRef={titleRef}
+                      {...variableProximityProps}
+                    />
+                  </div>
                 </div>
                 
                 <div className="w-full flex justify-center md:justify-start">
@@ -112,21 +117,26 @@ const HeroSection = memo(() => {
                 
                 <div className="mt-2 w-full"></div>
                 
-                <div className="pointer-events-auto mt-6 sm:mt-10" ref={containerRef}>
-                  <VariableProximity
-                    label={`A personal portfolio is a collection of your work, achievements,`}
-                    className={'variable-proximity-demo mt-4 sm:mt-5 text-xs sm:text-sm md:text-base lg:text-lg text-white/70 text-center md:text-left w-full max-w-full md:max-w-xl'}
-                    {...variableProximityProps}
-                  />
+                <div className="mt-6 sm:mt-10">
+                  <div ref={desc1Ref} style={{ position: 'relative', display: 'inline-block' }}>
+                    <VariableProximity
+                      label={`A personal portfolio is a collection of your work, achievements,`}
+                      className={'mt-4 sm:mt-5 text-xs sm:text-sm md:text-base lg:text-lg text-white/70 text-center md:text-left w-full max-w-full md:max-w-xl'}
+                      containerRef={desc1Ref}
+                      {...variableProximityProps}
+                    />
+                  </div>
                 </div>
                 
-                <div className="pointer-events-auto" ref={containerRef}>
-                  <VariableProximity
-                    label={`and skills that highlights your and professional growth.`}
-                    className={'variable-proximity-demo text-xs sm:text-sm md:text-base lg:text-lg text-white/70 text-center md:text-left w-full max-w-full md:max-w-xl'}
-                    {...variableProximityProps}
-                  />
-                  
+                <div>
+                  <div ref={desc2Ref} style={{ position: 'relative', display: 'inline-block' }}>
+                    <VariableProximity
+                      label={`and skills that highlights your and professional growth.`}
+                      className={'text-xs sm:text-sm md:text-base lg:text-lg text-white/70 text-center md:text-left w-full max-w-full md:max-w-xl'}
+                      containerRef={desc2Ref}
+                      {...variableProximityProps}
+                    />
+                  </div>
                 </div>
                 
                 {/* Download Resume Button */}
