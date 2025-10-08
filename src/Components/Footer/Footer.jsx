@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import LaserFlow from './LaserFlow'
 import Dock from '../ui/Dock'
+import resume from '../../../public/Savvana_Rahul.pdf'
 import { IconBrandLinkedin, IconMail, IconBrandGithub, IconFileText } from '@tabler/icons-react'
 // import github from '../../../public/image.png'
 function Footer() {
@@ -22,7 +23,20 @@ function Footer() {
       });
     } },
     { icon: <IconBrandGithub size={18} />, label: 'GitHub', onClick: () => window.open('https://github.com/RahulDev-01', '_blank') },
-    { icon: <IconFileText size={18} />, label: 'Resume', onClick: () => window.open('/resume.pdf', '_blank') },
+    { icon: <IconFileText size={18} />, label: 'Resume', onClick: () => {
+      try {
+        const link = document.createElement('a');
+        link.href = resume;
+        link.download = resume;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('Resume download started!');
+      } catch (error) {
+        showToast('Resume file not found. Please contact me directly.');
+      }
+    } },
   ];
   return (
     <>
@@ -109,22 +123,21 @@ function Footer() {
                 <div className='text-gray-500 text-[16px] flex-shrink-0'>© 2025 Savvana Rahul⚡. All Rights Reserved .</div>
                 <div className='text-gray-500 text-[16px] flex-shrink-0'> For Contact - s.rahul5116@gmail.com</div>
                 </div>
-                 <div className='flex-1 flex justify-center  items-center overflow-hidden'>
-                   <Dock
-                     items={items}
-                     panelHeight={45}
-                     baseItemSize={35}
-                     magnification={45}
-                     className='max-w-fit cursor-pointer'
-                     style={{ 
-                       position: 'relative',
-                       top: '-20px',
-                       transform: 'translateY(-10px)'
-                     }}
-                   />
-                 </div>
               </div>
            </nav>
+                     <Dock
+                       items={items}
+                       panelHeight={60}
+                       baseItemSize={40}
+                       magnification={60}
+                       itemAlignment='items-center'
+                       className='max-w-fit cursor-pointer mb-3'
+                       style={{ 
+                         position: 'relative',
+                         top: '0px',
+                         transform: 'translateY(0px)'
+                       }}
+                     />
         </div>
 
         <img

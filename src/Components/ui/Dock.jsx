@@ -82,7 +82,8 @@ export default function Dock({
   distance = 200,
   panelHeight = 64,
   dockHeight = 256,
-  baseItemSize = 50
+  baseItemSize = 50,
+  itemAlignment = 'items-end'
 }) {
   const mouseX = useMotionValue(Infinity);
   const isHovered = useMotionValue(0);
@@ -105,7 +106,7 @@ export default function Dock({
           isHovered.set(0);
           mouseX.set(Infinity);
         }}
-        className={`${className} absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-end w-fit gap-4 rounded-2xl border-neutral-700 border-2 pb-2 px-4`}
+        className={`${className} absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-center mt-1 justify-center w-fit gap-10 rounded-2xl border-neutral-700 border-2  px-6`}
         style={{ height: panelHeight }}
         role="toolbar"
         aria-label="Application dock"
