@@ -11,30 +11,32 @@ const cardData = [
   {
     color: '#060010',
     title: 'Home',
+    sectionId: 'hero-section'
   },
   {
     color: '#060010',
     title: 'About Me',
-
+    sectionId: 'hero-section'
   },
   {
     color: '#060010',
     title: 'Skills',
+    sectionId: 'skills-section'
   },
   {
     color: '#060010',
     title: 'Projects',
-
+    sectionId: 'projects-section'
   },
   {
     color: '#060010',
     title: 'Experience',
-
+    sectionId: 'skills-section'
   },
   {
     color: '#060010',
     title: 'Contact Me',
-
+    sectionId: 'contact-section'
   }
 ];
 
@@ -81,7 +83,8 @@ const ParticleCard = ({
   glowColor = DEFAULT_GLOW_COLOR,
   enableTilt = true,
   clickEffect = false,
-  enableMagnetism = false
+  enableMagnetism = false,
+  onClick = null
 }) => {
   const cardRef = useRef(null);
   const particlesRef = useRef([]);
@@ -239,6 +242,11 @@ const ParticleCard = ({
     };
 
     const handleClick = e => {
+      // Handle navigation first
+      if (onClick) {
+        onClick();
+      }
+
       if (!clickEffect) return;
 
       const rect = element.getBoundingClientRect();
@@ -467,7 +475,8 @@ const MagicBento = ({
   enableTilt = false,
   glowColor = DEFAULT_GLOW_COLOR,
   clickEffect = true,
-  enableMagnetism = true
+  enableMagnetism = true,
+  onNavigate = null
 }) => {
   const gridRef = useRef(null);
   const isMobile = useMobileDetection();
@@ -669,6 +678,11 @@ const MagicBento = ({
                   enableTilt={enableTilt}
                   clickEffect={clickEffect}
                   enableMagnetism={enableMagnetism}
+                  onClick={() => {
+                    if (onNavigate && card.sectionId) {
+                      onNavigate(card.sectionId);
+                    }
+                  }}
                 >
                   <div className="card__content flex items-center justify-center relative text-white group-hover:text-white">
                     <h3 className={`card__title font-semibold text-xs sm:text-sm md:text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''}`}>
@@ -745,6 +759,11 @@ const MagicBento = ({
                   };
 
                   const handleClick = e => {
+                    // Handle navigation first
+                    if (onNavigate && card.sectionId) {
+                      onNavigate(card.sectionId);
+                    }
+
                     if (!clickEffect || shouldDisableAnimations) return;
 
                     const rect = el.getBoundingClientRect();

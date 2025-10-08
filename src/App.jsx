@@ -122,6 +122,8 @@ function App() {
   const [projectsLoaded, setProjectsLoaded] = useState(false)
   const [contactLoaded, setContactLoaded] = useState(false)
   const [footerLoaded, setFooterLoaded] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [showMobileAlert, setShowMobileAlert] = useState(false)
   const skillsRef = React.useRef(null)
   const projectsRef = React.useRef(null)
   const contactRef = React.useRef(null)
@@ -155,6 +157,26 @@ function App() {
     }
   }, [])
 
+  // Mobile detection
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth <= 768
+      setIsMobile(mobile)
+      if (mobile) {
+        setShowMobileAlert(true)
+        // Auto-hide alert after 5 seconds
+        setTimeout(() => {
+          setShowMobileAlert(false)
+        }, 5000)
+      }
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   // Preload critical components after initial load
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -167,17 +189,43 @@ function App() {
   return (
     <ErrorBoundary>
       <div className='h-full w-full bg-[#060010] overflow-x-hidden'>
+        {/* Mobile Alert - Only visible on mobile screens */}
+        {showMobileAlert && (
+          <div className="fixed top-0 left-0 right-0 z-[9999] bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 text-white p-3 sm:hidden">
+            <div className="flex items-center justify-between max-w-sm mx-auto">
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <p className="text-sm font-medium">
+                  Switch to laptop for better experience
+                </p>
+              </div>
+              <button
+                onClick={() => setShowMobileAlert(false)}
+                className="text-white/80 hover:text-white transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Critical above-the-fold components */}
         <OptimizedComponent>
           <Header />
         </OptimizedComponent>
         
-        <OptimizedComponent>
-          <HeroSection />
-        </OptimizedComponent>
+        <div id="hero-section">
+          <OptimizedComponent>
+            <HeroSection />
+          </OptimizedComponent>
+        </div>
 
         {/* Progressive loading for below-the-fold components */}
-        <div ref={skillsRef}>
+        <div id="skills-section" ref={skillsRef}>
           {skillsLoaded && (
             <OptimizedComponent>
               <Skills />
@@ -185,7 +233,7 @@ function App() {
           )}
         </div>
 
-        <div ref={projectsRef}>
+        <div id="projects-section" ref={projectsRef}>
           {projectsLoaded && (
             <OptimizedComponent>
               <Projects />
@@ -193,7 +241,7 @@ function App() {
           )}
         </div>
 
-        <div ref={contactRef}>
+        <div id="contact-section" ref={contactRef}>
           {contactLoaded && (
             <OptimizedComponent>
               <ContactMe />

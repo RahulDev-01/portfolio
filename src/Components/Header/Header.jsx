@@ -17,6 +17,21 @@ function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Smooth scroll to section function
+  const scrollToSection = (sectionId) => {
+    console.log('Scrolling to section:', sectionId)
+    const element = document.getElementById(sectionId)
+    if (element) {
+      console.log('Element found, scrolling...')
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+    } else {
+      console.log('Element not found:', sectionId)
+    }
+  }
+
   const glassWhenUp = 'backdrop-blur-0 bg-transparent border-b-0 shadow-none'
 
   return (
@@ -33,6 +48,7 @@ function Header() {
           spotlightRadius={200}
           particleCount={8}
           glowColor="132, 0, 255"
+          onNavigate={scrollToSection}
         />
       </div>
     </header>
