@@ -4,4 +4,23 @@ html, body, #root {
 
 body {
   background-color: #060010;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar for better UX */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #060010;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #274DA5;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3B82F6;
 }
