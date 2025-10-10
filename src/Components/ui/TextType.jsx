@@ -80,6 +80,7 @@ const TextType = ({
     if (!isVisible) return;
 
     let timeout;
+    let animationFrame;
 
     const currentText = textArray[currentTextIndex];
     const processedText = reverseMode ? currentText.split('').reverse().join('') : currentText;
@@ -100,19 +101,25 @@ const TextType = ({
           setCurrentCharIndex(0);
           timeout = setTimeout(() => {}, pauseDuration);
         } else {
-          timeout = setTimeout(() => {
-            setDisplayedText(prev => prev.slice(0, -1));
-          }, deletingSpeed);
+          // Use requestAnimationFrame for smoother deletion
+          animationFrame = requestAnimationFrame(() => {
+            timeout = setTimeout(() => {
+              setDisplayedText(prev => prev.slice(0, -1));
+            }, deletingSpeed);
+          });
         }
       } else {
         if (currentCharIndex < processedText.length) {
-          timeout = setTimeout(
-            () => {
-              setDisplayedText(prev => prev + processedText[currentCharIndex]);
-              setCurrentCharIndex(prev => prev + 1);
-            },
-            variableSpeed ? getRandomSpeed() : typingSpeed
-          );
+          // Use requestAnimationFrame for smoother typing
+          animationFrame = requestAnimationFrame(() => {
+            timeout = setTimeout(
+              () => {
+                setDisplayedText(prev => prev + processedText[currentCharIndex]);
+                setCurrentCharIndex(prev => prev + 1);
+              },
+              variableSpeed ? getRandomSpeed() : typingSpeed
+            );
+          });
         } else if (textArray.length > 1) {
           timeout = setTimeout(() => {
             setIsDeleting(true);
@@ -127,7 +134,12 @@ const TextType = ({
       executeTypingAnimation();
     }
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     currentCharIndex,

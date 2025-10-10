@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useState } from 'react'
+import React, { useRef, useEffect, useCallback, useState, memo, useMemo } from 'react'
 import FuzzyText  from '../Components/ui/FuzzyText';
 // Placeholder images. Replace these URLs with your own when ready.
 const imageUrls = [
@@ -25,7 +25,7 @@ const imageUrls = [
 
 ];
 
-function Skills() {
+const Skills = memo(() => {
   // Use refs to get direct access to the DOM elements
   // Fix: Define hoverIntensity and enableHover for FuzzyText
   const hoverIntensity = 0;
@@ -396,6 +396,7 @@ function Skills() {
       {/* End STICKY WRAPPER */}
     </div>
   );
-}
+})
 
+Skills.displayName = 'Skills'
 export default Skills

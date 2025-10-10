@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo, useMemo, useCallback } from 'react'
 import Hyperspeed from '../Components/ui/Hyperspeed';
 import PixelTrail from '../Components/ui/PixelTrail';
 import SplashCursor from '../Components/ui/SplashCursor'
@@ -6,7 +6,7 @@ import { CardContainer, CardBody, CardItem } from '../Components/ui/3d-card'
 import { motion } from "motion/react";
 import { LinkPreview } from "../Components/ui/link-preview";
 
-function Projects() {
+const Projects = memo(() => {
   return (
     <div className='relative text-white w-full overflow-hidden'>
       {/* Hyperspeed Background */}
@@ -248,5 +248,7 @@ Button icon is fetched dynamically from an API 🔄 .
       <div className='h-20'></div>
     </div>
   )
-}
+})
+
+Projects.displayName = 'Projects'
 export default Projects

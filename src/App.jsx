@@ -1,13 +1,38 @@
-import React, { Suspense, lazy, memo, useCallback, useState, useEffect } from 'react'
+import React, { Suspense, lazy, memo, useCallback, useState, useEffect, useMemo } from 'react'
 import './App.css'
+import { debounce, throttle, preloadImages, measurePerformance, logMemoryUsage } from './utils/performance'
 
-// Lazy load heavy components
+// Lazy load heavy components with preloading
 const Footer = lazy(() => import('./Components/Footer/Footer'))
 const Header = lazy(() => import('./Components/Header/Header'))
 const HeroSection = lazy(() => import('./Components/HeroSection/HeroSection'))
 const Skills = lazy(() => import('./Skills/Skills'))
 const Projects = lazy(() => import('./Projects/Projects'))
 const ContactMe = lazy(() => import('./ContactMe/ContactMe'))
+
+// Preload components for better performance
+const preloadComponents = () => {
+  import('./Components/Footer/Footer')
+  import('./Skills/Skills')
+  import('./Projects/Projects')
+  import('./ContactMe/ContactMe')
+}
+
+// Preload critical images
+const preloadCriticalImages = () => {
+  const criticalImages = [
+    '/profile.jpg',
+    '/Logos/figma.png',
+    '/Logos/html.png',
+    '/Logos/css1.png',
+    '/Logos/js.png',
+    '/Logos/react.png',
+    '/Logos/typeScript.png',
+    '/Logos/tailwind.png',
+    '/Logos/nodejs.png'
+  ]
+  preloadImages(criticalImages)
+}
 
 // Loading component
 const LoadingSpinner = memo(() => (
@@ -128,60 +153,82 @@ function App() {
   const projectsRef = React.useRef(null)
   const contactRef = React.useRef(null)
 
-  // Progressive loading with delays
+  // Memoized mobile detection function
+  const checkMobile = useCallback(() => {
+    const mobile = window.innerWidth <= 768
+    setIsMobile(mobile)
+    if (mobile) {
+      setShowMobileAlert(true)
+      // Auto-hide alert after 5 seconds
+      setTimeout(() => {
+        setShowMobileAlert(false)
+      }, 5000)
+    }
+  }, [])
+
+  // Progressive loading with optimized delays
   useEffect(() => {
     const timers = []
     
-    // Load skills after 500ms
+    // Preload critical images immediately
+    preloadCriticalImages()
+    
+    // Preload components after initial render
+    timers.push(setTimeout(() => {
+      preloadComponents()
+    }, 100))
+    
+    // Load skills after 200ms (faster)
     timers.push(setTimeout(() => {
       setSkillsLoaded(true)
-    }, 500))
+    }, 200))
     
-    // Load projects after 1000ms
+    // Load projects after 400ms (faster)
     timers.push(setTimeout(() => {
       setProjectsLoaded(true)
-    }, 1000))
+    }, 400))
     
-    // Load contact after 1500ms
+    // Load contact after 600ms (faster)
     timers.push(setTimeout(() => {
       setContactLoaded(true)
-    }, 1500))
+    }, 600))
     
-    // Load footer after 2000ms
+    // Load footer after 800ms (faster)
     timers.push(setTimeout(() => {
       setFooterLoaded(true)
-    }, 2000))
+    }, 800))
 
     return () => {
       timers.forEach(clearTimeout)
     }
   }, [])
 
-  // Mobile detection
+  // Optimized mobile detection with debouncing
   useEffect(() => {
-    const checkMobile = () => {
-      const mobile = window.innerWidth <= 768
-      setIsMobile(mobile)
-      if (mobile) {
-        setShowMobileAlert(true)
-        // Auto-hide alert after 5 seconds
-        setTimeout(() => {
-          setShowMobileAlert(false)
-        }, 5000)
-      }
+    let timeoutId
+    const debouncedCheckMobile = () => {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(checkMobile, 100)
     }
 
     checkMobile()
-    window.addEventListener('resize', checkMobile)
+    window.addEventListener('resize', debouncedCheckMobile)
 
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+    return () => {
+      window.removeEventListener('resize', debouncedCheckMobile)
+      clearTimeout(timeoutId)
+    }
+  }, [checkMobile])
 
   // Preload critical components after initial load
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoaded(true)
-    }, 100)
+      // Log performance metrics in development
+      if (process.env.NODE_ENV === 'development') {
+        logMemoryUsage()
+      }
+    }, 50) // Faster initial load
 
     return () => clearTimeout(timer)
   }, [])

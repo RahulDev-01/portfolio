@@ -58,11 +58,13 @@ const HeroSection = memo(() => {
   // Memoize TextType props
   const textTypeProps = useMemo(() => ({
     text: ["Full Stack Developer", "Figma Designer", "Web Designer", "Freelancer ."],
-    typingSpeed: 90,
-    pauseDuration: 900,
+    typingSpeed: 50,
+    pauseDuration: 600,
+    deletingSpeed: 25,
     showCursor: true,
     textColors: ["#00A9E5", "#00A9E5"],
     cursorCharacter: "⚡",
+    cursorBlinkDuration: 0.8,
     className: 'text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 sm:mt-3 md:mt-5 text-red-300 font-bold text-center md:text-left'
   }), []);
   return (

@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, memo } from 'react'
 import BlobCursor from '../Components/ui/BlobCursor';
 import Lanyard from '../Components/ui/Lanyard'
 import ElectricBorder from '../Components/ui/ElectricBorder'
@@ -413,7 +413,7 @@ const BottomGradient = () => {
   );
 };
 
-function ContactMe() {
+const ContactMe = memo(() => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('error'); // 'error' or 'success'
@@ -639,6 +639,7 @@ function ContactMe() {
         </div>
     </div>
   )
-}
+})
 
+ContactMe.displayName = 'ContactMe'
 export default ContactMe
