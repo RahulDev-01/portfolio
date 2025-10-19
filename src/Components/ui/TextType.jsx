@@ -31,8 +31,20 @@ const TextType = ({
   const [isVisible, setIsVisible] = useState(!startOnVisible);
   const cursorRef = useRef(null);
   const containerRef = useRef(null);
+  const rafRef = useRef(null);
+  const timeoutRef = useRef(null);
+  const textCache = useRef(new Map());
 
   const textArray = useMemo(() => (Array.isArray(text) ? text : [text]), [text]);
+
+  // Pre-cache text for faster rendering
+  useEffect(() => {
+    textArray.forEach(text => {
+      if (!textCache.current.has(text)) {
+        textCache.current.set(text, [...text]);
+      }
+    });
+  }, [textArray]);
 
   const getRandomSpeed = useCallback(() => {
     if (!variableSpeed) return typingSpeed;
@@ -84,8 +96,10 @@ const TextType = ({
 
     const currentText = textArray[currentTextIndex];
     const processedText = reverseMode ? currentText.split('').reverse().join('') : currentText;
+    const cachedText = textCache.current.get(processedText) || [...processedText];
 
     const executeTypingAnimation = () => {
+      if (!isVisible) return;
       if (isDeleting) {
         if (displayedText === '') {
           setIsDeleting(false);
@@ -161,25 +175,33 @@ const TextType = ({
   const shouldHideCursor =
     hideCursorWhileTyping && (currentCharIndex < textArray[currentTextIndex].length || isDeleting);
 
-  return createElement(
-    Component,
-    {
-      ref: containerRef,
-      className: `inline-block whitespace-pre-wrap tracking-tight ${className}`,
-      ...props
-    },
-    <span className="inline" style={{ color: getCurrentTextColor() }}>
-      {displayedText}
-    </span>,
-    showCursor && (
-      <span
-        ref={cursorRef}
-        className={`ml-1 inline-block opacity-100 ${shouldHideCursor ? 'hidden' : ''} ${cursorClassName}`}
-      >
-        {cursorCharacter}
-      </span>
-    )
-  );
+  const renderContent = useMemo(() => {
+    const currentColor = getCurrentTextColor();
+    return createElement(
+      Component,
+      {
+        ref: containerRef,
+        className,
+        style: { color: currentColor },
+        ...props
+      },
+      displayedText,
+      showCursor && (
+        <span
+          ref={cursorRef}
+          className={cursorClassName}
+          style={{
+            opacity: hideCursorWhileTyping && !isDeleting && currentCharIndex < textArray[currentTextIndex].length ? 0 : 1,
+            transition: 'opacity 150ms ease-in-out'
+          }}
+        >
+          {cursorCharacter}
+        </span>
+      )
+    );
+  }, [displayedText, currentTextIndex, isDeleting, showCursor, cursorCharacter, Component, className, props]);
+
+  return renderContent;
 };
 
 export default TextType;

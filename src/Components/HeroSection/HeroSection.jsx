@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useRef, memo, useCallback, useMemo ,Suspense } from 'react'
 import VariableProximity from '../ui/VariableProximity';
-import LiquidEther from '../ui/LiquidEther';
+// import React, { Suspense } from 'react';
+const LiquidEther = React.lazy(() => import('../ui/LiquidEther'));
 import SplitText from "../ui/SplitText";
 import TextType from '../ui/TextType';
 
@@ -55,21 +56,25 @@ const HeroSection = memo(() => {
     onMouseLeave: handleVPMouseLeave,
   }), [handleVPMouseEnter, handleVPMouseLeave]);
 
-  // Memoize TextType props
+  // Memoize TextType props with optimized performance settings
   const textTypeProps = useMemo(() => ({
-    text: ["Full Stack Developer", "Figma Designer", "Web Designer", "Freelancer ."],
-    typingSpeed: 50,
-    pauseDuration: 600,
-    deletingSpeed: 25,
+    text: ["Full Stack Developer", "Figma Designer", "Web Designer", "Freelancer"],
+    typingSpeed: 35, // Faster typing speed
+    pauseDuration: 1500, // Longer pause to improve readability
+    deletingSpeed: 20, // Slightly faster deletion
     showCursor: true,
     textColors: ["#00A9E5", "#00A9E5"],
     cursorCharacter: "⚡",
-    cursorBlinkDuration: 0.8,
-    className: 'text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 sm:mt-3 md:mt-5 text-red-300 font-bold text-center md:text-left'
+    cursorBlinkDuration: 0.6, // Faster cursor blink for better responsiveness
+    className: 'text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 sm:mt-3 md:mt-5 text-blue-400 font-bold text-center md:text-left',
+    useRAF: true, // Use requestAnimationFrame for smoother animations
+    preRenderText: true, // Pre-render text for faster display
   }), []);
   return (
     <div className='text-white w-full relative min-h-[400px] sm:min-h-[500px] md:h-[700px] overflow-hidden'>
-      <LiquidEther {...liquidEtherProps} />
+      <Suspense fallback={<div aria-hidden="true" className="absolute inset-0 pointer-events-none" />}> 
+        <LiquidEther {...liquidEtherProps} />
+      </Suspense>
       
       {/* Overlay content above the effect */}
       <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none px-2 sm:px-4">
