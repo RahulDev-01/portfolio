@@ -12,7 +12,7 @@ function GlobeScene({ data, globeConfig }) {
   useEffect(() => {
     // Create the globe instance
     const globe = new Globe()
-      .globeImageUrl("//unpkg.com/three-globe/example/img/earth-night.jpg")
+      .globeImageUrl("//unpkg.com/three-globe/example/img/earth-blue-marble.jpg")
       .bumpImageUrl("//unpkg.com/three-globe/example/img/earth-topology.png");
 
     // Add hex polygons for dotted pattern like the image
@@ -30,32 +30,34 @@ function GlobeScene({ data, globeConfig }) {
 
     // Add arcs data for animated lines
     if (data && data.length > 0) {
+      // Reduce density of arcs and related visuals (very few lines)
+      const reducedData = data.filter(() => Math.random() < 0.1).slice(0, 5);
       globe
-        .arcsData(data)
-        .arcColor('color')
-        .arcDashLength(0.9)
-        .arcDashGap(0.4)
+        .arcsData(reducedData)
+        .arcColor(() => ['#b5b5b5', '#e5e5e5'])
+        .arcDashLength(0.4)
+        .arcDashGap(1.2)
         .arcDashInitialGap(() => Math.random() * 5)
-        .arcDashAnimateTime(3000)
-        .arcStroke(0.5)
-        .arcsTransitionDuration(1000);
+        .arcDashAnimateTime(4500)
+        .arcStroke(0.15)
+        .arcsTransitionDuration(700);
       
-      // Enhanced points for better visibility
+      // Subtle, fewer points
       globe
-        .pointsData(data)
-        .pointColor(() => '#88ffff')
-        .pointAltitude(0.08)
-        .pointRadius(3)
+        .pointsData(reducedData)
+        .pointColor(() => '#cccccc')
+        .pointAltitude(0.04)
+        .pointRadius(1.5)
         .pointsMerge(true);
       
-      // Brighter and more visible rings
+      // Subtle rings
       globe
-        .ringsData(data)
-        .ringColor(() => '#00ffff')
-        .ringMaxRadius(4.0)
-        .ringPropagationSpeed(2.5)
-        .ringRepeatPeriod(700)
-        .ringResolution(32);
+        .ringsData(reducedData)
+        .ringColor(() => '#d0d0d0')
+        .ringMaxRadius(2.5)
+        .ringPropagationSpeed(1.5)
+        .ringRepeatPeriod(1200)
+        .ringResolution(24);
     }
 
     // Configure atmosphere with brighter settings
@@ -68,14 +70,14 @@ function GlobeScene({ data, globeConfig }) {
     setTimeout(() => {
       const globeMaterial = globe.globeMaterial();
       if (globeMaterial) {
-        // Brighter base color and stronger emissive
-        globeMaterial.color = new THREE.Color(0x1a3a5f);
-        globeMaterial.emissive = new THREE.Color(0x003366);
-        globeMaterial.emissiveIntensity = 0.6;
-        // Adjust material properties for better light reflection
-        if ('metalness' in globeMaterial) globeMaterial.metalness = 0.1;
-        if ('roughness' in globeMaterial) globeMaterial.roughness = 0.8;
-        if ('shininess' in globeMaterial) globeMaterial.shininess = 20;
+        // Neutral material to let the texture show natural colors
+        globeMaterial.color = new THREE.Color(0xffffff);
+        globeMaterial.emissive = new THREE.Color(0x000000);
+        globeMaterial.emissiveIntensity = 0.1;
+        // Natural material response
+        if ('metalness' in globeMaterial) globeMaterial.metalness = 0.0;
+        if ('roughness' in globeMaterial) globeMaterial.roughness = 0.9;
+        if ('shininess' in globeMaterial) globeMaterial.shininess = 10;
       }
     }, 100);
 
@@ -110,21 +112,25 @@ function GlobeScene({ data, globeConfig }) {
 }
 
 function World({ data, globeConfig }) {
+  const onPointerDown = (e) => { e.currentTarget.style.cursor = 'grabbing'; };
+  const onPointerUp = (e) => { e.currentTarget.style.cursor = 'grab'; };
+  const onPointerLeave = (e) => { e.currentTarget.style.cursor = 'grab'; };
+  const onPointerOver = (e) => { e.currentTarget.style.cursor = 'grab'; };
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <Canvas 
         camera={{ position: [0, 0, 300], fov: 50 }}
         gl={{ alpha: true, antialias: true }}
-        style={{ background: 'transparent' }}
+        style={{ background: 'transparent', cursor: 'grab' }}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onPointerLeave={onPointerLeave}
+        onPointerOver={onPointerOver}
       >
-        {/* Enhanced lighting for brighter globe */}
-        <ambientLight intensity={1.0} />
-        <directionalLight position={[-8, 5, 8]} intensity={1.2} color="#ffffff" />
-        <directionalLight position={[8, -5, -8]} intensity={0.8} color="#e0f7ff" />
-        <pointLight position={[15, 15, 15]} intensity={5} color="#a0e8ff" distance={1000} />
-        <pointLight position={[-15, -15, 15]} intensity={4} color="#3b82f6" distance={1000} />
-        <pointLight position={[0, 0, 20]} intensity={6} color="#66ffff" distance={1000} />
-        <pointLight position={[10, 10, 10]} intensity={8} color="#00ffff" distance={1000} />
+        {/* Neutral lighting for natural colors */}
+        <ambientLight intensity={0.6} color="#ffffff" />
+        <directionalLight position={[5, 3, 5]} intensity={1.0} color="#ffffff" />
+        <directionalLight position={[-5, -3, -5]} intensity={0.5} color="#ffffff" />
         <GlobeScene data={data} globeConfig={globeConfig} />
         <OrbitControls 
           enableZoom={true} 
