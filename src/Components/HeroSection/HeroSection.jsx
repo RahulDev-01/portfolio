@@ -69,7 +69,7 @@ const HeroSection = memo(() => {
     className: 'text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 sm:mt-3 md:mt-5 text-red-300 font-bold text-center md:text-left'
   }), []);
   return (
-    <div className='text-white w-full relative min-h-[400px] sm:min-h-[500px] md:h-[700px] overflow-hidden'>
+    <div className='text-white w-full relative min-h-[520px] sm:min-h-[580px] md:h-[700px] overflow-hidden'>
       <Suspense fallback={<div aria-hidden="true" className="absolute inset-0 pointer-events-none" />}> 
         <LiquidEther {...liquidEtherProps} />
       </Suspense>
@@ -80,20 +80,22 @@ const HeroSection = memo(() => {
           {/* Main Div */}
           <div className='flex flex-col-reverse md:flex-row items-center justify-center gap-4 sm:gap-8 md:gap-16 lg:gap-40 mb-6 sm:mb-10 md:mb-20'>
             {/* left section */}
-            <img 
-              src="/profile.jpg" 
-              alt="Profile" 
-              className='w-32 h-32 sm:w-40 sm:h-40 md:w-72 md:h-72 lg:w-96 lg:h-96 rounded-full object-cover flex-shrink-0' 
-              loading="lazy"
-            />
+            <div className='flex-shrink-0 p-1 md:p-4'>
+              <img
+                src="/profile.jpg"
+                alt="Profile"
+                className='w-28 h-28 xs:w-32 xs:h-32 sm:w-40 sm:h-40 md:w-72 md:h-72 lg:w-96 lg:h-96 rounded-full object-cover border-2 border-white/10 shadow-xl'
+                loading="lazy"
+              />
+            </div>
 
-            <div>
+            <div className='w-full'>
               {/* right section */}
-              <div className='mb-6 sm:mb-10 md:mb-20 flex flex-col items-center md:items-start max-w-[95vw] sm:max-w-[90vw] md:max-w-2xl lg:max-w-3xl'>
+              <div className='mb-4 sm:mb-8 md:mb-16 flex flex-col items-center md:items-start px-4 sm:px-6 md:px-0 max-w-[95vw] sm:max-w-[80vw] md:max-w-2xl lg:max-w-3xl'>
                 <SplitText 
                   key={reloadKey} 
                   text={"Hello ,"} 
-                  className="text-lg sm:text-2xl md:text-3xl font-semibold text-center md:text-left text-blue-300" 
+                  className="text-base sm:text-lg md:text-2xl font-semibold text-center md:text-left text-blue-300" 
                   delay={100} 
                   duration={0.6} 
                   ease="power3.out" 
@@ -160,7 +162,7 @@ const HeroSection = memo(() => {
                         console.error('Download error:', error);
                       }
                     }}
-                    className="group relative px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 hover:from-blue-500 hover:via-purple-500 hover:to-cyan-400 text-white font-semibold text-sm sm:text-base rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out overflow-hidden  cursor-pointer"
+                    className="group relative   block sm:inline-flex justify-center px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 hover:from-blue-500 hover:via-purple-500 hover:to-cyan-400 text-white font-semibold text-sm sm:text-base rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out overflow-hidden cursor-pointer"
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
