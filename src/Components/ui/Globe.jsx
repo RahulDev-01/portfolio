@@ -30,16 +30,17 @@ function GlobeScene({ data, globeConfig }) {
 
     // Add arcs data for animated lines
     if (data && data.length > 0) {
-      // Reduce density of arcs and related visuals (very few lines)
-      const reducedData = data.filter(() => Math.random() < 0.1).slice(0, 5);
+      // 50+ lines (random selection), up to 100 if available
+      const desired = Math.max(50, Math.min(100, data.length));
+      const reducedData = [...data].sort(() => 0.5 - Math.random()).slice(0, desired);
       globe
         .arcsData(reducedData)
-        .arcColor(() => ['#b5b5b5', '#e5e5e5'])
-        .arcDashLength(0.4)
+        .arcColor(() => ['#2da8ff', '#7cc7ff'])
+        .arcDashLength(1.4)
         .arcDashGap(1.2)
         .arcDashInitialGap(() => Math.random() * 5)
         .arcDashAnimateTime(4500)
-        .arcStroke(0.15)
+        .arcStroke(1.25)
         .arcsTransitionDuration(700);
       
       // Subtle, fewer points
