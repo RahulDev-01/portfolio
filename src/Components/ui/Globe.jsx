@@ -40,39 +40,41 @@ function GlobeScene({ data, globeConfig }) {
         .arcStroke(0.5)
         .arcsTransitionDuration(1000);
       
-      // Add points data for the cyan glowing circles - make them larger/brighter so cities are visible
+      // Enhanced points for better visibility
       globe
         .pointsData(data)
-        .pointColor(() => '#aaffff')
+        .pointColor(() => '#88ffff')
         .pointAltitude(0.08)
-        .pointRadius(6) // larger radius for visibility
-        .pointsMerge(false);
+        .pointRadius(3)
+        .pointsMerge(true);
       
-      // Add rings around cities for intense glow effect
+      // Brighter and more visible rings
       globe
         .ringsData(data)
-        .ringColor(() => '#66ffff')
-        .ringMaxRadius(6)
-        .ringPropagationSpeed(1.6)
-        .ringRepeatPeriod(600);
+        .ringColor(() => '#00ffff')
+        .ringMaxRadius(4.0)
+        .ringPropagationSpeed(2.5)
+        .ringRepeatPeriod(700)
+        .ringResolution(32);
     }
 
-    // Configure atmosphere
+    // Configure atmosphere with brighter settings
     globe
       .showAtmosphere(true)
       .atmosphereColor("#ffffff")
-      .atmosphereAltitude(0.25);
+      .atmosphereAltitude(0.3);
 
-    // Add custom material for dark blue gradient
-    // Tweak globe material for more visible city highlights
+    // Enhance globe material for brightness
     setTimeout(() => {
       const globeMaterial = globe.globeMaterial();
       if (globeMaterial) {
-        globeMaterial.color = new THREE.Color(0x071427);
-        globeMaterial.emissive = new THREE.Color(0x00334d);
-        globeMaterial.emissiveIntensity = 1.0; // stronger emissive to make highlights pop
-        if ('metalness' in globeMaterial) globeMaterial.metalness = 0.2;
-        if ('roughness' in globeMaterial) globeMaterial.roughness = 0.6;
+        // Brighter base color and stronger emissive
+        globeMaterial.color = new THREE.Color(0x1a3a5f);
+        globeMaterial.emissive = new THREE.Color(0x003366);
+        globeMaterial.emissiveIntensity = 0.6;
+        // Adjust material properties for better light reflection
+        if ('metalness' in globeMaterial) globeMaterial.metalness = 0.1;
+        if ('roughness' in globeMaterial) globeMaterial.roughness = 0.8;
         if ('shininess' in globeMaterial) globeMaterial.shininess = 20;
       }
     }, 100);
@@ -115,13 +117,14 @@ function World({ data, globeConfig }) {
         gl={{ alpha: true, antialias: true }}
         style={{ background: 'transparent' }}
       >
-  <ambientLight intensity={0.9} />
-  <directionalLight position={[-8, 5, 8]} intensity={0.9} />
-  <pointLight position={[10, 10, 10]} intensity={4} color="#9fffff" />
-  <pointLight position={[-10, -10, -10]} intensity={2.5} color="#5aa6ff" />
-  <pointLight position={[0, 0, 10]} intensity={3.5} color="#66ffff" />
-  <pointLight position={[5, 5, 5]} intensity={3.5} color="#00ffff" />
-  <pointLight position={[-5, 0, 5]} intensity={2.5} color="#00d9ff" />
+        {/* Enhanced lighting for brighter globe */}
+        <ambientLight intensity={1.0} />
+        <directionalLight position={[-8, 5, 8]} intensity={1.2} color="#ffffff" />
+        <directionalLight position={[8, -5, -8]} intensity={0.8} color="#e0f7ff" />
+        <pointLight position={[15, 15, 15]} intensity={5} color="#a0e8ff" distance={1000} />
+        <pointLight position={[-15, -15, 15]} intensity={4} color="#3b82f6" distance={1000} />
+        <pointLight position={[0, 0, 20]} intensity={6} color="#66ffff" distance={1000} />
+        <pointLight position={[10, 10, 10]} intensity={8} color="#00ffff" distance={1000} />
         <GlobeScene data={data} globeConfig={globeConfig} />
         <OrbitControls 
           enableZoom={true} 
