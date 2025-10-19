@@ -5,7 +5,7 @@ const LiquidEther = React.lazy(() => import('../ui/LiquidEther'));
 import SplitText from "../ui/SplitText";
 import TextType from '../ui/TextType';
 
-function HeroSection() {
+const HeroSection = memo(() => {
   const containerRef = useRef(null);
   const titleRef = useRef(null);
   const desc1Ref = useRef(null);
@@ -56,67 +56,60 @@ function HeroSection() {
     onMouseLeave: handleVPMouseLeave,
   }), [handleVPMouseEnter, handleVPMouseLeave]);
 
-  // Memoize TextType props with optimized performance settings
+  // Memoize TextType props
   const textTypeProps = useMemo(() => ({
-    text: ["Full Stack Developer", "Figma Designer", "Web Designer", "Freelancer"],
-    typingSpeed: 35, // Faster typing speed
-    pauseDuration: 1500, // Longer pause to improve readability
-    deletingSpeed: 20, // Slightly faster deletion
+    text: ["Full Stack Developer", "Figma Designer", "Web Designer", "Freelancer ."],
+    typingSpeed: 50,
+    pauseDuration: 600,
+    deletingSpeed: 25,
     showCursor: true,
     textColors: ["#00A9E5", "#00A9E5"],
     cursorCharacter: "⚡",
-    cursorBlinkDuration: 0.6, // Faster cursor blink for better responsiveness
-    className: 'text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 sm:mt-3 md:mt-5 text-blue-400 font-bold text-center md:text-left',
-    useRAF: true, // Use requestAnimationFrame for smoother animations
-    preRenderText: true, // Pre-render text for faster display
+    cursorBlinkDuration: 0.8,
+    className: 'text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 sm:mt-3 md:mt-5 text-red-300 font-bold text-center md:text-left'
   }), []);
   return (
-    <div className="text-white w-full relative min-h-[550px] sm:min-h-[600px] md:h-[700px] overflow-hidden">
-      <Suspense fallback={
-        <div aria-hidden="true" className="absolute inset-0 pointer-events-none bg-gradient-to-b from-blue-900/20 to-purple-900/20" />
-      }> 
+    <div className='text-white w-full relative min-h-[400px] sm:min-h-[500px] md:h-[700px] overflow-hidden'>
+      <Suspense fallback={<div aria-hidden="true" className="absolute inset-0 pointer-events-none" />}> 
         <LiquidEther {...liquidEtherProps} />
       </Suspense>
       
       {/* Overlay content above the effect */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none px-4 sm:px-6">
-        <div className="w-full max-w-7xl mx-auto">
+      <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none px-2 sm:px-4">
+        <div className="text-center px-3 sm:px-6">
           {/* Main Div */}
-          <div className='flex flex-col-reverse md:flex-row items-center justify-center gap-6 sm:gap-8 md:gap-16 lg:gap-40'>
+          <div className='flex flex-col-reverse md:flex-row items-center justify-center gap-4 sm:gap-8 md:gap-16 lg:gap-40 mb-6 sm:mb-10 md:mb-20'>
             {/* left section */}
-            <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-72 md:h-72 lg:w-96 lg:h-96">
-              <img 
-                src="/profile.jpg" 
-                alt="Profile" 
-                className='w-full h-full rounded-full object-cover flex-shrink-0 border-2 border-blue-400/30 shadow-lg shadow-blue-500/20' 
-                loading="lazy"
-              />
+            <img 
+              src="/profile.jpg" 
+              alt="Profile" 
+              className='w-32 h-32 sm:w-40 sm:h-40 md:w-72 md:h-72 lg:w-96 lg:h-96 rounded-full object-cover flex-shrink-0' 
+              loading="lazy"
+            />
 
-            </div>
-            {/* right section */}
-            <div className='w-full md:flex-1'>
-              <div className='flex flex-col items-center md:items-start space-y-4 sm:space-y-6 md:space-y-8 px-4 sm:px-6 md:px-0'>
-                <div className="w-full text-center md:text-left">
-                  <SplitText 
-                    key={reloadKey} 
-                    text={"Hello ,"} 
-                    className="text-xl sm:text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400" 
-                    delay={100} 
-                    duration={0.6} 
-                    ease="power3.out" 
-                    splitType="chars" 
-                    from={{ opacity: 0, y: 40 }} 
-                    to={{ opacity: 1, y: 0 }} 
-                    threshold={0.1} 
-                    rootMargin="-100px"
-                  />
-                </div>
+            <div>
+              {/* right section */}
+              <div className='mb-6 sm:mb-10 md:mb-20 flex flex-col items-center md:items-start max-w-[95vw] sm:max-w-[90vw] md:max-w-2xl lg:max-w-3xl'>
+                <SplitText 
+                  key={reloadKey} 
+                  text={"Hello ,"} 
+                  className="text-lg sm:text-2xl md:text-3xl font-semibold text-center md:text-left text-blue-300" 
+                  delay={100} 
+                  duration={0.6} 
+                  ease="power3.out" 
+                  splitType="chars" 
+                  from={{ opacity: 0, y: 40 }} 
+                  to={{ opacity: 1, y: 0 }} 
+                  threshold={0.1} 
+                  rootMargin="-100px" 
+                  textAlign="center" 
+                />
                 
-                <div className="mt-2 sm:mt-4">
-                  <div ref={titleRef} className="relative inline-block">
+                <div className="mt-2 sm:mt-3">
+                  <div ref={titleRef} style={{ position: 'relative', display: 'inline-block' }}>
                     <VariableProximity
                       label={`I'm Savvana Rahul a `}
-                      className={'text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight bg-gradient-to-r from-white to-white/90'}
+                      className={'mt-2 sm:mt-3 text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center md:text-left'}
                       containerRef={titleRef}
                       {...variableProximityProps}
                     />
@@ -127,20 +120,24 @@ function HeroSection() {
                   <TextType {...textTypeProps} />
                 </div>
                 
-                <div className="w-full max-w-lg space-y-3">
-                  <div ref={desc1Ref} style={{ position: 'relative' }} className="backdrop-blur-sm bg-white/5 p-4 rounded-lg">
+                <div className="mt-2 w-full"></div>
+                
+                <div className="mt-6 sm:mt-10">
+                  <div ref={desc1Ref} style={{ position: 'relative', display: 'inline-block' }}>
                     <VariableProximity
                       label={`A personal portfolio is a collection of your work, achievements,`}
-                      className={'text-sm sm:text-base md:text-lg text-white/90 leading-relaxed'}
+                      className={'mt-4 sm:mt-5 text-xs sm:text-sm md:text-base lg:text-lg text-white/70 text-center md:text-left w-full max-w-full md:max-w-xl'}
                       containerRef={desc1Ref}
                       {...variableProximityProps}
                     />
                   </div>
-                  
-                  <div ref={desc2Ref} style={{ position: 'relative' }} className="backdrop-blur-sm bg-white/5 p-4 rounded-lg">
+                </div>
+                
+                <div>
+                  <div ref={desc2Ref} style={{ position: 'relative', display: 'inline-block' }}>
                     <VariableProximity
                       label={`and skills that highlights your and professional growth.`}
-                      className={'text-sm sm:text-base md:text-lg text-white/90 leading-relaxed'}
+                      className={'text-xs sm:text-sm md:text-base lg:text-lg text-white/70 text-center md:text-left w-full max-w-full md:max-w-xl'}
                       containerRef={desc2Ref}
                       {...variableProximityProps}
                     />
@@ -148,7 +145,7 @@ function HeroSection() {
                 </div>
                 
                 {/* Download Resume Button */}
-                <div className="pointer-events-auto mt-8 sm:mt-10 w-full flex justify-center md:justify-start">
+                <div className="pointer-events-auto mt-6 sm:mt-8 w-full flex justify-center md:justify-start">
                   <button
                     onClick={() => {
                       try {
@@ -163,21 +160,20 @@ function HeroSection() {
                         console.error('Download error:', error);
                       }
                     }}
-                    className="group relative px-6 py-3.5 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 text-white font-semibold text-base sm:text-lg rounded-full shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-purple-500/20 transform hover:scale-[1.02] transition-all duration-300 ease-out overflow-hidden cursor-pointer"
+                    className="group relative px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 hover:from-blue-500 hover:via-purple-500 hover:to-cyan-400 text-white font-semibold text-sm sm:text-base rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out overflow-hidden  cursor-pointer"
                   >
-                    <span className="relative z-10 flex items-center gap-3">
-                      <svg className="w-5 h-5 sm:w-6 sm:h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <span className="relative z-10 flex items-center gap-2">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
-                      Download Resume
-                      <span className="hidden sm:inline"> - PDF</span>
+                      Download My Resume
                     </span>
                     
                     {/* Animated background gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     
                     {/* Shine effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -skew-x-45 translate-x-[-150%] animate-[shine_3s_ease-in-out_infinite]"></div>
+                    <div className="absolute inset-0 -top-2 -left-2 w-0 h-0 bg-white/20 rounded-full group-hover:w-full group-hover:h-full group-hover:top-0 group-hover:left-0 transition-all duration-500 ease-out"></div>
                   </button>
                 </div>
               </div>
@@ -186,7 +182,7 @@ function HeroSection() {
         </div>
       </div>
     </div>
-  );
-}
+  )
+})
 
-export default memo(HeroSection);
+export default HeroSection
