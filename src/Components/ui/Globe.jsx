@@ -40,21 +40,21 @@ function GlobeScene({ data, globeConfig }) {
         .arcStroke(0.5)
         .arcsTransitionDuration(1000);
       
-      // Add points data for the cyan glowing circles - EXTREMELY bright
+      // Add points data for the cyan glowing circles - make them larger/brighter so cities are visible
       globe
         .pointsData(data)
-        .pointColor(() => '#66ffff')
-        .pointAltitude(0.05)
-        .pointRadius(2)
-        .pointsMerge(true);
+        .pointColor(() => '#aaffff')
+        .pointAltitude(0.08)
+        .pointRadius(6) // larger radius for visibility
+        .pointsMerge(false);
       
       // Add rings around cities for intense glow effect
       globe
         .ringsData(data)
-        .ringColor(() => '#00ffff')
-        .ringMaxRadius(3.5)
-        .ringPropagationSpeed(2)
-        .ringRepeatPeriod(800);
+        .ringColor(() => '#66ffff')
+        .ringMaxRadius(6)
+        .ringPropagationSpeed(1.6)
+        .ringRepeatPeriod(600);
     }
 
     // Configure atmosphere
@@ -64,13 +64,16 @@ function GlobeScene({ data, globeConfig }) {
       .atmosphereAltitude(0.25);
 
     // Add custom material for dark blue gradient
+    // Tweak globe material for more visible city highlights
     setTimeout(() => {
       const globeMaterial = globe.globeMaterial();
       if (globeMaterial) {
-        globeMaterial.color = new THREE.Color(0x0a1929);
-        globeMaterial.emissive = new THREE.Color(0x001a33);
-        globeMaterial.emissiveIntensity = 0.2;
-        globeMaterial.shininess = 0.9;
+        globeMaterial.color = new THREE.Color(0x071427);
+        globeMaterial.emissive = new THREE.Color(0x00334d);
+        globeMaterial.emissiveIntensity = 1.0; // stronger emissive to make highlights pop
+        if ('metalness' in globeMaterial) globeMaterial.metalness = 0.2;
+        if ('roughness' in globeMaterial) globeMaterial.roughness = 0.6;
+        if ('shininess' in globeMaterial) globeMaterial.shininess = 20;
       }
     }, 100);
 
@@ -112,13 +115,13 @@ function World({ data, globeConfig }) {
         gl={{ alpha: true, antialias: true }}
         style={{ background: 'transparent' }}
       >
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[-8, 5, 8]} intensity={0.6} />
-        <pointLight position={[10, 10, 10]} intensity={3} color="#00ffff" />
-        <pointLight position={[-10, -10, -10]} intensity={1.5} color="#3b82f6" />
-        <pointLight position={[0, 0, 10]} intensity={2.5} color="#66ffff" />
-        <pointLight position={[5, 5, 5]} intensity={2.5} color="#00ffff" />
-        <pointLight position={[-5, 0, 5]} intensity={2} color="#00d9ff" />
+  <ambientLight intensity={0.9} />
+  <directionalLight position={[-8, 5, 8]} intensity={0.9} />
+  <pointLight position={[10, 10, 10]} intensity={4} color="#9fffff" />
+  <pointLight position={[-10, -10, -10]} intensity={2.5} color="#5aa6ff" />
+  <pointLight position={[0, 0, 10]} intensity={3.5} color="#66ffff" />
+  <pointLight position={[5, 5, 5]} intensity={3.5} color="#00ffff" />
+  <pointLight position={[-5, 0, 5]} intensity={2.5} color="#00d9ff" />
         <GlobeScene data={data} globeConfig={globeConfig} />
         <OrbitControls 
           enableZoom={true} 
