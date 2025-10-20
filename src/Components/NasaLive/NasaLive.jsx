@@ -224,36 +224,82 @@ function NasaLive({ apiKey }) {
     }
   }
 
+  // Improved caching with service worker support
   const load = async () => {
     try {
       setLoading(true)
       setError(null)
 
-      // Local cache to avoid unnecessary calls within the hour
-      const now = Date.now()
-      const cacheRaw = localStorage.getItem('nasa_live_cache_v1')
-      const cache = cacheRaw ? JSON.parse(cacheRaw) : null
-      if (cache && now - cache.timestamp < HOUR_MS) {
-        setApod(cache.apod || null)
-        setEpic(cache.epic || null)
-        setLoading(false)
-        return
+      // Check for service worker cache first
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        try {
+          const cache = await caches.match('nasa-data');
+          if (cache) {
+            const cachedData = await cache.json();
+            if (cachedData && Date.now() - cachedData.timestamp < HOUR_MS) {
+              setApod(cachedData.apod || null);
+              setEpic(cachedData.epic || null);
+              setLoading(false);
+              return;
+            }
+          }
+        } catch (e) {
+          console.log('Cache check failed, falling back to network');
+        }
       }
 
-      const [apodData, epicData] = await Promise.allSettled([fetchAPOD(), fetchEPIC()])
-      const apodVal = apodData.status === 'fulfilled' ? apodData.value : null
-      const epicVal = epicData.status === 'fulfilled' ? epicData.value : null
+      // Fallback to localStorage cache
+      const now = Date.now();
+      const cacheRaw = localStorage.getItem('nasa_live_cache_v1');
+      const cache = cacheRaw ? JSON.parse(cacheRaw) : null;
+      if (cache && now - cache.timestamp < HOUR_MS) {
+        setApod(cache.apod || null);
+        setEpic(cache.epic || null);
+        setLoading(false);
+        return;
+      }
 
-      if (!apodVal && !epicVal) throw new Error('Unable to load NASA images')
+      const [apodData, epicData] = await Promise.allSettled([
+        fetchAPOD().catch(e => {
+          console.error('APOD fetch error:', e);
+          return null;
+        }), 
+        fetchEPIC().catch(e => {
+          console.error('EPIC fetch error:', e);
+          return null;
+        })
+      ]);
 
-      setApod(apodVal)
-      setEpic(epicVal)
+      const apodVal = apodData.status === 'fulfilled' ? apodData.value : null;
+      const epicVal = epicData.status === 'fulfilled' ? epicData.value : null;
 
-      localStorage.setItem('nasa_live_cache_v1', JSON.stringify({ 
-        timestamp: now, 
+      if (!apodVal && !epicVal) throw new Error('Unable to load NASA images');
+
+      // Update state with new data
+      setApod(apodVal);
+      setEpic(epicVal);
+
+      // Cache the response
+      const cacheData = { 
+        timestamp: Date.now(), 
         apod: apodVal, 
         epic: epicVal 
-      }))
+      };
+
+      // Update service worker cache if available
+      if ('caches' in window) {
+        try {
+          const response = new Response(JSON.stringify(cacheData), {
+            headers: { 'Content-Type': 'application/json' }
+          });
+          caches.open('nasa-cache').then(cache => cache.put('nasa-data', response));
+        } catch (e) {
+          console.log('Failed to cache in service worker:', e);
+        }
+      }
+
+      // Fallback to localStorage
+      localStorage.setItem('nasa_live_cache_v1', JSON.stringify(cacheData));
       
       setLoading(false)
     } catch (e) {
@@ -310,7 +356,12 @@ function NasaLive({ apiKey }) {
                   src={epic.url}
                   alt={epic.title}
                   className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                  loading="lazy"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  width={800}
+                  height={450}
                   onError={(e) => {
                     try {
                       const jpg = e.currentTarget.src.replace('/png/', '/jpg/').replace('.png', '.jpg')
@@ -334,7 +385,12 @@ function NasaLive({ apiKey }) {
                 src={`https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_0171.jpg?t=${nowTs}`}
                 alt={'Sun • SDO'}
                 className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                loading="lazy"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                width={800}
+                height={450}
                 onError={(e) => {
                   try {
                     const altUrl = `https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_0193.jpg?t=${nowTs}`
