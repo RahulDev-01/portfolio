@@ -9,6 +9,7 @@ const HeroSection = lazy(() => import('./Components/HeroSection/HeroSection'))
 const Skills = lazy(() => import('./Skills/Skills'))
 const Projects = lazy(() => import('./Projects/Projects'))
 const ContactMe = lazy(() => import('./ContactMe/ContactMe'))
+const NasaLive = lazy(() => import('./Components/NasaLive/NasaLive'))
 
 // Preload components for better performance
 const preloadComponents = () => {
@@ -144,6 +145,7 @@ function App() {
   const [projectsLoaded, setProjectsLoaded] = useState(false)
   const [contactLoaded, setContactLoaded] = useState(false)
   const [footerLoaded, setFooterLoaded] = useState(false)
+  const [nasaLoaded, setNasaLoaded] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [showMobileAlert, setShowMobileAlert] = useState(false)
   const skillsRef = React.useRef(null)
@@ -190,6 +192,11 @@ function App() {
       setContactLoaded(true)
     }, 600))
     
+    // Load NASA Live section before footer
+    timers.push(setTimeout(() => {
+      setNasaLoaded(true)
+    }, 700))
+
     // Load footer after 800ms (faster)
     timers.push(setTimeout(() => {
       setFooterLoaded(true)
@@ -292,6 +299,13 @@ function App() {
             </OptimizedComponent>
           )}
         </div>
+
+        {/* NASA Live section just above the footer */}
+        {nasaLoaded && (
+          <OptimizedComponent>
+            <NasaLive apiKey="1GQwQtqzaLGX0IQ4QIVu7rGwlW3qupujpObykRQP" />
+          </OptimizedComponent>
+        )}
 
         {/* Footer loads last */}
         {footerLoaded && (
