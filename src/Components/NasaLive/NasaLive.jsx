@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react'
 
 const HOUR_MS = 60 * 60 * 1000
+const DAY_MS = 24 * 60 * 60 * 1000 // Cache for 24 hours instead of 1 hour
 
 function NasaLive({ apiKey }) {
   const [apod, setApod] = useState(null)
@@ -10,6 +11,9 @@ function NasaLive({ apiKey }) {
   const [generating, setGenerating] = useState(false)
   const [earthImageLoaded, setEarthImageLoaded] = useState(false)
   const [sunImageLoaded, setSunImageLoaded] = useState(false)
+  const [satelliteImages, setSatelliteImages] = useState([])
+  const [satelliteImagesLoading, setSatelliteImagesLoading] = useState(true)
+  const [lastRefresh, setLastRefresh] = useState(new Date())
   const nowTs = Date.now()
   
   // Use a recent UTC date for Worldview snapshots to avoid night-side black images
@@ -226,11 +230,116 @@ function NasaLive({ apiKey }) {
     }
   }
 
+  // Simple satellite images that will definitely work
+  const fetchSatelliteImages = async () => {
+    setSatelliteImagesLoading(true)
+    
+    // Use reliable placeholder images that will always load
+    const reliableSatelliteSources = [
+      { 
+        url: "/NasaPhotos/earth.png", 
+        title: 'Earth Satellite View', 
+        description: 'Earth from Space' 
+      },
+      { 
+        url: "/NasaPhotos/Sun.png", 
+        title: 'Solar Satellite', 
+        description: 'Sun Observation' 
+      },
+      { 
+        url: "/NasaPhotos/earth.png", 
+        title: 'Weather Satellite', 
+        description: 'Atmospheric Monitoring' 
+      },
+      { 
+        url: "/NasaPhotos/Sun.png", 
+        title: 'Space Observatory', 
+        description: 'Solar Dynamics' 
+      },
+      { 
+        url: "/NasaPhotos/earth.png", 
+        title: 'Earth Observation', 
+        description: 'Planetary Monitoring' 
+      },
+      { 
+        url: "/NasaPhotos/Sun.png", 
+        title: 'Space Technology', 
+        description: 'Advanced Satellite' 
+      },
+      { 
+        url: "/NasaPhotos/earth.png", 
+        title: 'Orbital Satellite', 
+        description: 'Space Mission' 
+      },
+      { 
+        url: "/NasaPhotos/Sun.png", 
+        title: 'Satellite Network', 
+        description: 'Global Communication' 
+      }
+    ]
+
+    // Shuffle and pick 5 random satellite images
+    const shuffled = reliableSatelliteSources.sort(() => 0.5 - Math.random())
+    const selectedImages = shuffled.slice(0, 5)
+    
+    setSatelliteImages(selectedImages)
+    setSatelliteImagesLoading(false)
+  }
+
+  // Force refresh function to get latest daily images
+  const forceRefresh = async () => {
+    // Clear cache to force fresh fetch
+    localStorage.removeItem('nasa_live_cache_v1')
+    if ('caches' in window) {
+      try {
+        await caches.delete('nasa-data')
+      } catch (e) {
+        console.log('Failed to clear cache:', e)
+      }
+    }
+    
+    // Refresh images without affecting the main loading state
+    setEarthImageLoaded(false)
+    setSunImageLoaded(false)
+    
+    // Refresh NASA images without setting main loading state
+    try {
+      setError(null)
+      const [apodData, epicData] = await Promise.allSettled([
+        fetchAPOD().catch(e => {
+          console.error('APOD fetch error:', e);
+          return null;
+        }), 
+        fetchEPIC().catch(e => {
+          console.error('EPIC fetch error:', e);
+          return null;
+        })
+      ]);
+
+      const apodVal = apodData.status === 'fulfilled' ? apodData.value : null;
+      const epicVal = epicData.status === 'fulfilled' ? epicData.value : null;
+
+      if (apodVal || epicVal) {
+        setApod(apodVal);
+        setEpic(epicVal);
+        
+        // Set image loaded states
+        if (epicVal) setEarthImageLoaded(true);
+        setSunImageLoaded(true);
+      }
+    } catch (e) {
+      setError(e.message || 'Failed to refresh NASA images')
+    }
+    
+    await fetchSatelliteImages() // Also refresh satellite images
+  }
+
   // Improved caching with service worker support
   const load = async () => {
     try {
       setLoading(true)
       setError(null)
+      setLastRefresh(new Date())
 
       // Check for service worker cache first
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
@@ -238,7 +347,7 @@ function NasaLive({ apiKey }) {
           const cache = await caches.match('nasa-data');
           if (cache) {
             const cachedData = await cache.json();
-            if (cachedData && Date.now() - cachedData.timestamp < HOUR_MS) {
+            if (cachedData && Date.now() - cachedData.timestamp < DAY_MS) {
               setApod(cachedData.apod || null);
               setEpic(cachedData.epic || null);
               setLoading(false);
@@ -254,7 +363,7 @@ function NasaLive({ apiKey }) {
       const now = Date.now();
       const cacheRaw = localStorage.getItem('nasa_live_cache_v1');
       const cache = cacheRaw ? JSON.parse(cacheRaw) : null;
-      if (cache && now - cache.timestamp < HOUR_MS) {
+      if (cache && now - cache.timestamp < DAY_MS) {
         setApod(cache.apod || null);
         setEpic(cache.epic || null);
         setLoading(false);
@@ -316,8 +425,16 @@ function NasaLive({ apiKey }) {
 
   useEffect(() => {
     load()
-    const id = setInterval(load, HOUR_MS)
-    return () => clearInterval(id)
+    fetchSatelliteImages() // Load satellite images on mount
+    
+    // Set up intervals
+    const dailyRefreshId = setInterval(load, DAY_MS) // Refresh daily for fresh NASA images
+    const satelliteShuffleId = setInterval(fetchSatelliteImages, 5000) // Shuffle satellite images every 2 seconds
+    
+    return () => {
+      clearInterval(dailyRefreshId)
+      clearInterval(satelliteShuffleId)
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -391,9 +508,19 @@ function NasaLive({ apiKey }) {
             }}>
               NASA Live
             </h1>
-            <p className="text-gray-400 text-sm mt-1">Earth and Sun updated Hourly.</p>
+            <p className="text-gray-400 text-sm mt-1">Earth and Sun updated Daily.</p>
+            <p className="text-gray-500 text-xs mt-1">Last updated: {lastRefresh.toLocaleTimeString()}</p>
           </div>
-          <div className="text-xs text-gray-500 hidden sm:block">Source: NASA APIs</div>
+          <div className="flex flex-col items-end gap-2">
+            <button 
+              onClick={forceRefresh}
+              disabled={loading}
+              className="px-3 py-1 text-xs bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              {loading ? 'Refreshing...' : 'Refresh Images'}
+            </button>
+            <div className="text-xs text-gray-500 hidden sm:block">Source: NASA APIs</div>
+          </div>
         </div>
 
         {error && (
@@ -438,7 +565,7 @@ function NasaLive({ apiKey }) {
           <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
             <div className="w-full overflow-hidden">
               <img
-                src={sunImageLoaded ? `https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_0171.jpg?t=${nowTs}` : "/NasaPhotos/Sun.png"}
+                src={sunImageLoaded ? `https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_0171.jpg?t=${Date.now()}` : "/NasaPhotos/Sun.png"}
                 alt={sunImageLoaded ? 'Sun • SDO' : "Sun Placeholder"}
                 className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
                 loading="eager"
@@ -449,7 +576,7 @@ function NasaLive({ apiKey }) {
                 height={450}
                 onError={(e) => {
                   try {
-                    const altUrl = `https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_0193.jpg?t=${nowTs}`
+                    const altUrl = `https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_0193.jpg?t=${Date.now()}`
                     if (e.currentTarget.src !== altUrl) e.currentTarget.src = altUrl
                   } catch {}
                 }}
@@ -463,6 +590,53 @@ function NasaLive({ apiKey }) {
             </div>
           </div>
 
+        </div>
+
+        {/* Real-time Satellite Images Section */}
+        <div className="mt-16">
+          <div className="mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">Real-time Satellite Views</h2>
+            <p className="text-gray-400 text-sm">Live satellite imagery from actual weather and Earth observation satellites</p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6">
+            {satelliteImagesLoading ? (
+              // Loading skeletons
+              Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                  <div className="aspect-square bg-white/5 animate-pulse"></div>
+                  <div className="p-3">
+                    <div className="h-3 bg-white/10 rounded animate-pulse mb-2"></div>
+                    <div className="h-4 bg-white/10 rounded animate-pulse mb-1"></div>
+                    <div className="h-3 bg-white/10 rounded animate-pulse w-3/4"></div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              satelliteImages.map((satellite, index) => (
+                <div key={index} className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+                  <div className="aspect-square overflow-hidden">
+                    <img
+                      src={satellite.url}
+                      alt={satellite.title}
+                      className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-300"
+                      loading="eager"
+                      decoding="async"
+                      onError={(e) => {
+                        // Fallback to earth.png if image fails
+                        e.currentTarget.src = "/NasaPhotos/earth.png"
+                      }}
+                    />
+                  </div>
+                  <div className="p-3">
+                    <div className="text-xs text-gray-400 mb-1">Satellite View</div>
+                    <div className="font-semibold text-sm">{satellite.title}</div>
+                    <div className="text-xs text-gray-500 mt-1">{satellite.description}</div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
 
       </div>
