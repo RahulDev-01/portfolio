@@ -40,6 +40,14 @@ const LoadingSpinner = memo(() => (
   <div className="flex items-center justify-center min-h-screen bg-[#060010]">
     <div className="relative">
       <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <img 
+          src="/FavIcon.png" 
+          alt="Loading" 
+          className="w-8 h-8 animate-spin"
+          style={{ animationDirection: 'reverse' }}
+        />
+      </div>
     </div>
   </div>
 ))
@@ -67,7 +75,7 @@ class ErrorBoundary extends React.Component {
             <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
             <button 
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+              className="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors cursor-pointer"
             >
               Reload Page
             </button>
