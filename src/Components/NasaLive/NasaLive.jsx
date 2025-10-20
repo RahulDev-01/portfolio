@@ -8,6 +8,8 @@ function NasaLive({ apiKey }) {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
+  const [earthImageLoaded, setEarthImageLoaded] = useState(false)
+  const [sunImageLoaded, setSunImageLoaded] = useState(false)
   const nowTs = Date.now()
   
   // Use a recent UTC date for Worldview snapshots to avoid night-side black images
@@ -278,6 +280,10 @@ function NasaLive({ apiKey }) {
       // Update state with new data
       setApod(apodVal);
       setEpic(epicVal);
+      
+      // Set image loaded states
+      if (epicVal) setEarthImageLoaded(true);
+      setSunImageLoaded(true); // Sun image is always available from SDO
 
       // Cache the response
       const cacheData = { 
@@ -321,11 +327,50 @@ function NasaLive({ apiKey }) {
         <div className="max-w-6xl mx-auto">
           <div className="mb-6">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">NASA Live</h2>
-            <p className="text-gray-400 text-sm mt-1">Fetching latest earth and space imagery...</p>
+            <p className="text-gray-400 text-sm mt-1">Loading latest earth and space imagery...</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="aspect-[16/1] w-full rounded-xl bg-white/5 animate-pulse" />
-            <div className="aspect-[16/10] w-full rounded-xl bg-white/5 animate-pulse" />
+          <div className="grid grid-cols-2 gap-6 sm:gap-8 md:gap-10 mb-12 md:mb-20 mt-8 md:mt-10">
+            {/* Earth placeholder */}
+            <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+              <div className="w-full overflow-hidden">
+                <img
+                  src="/NasaPhotos/earth.png"
+                  alt="Earth Placeholder"
+                  className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  width={800}
+                  height={450}
+                />
+              </div>
+              <div className="p-3 sm:p-4">
+                <div className="text-xs text-gray-400">Earth • Loading...</div>
+                <div className="font-semibold mt-1">Earth from Space</div>
+              </div>
+            </div>
+            
+            {/* Sun placeholder */}
+            <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+              <div className="w-full overflow-hidden">
+                <img
+                  src="/NasaPhotos/Sun.png"
+                  alt="Sun Placeholder"
+                  className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  width={800}
+                  height={450}
+                />
+              </div>
+              <div className="p-3 sm:p-4">
+                <div className="text-xs text-gray-400">Sun • Loading...</div>
+                <div className="font-semibold mt-1">Solar Dynamics Observatory</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -337,7 +382,15 @@ function NasaLive({ apiKey }) {
       <div className="max-w-6xl mx-auto">
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">NASA Live</h2>
+              <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent  pt-20 sm:pt-32 md:pt-40 mb-4 sm:mb-6 text-center' style={{
+              backgroundImage: 'linear-gradient(135deg, #3b82f6, #06b6d4, #00d9ff, #3b82f6)',
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 1s ease infinite',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
+              NASA Live
+            </h1>
             <p className="text-gray-400 text-sm mt-1">Earth and Sun updated Hourly.</p>
           </div>
           <div className="text-xs text-gray-500 hidden sm:block">Source: NASA APIs</div>
@@ -349,41 +402,44 @@ function NasaLive({ apiKey }) {
 
         <div className="grid grid-cols-2 gap-6 sm:gap-8 md:gap-10 mb-12 md:mb-20 mt-8 md:mt-10">
             {/* Earth EPIC card (non-navigating) */}
-          {epic && (
-            <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
-              <div className=" w-full overflow-hidden">
-                <img
-                  src={epic.url}
-                  alt={epic.title}
-                  className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  width={800}
-                  height={450}
-                  onError={(e) => {
-                    try {
-                      const jpg = e.currentTarget.src.replace('/png/', '/jpg/').replace('.png', '.jpg')
-                      if (e.currentTarget.src !== jpg) {
-                        e.currentTarget.src = jpg
-                      }
-                    } catch {}
-                  }}
-                />
+          <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+            <div className="w-full overflow-hidden">
+              <img
+                src={earthImageLoaded && epic ? epic.url : "/NasaPhotos/earth.png"}
+                alt={earthImageLoaded && epic ? epic.title : "Earth Placeholder"}
+                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                width={800}
+                height={450}
+                onError={(e) => {
+                  try {
+                    const jpg = e.currentTarget.src.replace('/png/', '/jpg/').replace('.png', '.jpg')
+                    if (e.currentTarget.src !== jpg) {
+                      e.currentTarget.src = jpg
+                    }
+                  } catch {}
+                }}
+              />
+            </div>
+            <div className="p-3 sm:p-4">
+              <div className="text-xs text-gray-400">
+                {earthImageLoaded && epic ? `Earth • EPIC • ${new Date(epic.date).toISOString().slice(0,10)}` : "Earth • Loading..."}
               </div>
-              <div className="p-3 sm:p-4">
-                <div className="text-xs text-gray-400">Earth • EPIC • {new Date(epic.date).toISOString().slice(0,10)}</div>
-                <div className="font-semibold mt-1">{epic.title}</div>
+              <div className="font-semibold mt-1">
+                {earthImageLoaded && epic ? epic.title : "Earth from Space"}
               </div>
             </div>
-          )}
+          </div>
+          
           {/* Sun card (non-navigating) */}
           <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
-            <div className=" w-full overflow-hidden">
+            <div className="w-full overflow-hidden">
               <img
-                src={`https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_0171.jpg?t=${nowTs}`}
-                alt={'Sun • SDO'}
+                src={sunImageLoaded ? `https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_0171.jpg?t=${nowTs}` : "/NasaPhotos/Sun.png"}
+                alt={sunImageLoaded ? 'Sun • SDO' : "Sun Placeholder"}
                 className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
                 loading="eager"
                 fetchPriority="high"
@@ -400,11 +456,12 @@ function NasaLive({ apiKey }) {
               />
             </div>
             <div className="p-3 sm:p-4">
-              <div className="text-xs text-gray-400">Sun • SDO</div>
+              <div className="text-xs text-gray-400">
+                {sunImageLoaded ? "Sun • SDO" : "Sun • Loading..."}
+              </div>
               <div className="font-semibold mt-1">Solar Dynamics Observatory</div>
             </div>
           </div>
-
 
         </div>
 
