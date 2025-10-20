@@ -122,8 +122,8 @@ function Footer() {
            <nav className='w-full'>
               <div className='flex items-center w-full px-8 overflow-hidden gap-8'>
                 <div className='flex items-center gap-4 justify-between w-full'>
-                <div className='text-gray-500 text-[16px] flex-shrink-0'>© 2025 Savvana Rahul⚡. All Rights Reserved .</div>
-                <div className='text-gray-500 text-[16px] flex-shrink-0'> For Contact - s.rahul5116@gmail.com</div>
+                <div className='text-gray-500 text-[16px] flex-shrink-0  hidden md:block '>© 2025 Savvana Rahul⚡. All Rights Reserved .</div>
+                <div className='text-gray-500 text-[16px] flex-shrink-0 '> For Contact - s.rahul5116@gmail.com</div>
                 </div>
               </div>
            </nav>

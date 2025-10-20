@@ -278,7 +278,7 @@ function NasaLive({ apiKey }) {
             <p className="text-gray-400 text-sm mt-1">Fetching latest earth and space imagery...</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="aspect-[16/10] w-full rounded-xl bg-white/5 animate-pulse" />
+            <div className="aspect-[16/1] w-full rounded-xl bg-white/5 animate-pulse" />
             <div className="aspect-[16/10] w-full rounded-xl bg-white/5 animate-pulse" />
           </div>
         </div>
@@ -301,11 +301,11 @@ function NasaLive({ apiKey }) {
           <div className="mb-6 text-sm text-red-400">{error}</div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-20 mt-10">
+        <div className="grid grid-cols-2 gap-6 sm:gap-8 md:gap-10 mb-12 md:mb-20 mt-8 md:mt-10">
             {/* Earth EPIC card (non-navigating) */}
           {epic && (
-            <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors">
-              <div className="aspect-[16/] w-full overflow-hidden">
+            <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+              <div className=" w-full overflow-hidden">
                 <img
                   src={epic.url}
                   alt={epic.title}
@@ -321,15 +321,15 @@ function NasaLive({ apiKey }) {
                   }}
                 />
               </div>
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
                 <div className="text-xs text-gray-400">Earth • EPIC • {new Date(epic.date).toISOString().slice(0,10)}</div>
                 <div className="font-semibold mt-1">{epic.title}</div>
               </div>
             </div>
           )}
           {/* Sun card (non-navigating) */}
-          <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors">
-            <div className="aspect-[16/] w-full overflow-hidden">
+          <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+            <div className=" w-full overflow-hidden">
               <img
                 src={`https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_0171.jpg?t=${nowTs}`}
                 alt={'Sun • SDO'}
@@ -343,7 +343,7 @@ function NasaLive({ apiKey }) {
                 }}
               />
             </div>
-            <div className="p-4">
+            <div className="p-3 sm:p-4">
               <div className="text-xs text-gray-400">Sun • SDO</div>
               <div className="font-semibold mt-1">Solar Dynamics Observatory</div>
             </div>
