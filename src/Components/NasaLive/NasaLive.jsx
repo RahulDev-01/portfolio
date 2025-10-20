@@ -232,8 +232,6 @@ function NasaLive({ apiKey }) {
 
   // Simple satellite images that will definitely work
   const fetchSatelliteImages = async () => {
-    setSatelliteImagesLoading(true)
-    
     // Use reliable placeholder images that will always load
     const reliableSatelliteSources = [
       { 
@@ -283,7 +281,7 @@ function NasaLive({ apiKey }) {
     const selectedImages = shuffled.slice(0, 5)
     
     setSatelliteImages(selectedImages)
-    setSatelliteImagesLoading(false)
+    // No loading state - images load instantly
   }
 
   // Force refresh function to get latest daily images
@@ -424,12 +422,15 @@ function NasaLive({ apiKey }) {
   }
 
   useEffect(() => {
+    // Load satellite images immediately - no waiting for NASA API
+    fetchSatelliteImages()
+    
+    // Load NASA images in background (non-blocking)
     load()
-    fetchSatelliteImages() // Load satellite images on mount
     
     // Set up intervals
     const dailyRefreshId = setInterval(load, DAY_MS) // Refresh daily for fresh NASA images
-    const satelliteShuffleId = setInterval(fetchSatelliteImages, 5000) // Shuffle satellite images every 2 seconds
+    const satelliteShuffleId = setInterval(fetchSatelliteImages, 2000) // Shuffle satellite images every 2 seconds
     
     return () => {
       clearInterval(dailyRefreshId)
@@ -438,62 +439,7 @@ function NasaLive({ apiKey }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (loading) {
-    return (
-      <section className="w-full bg-[#060010] text-white px-4 sm:px-6 md:px-8 lg:px-12 py-10 sm:py-14 md:py-16">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-6">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">NASA Live</h2>
-            <p className="text-gray-400 text-sm mt-1">Loading latest earth and space imagery...</p>
-          </div>
-          <div className="grid grid-cols-2 gap-6 sm:gap-8 md:gap-10 mb-12 md:mb-20 mt-8 md:mt-10">
-            {/* Earth placeholder */}
-            <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
-              <div className="w-full overflow-hidden">
-                <img
-                  src="/NasaPhotos/earth.png"
-                  alt="Earth Placeholder"
-                  className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  width={800}
-                  height={450}
-                />
-              </div>
-              <div className="p-3 sm:p-4">
-                <div className="text-xs text-gray-400">Earth • Loading...</div>
-                <div className="font-semibold mt-1">Earth from Space</div>
-              </div>
-            </div>
-            
-            {/* Sun placeholder */}
-            <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
-              <div className="w-full overflow-hidden">
-                <img
-                  src="/NasaPhotos/Sun.png"
-                  alt="Sun Placeholder"
-                  className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  width={800}
-                  height={450}
-                />
-              </div>
-              <div className="p-3 sm:p-4">
-                <div className="text-xs text-gray-400">Sun • Loading...</div>
-                <div className="font-semibold mt-1">Solar Dynamics Observatory</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    )
-  }
-
+  // Always render the main section, but show loading state for NASA images only
   return (
     <section className="w-full bg-[#060010] text-white px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20">
       <div className="max-w-6xl mx-auto">
@@ -527,8 +473,9 @@ function NasaLive({ apiKey }) {
           <div className="mb-6 text-sm text-red-400">{error}</div>
         )}
 
+        {/* NASA Images Section - Shows loading state only for this section */}
         <div className="grid grid-cols-2 gap-6 sm:gap-8 md:gap-10 mb-12 md:mb-20 mt-8 md:mt-10">
-            {/* Earth EPIC card (non-navigating) */}
+            {/* Earth EPIC card */}
           <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
             <div className="w-full overflow-hidden">
               <img
@@ -561,7 +508,7 @@ function NasaLive({ apiKey }) {
             </div>
           </div>
           
-          {/* Sun card (non-navigating) */}
+          {/* Sun card */}
           <div className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
             <div className="w-full overflow-hidden">
               <img
@@ -592,7 +539,7 @@ function NasaLive({ apiKey }) {
 
         </div>
 
-        {/* Real-time Satellite Images Section */}
+        {/* Satellite Images Section - Always visible, independent of NASA loading */}
         <div className="mt-16">
           <div className="mb-8">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">Real-time Satellite Views</h2>
@@ -600,42 +547,28 @@ function NasaLive({ apiKey }) {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6">
-            {satelliteImagesLoading ? (
-              // Loading skeletons
-              Array.from({ length: 5 }).map((_, index) => (
-                <div key={index} className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <div className="aspect-square bg-white/5 animate-pulse"></div>
-                  <div className="p-3">
-                    <div className="h-3 bg-white/10 rounded animate-pulse mb-2"></div>
-                    <div className="h-4 bg-white/10 rounded animate-pulse mb-1"></div>
-                    <div className="h-3 bg-white/10 rounded animate-pulse w-3/4"></div>
-                  </div>
+            {satelliteImages.map((satellite, index) => (
+              <div key={index} className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+                <div className="aspect-square overflow-hidden">
+                  <img
+                    src={satellite.url}
+                    alt={satellite.title}
+                    className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-300"
+                    loading="eager"
+                    decoding="async"
+                    onError={(e) => {
+                      // Fallback to earth.png if image fails
+                      e.currentTarget.src = "/NasaPhotos/earth.png"
+                    }}
+                  />
                 </div>
-              ))
-            ) : (
-              satelliteImages.map((satellite, index) => (
-                <div key={index} className="group block overflow-hidden rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
-                  <div className="aspect-square overflow-hidden">
-                    <img
-                      src={satellite.url}
-                      alt={satellite.title}
-                      className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-300"
-                      loading="eager"
-                      decoding="async"
-                      onError={(e) => {
-                        // Fallback to earth.png if image fails
-                        e.currentTarget.src = "/NasaPhotos/earth.png"
-                      }}
-                    />
-                  </div>
-                  <div className="p-3">
-                    <div className="text-xs text-gray-400 mb-1">Satellite View</div>
-                    <div className="font-semibold text-sm">{satellite.title}</div>
-                    <div className="text-xs text-gray-500 mt-1">{satellite.description}</div>
-                  </div>
+                <div className="p-3">
+                  <div className="text-xs text-gray-400 mb-1">Satellite View</div>
+                  <div className="font-semibold text-sm">{satellite.title}</div>
+                  <div className="text-xs text-gray-500 mt-1">{satellite.description}</div>
                 </div>
-              ))
-            )}
+              </div>
+            ))}
           </div>
         </div>
 
