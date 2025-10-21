@@ -441,7 +441,7 @@ function NasaLive({ apiKey }) {
 
   // Always render the main section, but show loading state for NASA images only
   return (
-    <section className="w-full bg-[#060010] text-white px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20">
+    <section className="w-full bg-[#060010] text-white  sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20">
       <div className="max-w-6xl mx-auto">
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
