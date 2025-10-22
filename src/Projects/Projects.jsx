@@ -149,7 +149,7 @@ const Projects = memo(() => {
                   as="a"
                   href="https://gemini-clone-six-ruby.vercel.app/"
                   target="__blank"
-                  className="px-3 md:px-4 py-2 rounded-xl text-xs font-normal text-gray-100 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/50"
+                  className="px-3 md:px-4 py-2 rounded-xl text-xs font-normal text-gray-100  transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/50"
                 >
                   Click Here →
                 </CardItem>
