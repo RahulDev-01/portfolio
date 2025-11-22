@@ -6,14 +6,15 @@ import { debounce, throttle, preloadImages, measurePerformance, logMemoryUsage }
 const Footer = lazy(() => import('./Components/Footer/Footer'))
 const Header = lazy(() => import('./Components/Header/Header'))
 const HeroSection = lazy(() => import('./Components/HeroSection/HeroSection'))
+const AboutMe = lazy(() => import('./Components/AboutMe/AboutMe'))
 const Skills = lazy(() => import('./Skills/Skills'))
 const Projects = lazy(() => import('./Projects/Projects'))
 const ContactMe = lazy(() => import('./ContactMe/ContactMe'))
 const NasaLive = lazy(() => import('./Components/NasaLive/NasaLive'))
-
 // Preload components for better performance
 const preloadComponents = () => {
   import('./Components/Footer/Footer')
+  import('./Components/AboutMe/AboutMe')
   import('./Skills/Skills')
   import('./Projects/Projects')
   import('./ContactMe/ContactMe')
@@ -41,9 +42,9 @@ const LoadingSpinner = memo(() => (
     <div className="relative">
       <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
       <div className="absolute inset-0 flex items-center justify-center">
-        <img 
-          src="/FavIcon.png" 
-          alt="Loading" 
+        <img
+          src="/FavIcon.png"
+          alt="Loading"
           className="w-8 h-8 animate-spin"
           style={{ animationDirection: 'reverse' }}
         />
@@ -73,7 +74,7 @@ class ErrorBoundary extends React.Component {
         <div className="flex items-center justify-center min-h-screen bg-[#060010] text-white">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
-            <button 
+            <button
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors cursor-pointer"
             >
@@ -149,6 +150,8 @@ const OptimizedComponent = memo(({ children, fallback = <LoadingSpinner /> }) =>
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false)
+  const [aboutLoaded, setAboutLoaded] = useState(false)
+  const aboutRef = React.useRef(null)
   const [skillsLoaded, setSkillsLoaded] = useState(false)
   const [projectsLoaded, setProjectsLoaded] = useState(false)
   const [contactLoaded, setContactLoaded] = useState(false)
@@ -176,30 +179,33 @@ function App() {
   // Progressive loading with optimized delays
   useEffect(() => {
     const timers = []
-    
+
     // Preload critical images immediately
     preloadCriticalImages()
-    
+    // Load About Me section after 150ms
+    timers.push(setTimeout(() => {
+      setAboutLoaded(true)
+    }, 150))
     // Preload components after initial render
     timers.push(setTimeout(() => {
       preloadComponents()
     }, 100))
-    
+
     // Load skills after 200ms (faster)
     timers.push(setTimeout(() => {
       setSkillsLoaded(true)
     }, 200))
-    
+
     // Load projects after 400ms (faster)
     timers.push(setTimeout(() => {
       setProjectsLoaded(true)
     }, 400))
-    
+
     // Load contact after 600ms (faster)
     timers.push(setTimeout(() => {
       setContactLoaded(true)
     }, 600))
-    
+
     // Load NASA Live section before footer
     timers.push(setTimeout(() => {
       setNasaLoaded(true)
@@ -276,13 +282,20 @@ function App() {
         <OptimizedComponent>
           <Header />
         </OptimizedComponent>
-        
+
         <div id="hero-section">
           <OptimizedComponent>
             <HeroSection />
           </OptimizedComponent>
         </div>
-
+        {/* About Me Section */}
+        <div id="about-section" ref={aboutRef}>
+          {aboutLoaded && (
+            <OptimizedComponent>
+              <AboutMe />
+            </OptimizedComponent>
+          )}
+        </div>
         {/* Progressive loading for below-the-fold components */}
         <div id="skills-section" ref={skillsRef}>
           {skillsLoaded && (
