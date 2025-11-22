@@ -3,6 +3,7 @@ import { motion, useInView } from 'motion/react'
 
 const AboutMe = memo(() => {
     const [counters, setCounters] = useState({ projects: 0, experience: 0, clients: 0 })
+    const [activeInterestIndex, setActiveInterestIndex] = useState(0)
     const statsRef = useRef(null)
     const isStatsInView = useInView(statsRef, { once: true })
 
@@ -34,6 +35,15 @@ const AboutMe = memo(() => {
             return () => clearInterval(timer)
         }
     }, [isStatsInView])
+
+    // Auto-hover effect for interests - cycles every 2 seconds
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setActiveInterestIndex((prev) => (prev + 1) % 6)
+        }, 2000)
+
+        return () => clearInterval(timer)
+    }, [])
 
     const timeline = [
         {
@@ -88,7 +98,7 @@ const AboutMe = memo(() => {
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.3 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 0.6 }}
                     className="text-center mb-12 sm:mb-16"
                 >
@@ -105,7 +115,7 @@ const AboutMe = memo(() => {
                     ref={statsRef}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.3 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                     className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16 sm:mb-20"
                 >
@@ -135,7 +145,7 @@ const AboutMe = memo(() => {
                 <motion.div
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
-                    viewport={{ once: false, amount: 0.3 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 0.6 }}
                     className="mb-16 sm:mb-20"
                 >
@@ -151,7 +161,7 @@ const AboutMe = memo(() => {
                                 key={index}
                                 initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                                 whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: false, amount: 0.5 }}
+                                viewport={{ once: true, amount: 0.5 }}
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
                                 className={`relative flex items-center mb-8 sm:mb-12 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
                                     }`}
@@ -186,7 +196,7 @@ const AboutMe = memo(() => {
                 <motion.div
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
-                    viewport={{ once: false, amount: 0.3 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 0.6 }}
                     className="mb-16 sm:mb-20"
                 >
@@ -199,7 +209,7 @@ const AboutMe = memo(() => {
                                 key={skill.name}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: false, amount: 0.5 }}
+                                viewport={{ once: true, amount: 0.5 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
                                 whileHover={{ scale: 1.02 }}
                                 className="relative group"
@@ -214,7 +224,7 @@ const AboutMe = memo(() => {
                                         <motion.div
                                             initial={{ width: 0 }}
                                             whileInView={{ width: `${skill.level}%` }}
-                                            viewport={{ once: false, amount: 0.5 }}
+                                            viewport={{ once: true, amount: 0.5 }}
                                             transition={{ duration: 1, delay: index * 0.1 }}
                                             className={`h-full bg-gradient-to-r ${skill.color} rounded-full`}
                                         ></motion.div>
@@ -229,7 +239,7 @@ const AboutMe = memo(() => {
                 <motion.div
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
-                    viewport={{ once: false, amount: 0.3 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 0.6 }}
                 >
                     <h3 className="text-3xl sm:text-4xl font-bold text-center mb-12 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
@@ -241,12 +251,17 @@ const AboutMe = memo(() => {
                                 key={interest.title}
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: false, amount: 0.5 }}
+                                viewport={{ once: true, amount: 0.5 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
+                                animate={{
+                                    scale: activeInterestIndex === index ? 1.1 : 1,
+                                    rotate: activeInterestIndex === index ? 5 : 0
+                                }}
                                 whileHover={{ scale: 1.1, rotate: 5 }}
                                 className="relative group cursor-pointer"
                             >
-                                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-500 rounded-2xl blur-lg opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+                                <div className={`absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-500 rounded-2xl blur-lg transition-opacity duration-500 ${activeInterestIndex === index ? 'opacity-50' : 'opacity-0 group-hover:opacity-50'
+                                    }`}></div>
                                 <div className="relative bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-4 sm:p-6 text-center">
                                     <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">{interest.icon}</div>
                                     <h4 className="font-semibold text-sm sm:text-base mb-1">{interest.title}</h4>
