@@ -85,7 +85,7 @@ const Experience = () => {
                 ))}
             </div>
 
-            <div className="relative z-10 flex flex-col items-center mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -148,7 +148,7 @@ const Experience = () => {
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={isInView ? { opacity: 1, x: 0 } : {}}
                                     transition={{ duration: 0.6, delay: 0.5 }}
-                                    className="text-xl sm:text-xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent break-words leading-tight  mr-10"
+                                    className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent break-words leading-tight px-2 lg:px-0"
                                 >
                                     Certificate of Internship
                                 </motion.h3>
@@ -158,7 +158,7 @@ const Experience = () => {
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={isInView ? { opacity: 1, x: 0 } : {}}
                                     transition={{ duration: 0.6, delay: 0.6 }}
-                                    className="text-lg sm:text-xl md:text-2xl font-semibold text-white"
+                                    className="text-base sm:text-lg md:text-xl font-semibold text-white break-words px-2 lg:px-0"
                                 >
                                     Full Stack Web Development Intern
                                 </motion.p>
@@ -168,7 +168,7 @@ const Experience = () => {
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={isInView ? { opacity: 1, x: 0 } : {}}
                                     transition={{ duration: 0.6, delay: 0.7 }}
-                                    className="text-base sm:text-lg text-cyan-400"
+                                    className="text-sm sm:text-base md:text-lg text-cyan-400 break-words px-2 lg:px-0"
                                 >
                                     Unified Mentor Pvt Ltd
                                 </motion.p>
