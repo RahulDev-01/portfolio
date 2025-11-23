@@ -1,59 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { motion, useInView } from 'motion/react'
 
 const Experience = () => {
-    const [activeCard, setActiveCard] = useState(0)
     const sectionRef = useRef(null)
     const isInView = useInView(sectionRef, { once: true, amount: 0.3 })
+    const [hoveredSkill, setHoveredSkill] = useState(null)
 
-    // Auto-cycle through cards
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setActiveCard((prev) => (prev + 1) % 3)
-        }, 3000)
-        return () => clearInterval(timer)
-    }, [])
-
-    const experiences = [
-        {
-            company: 'Unified Mentor Pvt Ltd',
-            role: 'Full Stack Web Development Intern',
-            duration: '15/07/2025 - 15/10/2025',
-            period: '3 Months',
-            description: 'Successfully completed a comprehensive internship program focused on full-stack web development. Demonstrated consistent hard work and dedication throughout the program.',
-            icon: '💼',
-            color: 'from-blue-500 to-cyan-500',
-            skills: ['React', 'Node.js', 'JavaScript', 'Full Stack Development']
-        },
-        {
-            company: 'Web Development',
-            role: 'Frontend Specialist',
-            duration: '2024 - Present',
-            period: 'Ongoing',
-            description: 'Building modern, responsive web applications with cutting-edge technologies. Specializing in React, Next.js, and creating stunning user interfaces.',
-            icon: '⚛️',
-            color: 'from-purple-500 to-pink-500',
-            skills: ['React', 'Next.js', 'Tailwind CSS', 'UI/UX Design']
-        },
-        {
-            company: 'Freelance Projects',
-            role: 'Full Stack Developer',
-            duration: '2023 - Present',
-            period: '2+ Years',
-            description: 'Delivered multiple successful projects for clients worldwide. Focused on creating high-quality, scalable web applications with exceptional user experiences.',
-            icon: '🚀',
-            color: 'from-orange-500 to-red-500',
-            skills: ['JavaScript', 'TypeScript', 'API Development', 'Database Design']
-        }
+    const skills = [
+        { name: 'React', icon: '⚛️', color: 'from-blue-400 to-cyan-400' },
+        { name: 'Node.js', icon: '🟢', color: 'from-green-400 to-emerald-400' },
+        { name: 'JavaScript', icon: '⚡', color: 'from-yellow-400 to-orange-400' },
+        { name: 'Full Stack', icon: '🚀', color: 'from-purple-400 to-pink-400' }
     ]
-
-    const certificationDetails = {
-        issuedDate: '15/10/2025',
-        certificateId: 'U85500HR2023PTC115118',
-        verifyUrl: '#',
-        director: 'Paras Grover',
-        awardedBy: 'Sanket Patil'
-    }
 
     return (
         <div ref={sectionRef} className="relative w-full bg-[#060010] text-white py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden">
@@ -127,190 +85,169 @@ const Experience = () => {
                 ))}
             </div>
 
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6 }}
-                    className="text-center mb-12 sm:mb-16"
+                    className="text-center mb-8 sm:mb-12"
                 >
-                    <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent break-words leading-tight">
                         Experience
                     </h2>
-                    <p className="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto">
-                        My professional journey in web development and technology
+                    <p className="text-base sm:text-lg md:text-xl text-white/70 max-w-3xl mx-auto px-4">
+                        Professional certification and achievements
                     </p>
                 </motion.div>
 
-                {/* Experience Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-                    {experiences.map((exp, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 50 }}
-                            animate={isInView ? { opacity: 1, y: 0 } : {}}
-                            transition={{ duration: 0.6, delay: index * 0.2 }}
-                            onHoverStart={() => setActiveCard(index)}
-                            whileHover={{ scale: 1.03, y: -10 }}
-                            className="relative group cursor-pointer"
-                        >
-                            {/* Glow effect */}
-                            <div className={`absolute inset-0 bg-gradient-to-r ${exp.color} rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500`} />
-
-                            {/* Card content */}
-                            <div className="relative bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 h-full transition-all duration-300">
-                                {/* Icon */}
-                                <div className="text-5xl mb-4">{exp.icon}</div>
-
-                                {/* Company & Role */}
-                                <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-                                    {exp.company}
-                                </h3>
-                                <p className="text-lg font-semibold text-cyan-400 mb-2">{exp.role}</p>
-
-                                {/* Duration */}
-                                <div className="flex items-center gap-2 mb-4">
-                                    <span className="text-sm text-white/60">{exp.duration}</span>
-                                    <span className="px-2 py-1 bg-white/10 rounded-full text-xs text-white/80">
-                                        {exp.period}
-                                    </span>
-                                </div>
-
-                                {/* Description */}
-                                <p className="text-sm text-white/70 mb-4 leading-relaxed">
-                                    {exp.description}
-                                </p>
-
-                                {/* Skills */}
-                                <div className="flex flex-wrap gap-2">
-                                    {exp.skills.map((skill, idx) => (
-                                        <span
-                                            key={idx}
-                                            className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-white/80 hover:bg-white/10 transition-colors"
-                                        >
-                                            {skill}
-                                        </span>
-                                    ))}
-                                </div>
-
-                                {/* Active indicator */}
-                                {activeCard === index && (
-                                    <motion.div
-                                        layoutId="activeCard"
-                                        className={`absolute -inset-0.5 bg-gradient-to-r ${exp.color} rounded-2xl -z-10`}
-                                        initial={false}
-                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                    />
-                                )}
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
-
-                {/* Certification Highlight */}
+                {/* Certificate Card */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6, delay: 0.8 }}
+                    initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                    animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                    transition={{ duration: 0.8, delay: 0.2 }}
                     className="relative group"
                 >
-                    {/* Glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 rounded-3xl blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
+                    {/* Animated glow effect */}
+                    <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 rounded-2xl sm:rounded-3xl blur-xl sm:blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-500" />
 
-                    {/* Certificate card */}
-                    <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 sm:p-10">
-                        <div className="flex flex-col md:flex-row items-center gap-8">
-                            {/* Left side - Certificate icon */}
-                            <div className="flex-shrink-0">
+                    {/* Main certificate card */}
+                    <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 overflow-hidden">
+                        {/* Decorative corner elements */}
+                        <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-blue-500/20 to-transparent rounded-bl-full" />
+                        <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-tr-full" />
+
+                        <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
+                            {/* Left side - Certificate Image */}
+                            <div className="lg:col-span-5 flex flex-col items-center gap-4 sm:gap-6">
                                 <motion.div
-                                    animate={{
-                                        rotate: [0, 5, -5, 0],
-                                        scale: [1, 1.05, 1]
-                                    }}
-                                    transition={{
-                                        duration: 3,
-                                        repeat: Infinity,
-                                        ease: "easeInOut"
-                                    }}
-                                    className="w-32 h-32 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center text-6xl shadow-2xl"
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                                    transition={{ duration: 0.6, delay: 0.4 }}
+                                    whileHover={{ scale: 1.02 }}
+                                    className="relative w-full"
                                 >
-                                    🏆
+                                    {/* Glow effect */}
+                                    <div className="absolute -inset-2 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-xl blur-lg opacity-50" />
+
+                                    {/* Certificate Image */}
+                                    <div className="relative rounded-xl overflow-hidden border-2 border-white/20 shadow-2xl">
+                                        <img
+                                            src="/certificate.png"
+                                            alt="Internship Certificate"
+                                            className="w-full h-auto object-cover"
+                                        />
+                                    </div>
                                 </motion.div>
                             </div>
 
                             {/* Right side - Certificate details */}
-                            <div className="flex-1 text-center md:text-left">
-                                <h3 className="text-2xl sm:text-3xl font-bold mb-3 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                                    Certified Full Stack Developer
-                                </h3>
-                                <p className="text-white/80 mb-4 text-lg">
-                                    Successfully completed internship at <span className="font-semibold text-white">Unified Mentor Pvt Ltd</span>
-                                </p>
+                            <div className="lg:col-span-7 text-center lg:text-left space-y-4 sm:space-y-6">
+                                {/* Title */}
+                                <motion.h3
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={isInView ? { opacity: 1, x: 0 } : {}}
+                                    transition={{ duration: 0.6, delay: 0.5 }}
+                                    className="text-xl sm:text-xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent break-words leading-tight "
+                                >
+                                    Certificate of Internship
+                                </motion.h3>
 
-                                <div className="grid grid-cols-2 gap-4 mb-6">
-                                    <div className="bg-white/5 rounded-xl p-3 border border-white/10">
+                                {/* Role */}
+                                <motion.p
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={isInView ? { opacity: 1, x: 0 } : {}}
+                                    transition={{ duration: 0.6, delay: 0.6 }}
+                                    className="text-lg sm:text-xl md:text-2xl font-semibold text-white"
+                                >
+                                    Full Stack Web Development Intern
+                                </motion.p>
+
+                                {/* Company */}
+                                <motion.p
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={isInView ? { opacity: 1, x: 0 } : {}}
+                                    transition={{ duration: 0.6, delay: 0.7 }}
+                                    className="text-base sm:text-lg text-cyan-400"
+                                >
+                                    Unified Mentor Pvt Ltd
+                                </motion.p>
+
+                                {/* Details grid */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                                    transition={{ duration: 0.6, delay: 0.8 }}
+                                    className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
+                                >
+                                    <motion.div
+                                        whileHover={{ scale: 1.02, y: -2 }}
+                                        className="bg-white/5 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10 hover:bg-white/10 hover:border-cyan-400/30 transition-all"
+                                    >
+                                        <p className="text-xs text-white/60 mb-1">Duration</p>
+                                        <p className="text-xs sm:text-sm font-semibold text-white">15/07/2025 - 15/10/2025</p>
+                                        <p className="text-xs text-cyan-400 mt-1">3 Months</p>
+                                    </motion.div>
+                                    <motion.div
+                                        whileHover={{ scale: 1.02, y: -2 }}
+                                        className="bg-white/5 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10 hover:bg-white/10 hover:border-cyan-400/30 transition-all"
+                                    >
                                         <p className="text-xs text-white/60 mb-1">Issued Date</p>
-                                        <p className="text-sm font-semibold text-white">{certificationDetails.issuedDate}</p>
-                                    </div>
-                                    <div className="bg-white/5 rounded-xl p-3 border border-white/10">
+                                        <p className="text-xs sm:text-sm font-semibold text-white">15/10/2025</p>
+                                    </motion.div>
+                                    <motion.div
+                                        whileHover={{ scale: 1.02, y: -2 }}
+                                        className="bg-white/5 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10 hover:bg-white/10 hover:border-purple-400/30 transition-all sm:col-span-2"
+                                    >
                                         <p className="text-xs text-white/60 mb-1">Certificate ID</p>
-                                        <p className="text-xs font-mono text-cyan-400">{certificationDetails.certificateId}</p>
-                                    </div>
-                                </div>
+                                        <p className="text-xs font-mono text-cyan-400 break-all">U85500HR2023PTC115118</p>
+                                    </motion.div>
+                                </motion.div>
 
-                                <div className="flex flex-col sm:flex-row gap-3 items-center justify-center md:justify-start">
-                                    <div className="flex items-center gap-2 text-sm text-white/70">
-                                        <span>✍️ Director: {certificationDetails.director}</span>
+                                {/* Skills Section */}
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={isInView ? { opacity: 1 } : {}}
+                                    transition={{ duration: 0.6, delay: 0.9 }}
+                                >
+                                    <p className="text-xs sm:text-sm text-white/60 mb-3">Technologies & Skills</p>
+                                    <div className="flex flex-wrap gap-2 sm:gap-3 justify-center lg:justify-start">
+                                        {skills.map((skill, index) => (
+                                            <motion.div
+                                                key={skill.name}
+                                                whileHover={{ scale: 1.05, y: -3 }}
+                                                onHoverStart={() => setHoveredSkill(index)}
+                                                onHoverEnd={() => setHoveredSkill(null)}
+                                                className="relative group cursor-pointer"
+                                            >
+                                                {hoveredSkill === index && (
+                                                    <motion.div
+                                                        layoutId="skillGlow"
+                                                        className={`absolute -inset-1 bg-gradient-to-r ${skill.color} rounded-lg sm:rounded-xl blur-sm opacity-75`}
+                                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                                    />
+                                                )}
+                                                <div className="relative px-3 py-1.5 sm:px-4 sm:py-2 bg-white/5 border border-white/10 rounded-lg sm:rounded-xl flex items-center gap-1.5 sm:gap-2 hover:bg-white/10 transition-colors">
+                                                    <span className="text-base sm:text-lg">{skill.icon}</span>
+                                                    <span className="text-xs sm:text-sm font-medium text-white">{skill.name}</span>
+                                                </div>
+                                            </motion.div>
+                                        ))}
                                     </div>
-                                    <div className="hidden sm:block w-1 h-1 bg-white/30 rounded-full" />
-                                    <div className="flex items-center gap-2 text-sm text-white/70">
-                                        <span>🎖️ Awarded by: {certificationDetails.awardedBy}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                </motion.div>
 
-                        {/* ISO Certification badge */}
-                        <div className="mt-6 pt-6 border-t border-white/10 flex items-center justify-center gap-3">
-                            <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center border border-white/20">
-                                <span className="text-xs font-bold text-white">ISO</span>
+                                {/* Description */}
+                                <motion.p
+                                    initial={{ opacity: 0 }}
+                                    animate={isInView ? { opacity: 1 } : {}}
+                                    transition={{ duration: 0.6, delay: 1 }}
+                                    className="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed"
+                                >
+                                    Successfully completed a comprehensive three-month internship program, demonstrating consistent hard work and dedication throughout. Gained hands-on experience in full-stack web development technologies and best practices.
+                                </motion.p>
                             </div>
-                            <p className="text-sm text-white/60">
-                                AN ISO 9001:2015 Certified Company
-                            </p>
                         </div>
                     </div>
-                </motion.div>
-
-                {/* Stats Section */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={isInView ? { opacity: 1 } : {}}
-                    transition={{ duration: 0.6, delay: 1 }}
-                    className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
-                >
-                    {[
-                        { label: 'Months Experience', value: '3+', icon: '📅' },
-                        { label: 'Projects Completed', value: '15+', icon: '✅' },
-                        { label: 'Technologies', value: '10+', icon: '⚡' },
-                        { label: 'Certifications', value: '1', icon: '🎓' }
-                    ].map((stat, index) => (
-                        <motion.div
-                            key={index}
-                            whileHover={{ scale: 1.05, y: -5 }}
-                            className="relative group"
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 rounded-xl blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-300" />
-                            <div className="relative bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6 text-center">
-                                <div className="text-3xl mb-2">{stat.icon}</div>
-                                <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-1">
-                                    {stat.value}
-                                </div>
-                                <div className="text-xs sm:text-sm text-white/60">{stat.label}</div>
-                            </div>
-                        </motion.div>
-                    ))}
                 </motion.div>
             </div>
         </div>
