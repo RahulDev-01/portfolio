@@ -31,7 +31,7 @@ const cardData = [
   {
     color: '#060010',
     title: 'Experience',
-    sectionId: 'skills-section'
+    sectionId: 'experience-section'
   },
   {
     color: '#060010',

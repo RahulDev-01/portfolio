@@ -9,6 +9,7 @@ const HeroSection = lazy(() => import('./Components/HeroSection/HeroSection'))
 const AboutMe = lazy(() => import('./Components/AboutMe/AboutMe'))
 const Skills = lazy(() => import('./Skills/Skills'))
 const Projects = lazy(() => import('./Projects/Projects'))
+const Experience = lazy(() => import('./Components/Experience/Experience'))
 const ContactMe = lazy(() => import('./ContactMe/ContactMe'))
 const NasaLive = lazy(() => import('./Components/NasaLive/NasaLive'))
 // Preload components for better performance
@@ -17,6 +18,7 @@ const preloadComponents = () => {
   import('./Components/AboutMe/AboutMe')
   import('./Skills/Skills')
   import('./Projects/Projects')
+  import('./Components/Experience/Experience')
   import('./ContactMe/ContactMe')
 }
 
@@ -154,6 +156,7 @@ function App() {
   const aboutRef = React.useRef(null)
   const [skillsLoaded, setSkillsLoaded] = useState(false)
   const [projectsLoaded, setProjectsLoaded] = useState(false)
+  const [experienceLoaded, setExperienceLoaded] = useState(false)
   const [contactLoaded, setContactLoaded] = useState(false)
   const [footerLoaded, setFooterLoaded] = useState(false)
   const [nasaLoaded, setNasaLoaded] = useState(false)
@@ -161,6 +164,7 @@ function App() {
   const [showMobileAlert, setShowMobileAlert] = useState(false)
   const skillsRef = React.useRef(null)
   const projectsRef = React.useRef(null)
+  const experienceRef = React.useRef(null)
   const contactRef = React.useRef(null)
 
   // Memoized mobile detection function
@@ -200,6 +204,16 @@ function App() {
     timers.push(setTimeout(() => {
       setProjectsLoaded(true)
     }, 400))
+
+    // Load contact after 600ms (faster)
+    timers.push(setTimeout(() => {
+      setProjectsLoaded(true)
+    }, 400))
+
+    // Load experience after 500ms
+    timers.push(setTimeout(() => {
+      setExperienceLoaded(true)
+    }, 500))
 
     // Load contact after 600ms (faster)
     timers.push(setTimeout(() => {
@@ -309,6 +323,14 @@ function App() {
           {projectsLoaded && (
             <OptimizedComponent>
               <Projects />
+            </OptimizedComponent>
+          )}
+        </div>
+
+        <div id="experience-section" ref={experienceRef}>
+          {experienceLoaded && (
+            <OptimizedComponent>
+              <Experience />
             </OptimizedComponent>
           )}
         </div>
