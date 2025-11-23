@@ -85,7 +85,7 @@ const Experience = () => {
                 ))}
             </div>
 
-            <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative z-10 flex flex-col items-center mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -106,7 +106,7 @@ const Experience = () => {
                     initial={{ opacity: 0, y: 50, scale: 0.95 }}
                     animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="relative group"
+                    className="relative group "
                 >
                     {/* Animated glow effect */}
                     <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 rounded-2xl sm:rounded-3xl blur-xl sm:blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-500" />
@@ -117,7 +117,7 @@ const Experience = () => {
                         <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-blue-500/20 to-transparent rounded-bl-full" />
                         <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-tr-full" />
 
-                        <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
+                        <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-center ">
                             {/* Left side - Certificate Image */}
                             <div className="lg:col-span-5 flex flex-col items-center gap-4 sm:gap-6">
                                 <motion.div
@@ -128,14 +128,14 @@ const Experience = () => {
                                     className="relative w-full"
                                 >
                                     {/* Glow effect */}
-                                    <div className="absolute -inset-2 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-xl blur-lg opacity-50" />
+                                    <div className="absolute -inset-2 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-xl blur-lg opacity-50 " />
 
                                     {/* Certificate Image */}
-                                    <div className="relative rounded-xl overflow-hidden border-2 border-white/20 shadow-2xl">
+                                    <div className="relative rounded-xl overflow-hidden border-2 border-white/20 shadow-2xl ">
                                         <img
                                             src="/certificate.png"
                                             alt="Internship Certificate"
-                                            className="w-full h-auto object-cover"
+                                            className="w-full h-auto object-cover "
                                         />
                                     </div>
                                 </motion.div>
@@ -148,7 +148,7 @@ const Experience = () => {
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={isInView ? { opacity: 1, x: 0 } : {}}
                                     transition={{ duration: 0.6, delay: 0.5 }}
-                                    className="text-xl sm:text-xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent break-words leading-tight "
+                                    className="text-xl sm:text-xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent break-words leading-tight  mr-10"
                                 >
                                     Certificate of Internship
                                 </motion.h3>
