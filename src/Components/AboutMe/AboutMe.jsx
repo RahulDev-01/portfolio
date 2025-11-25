@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, memo } from 'react'
 import { motion, useInView } from 'motion/react'
+import InteractiveBackground from './InteractiveBackground'
 
 const AboutMe = memo(() => {
     const [counters, setCounters] = useState({ projects: 0, experience: 0, clients: 0 })
@@ -40,7 +41,7 @@ const AboutMe = memo(() => {
     useEffect(() => {
         const timer = setInterval(() => {
             setActiveInterestIndex((prev) => (prev + 1) % 6)
-        }, 2000)
+        }, 1000)
 
         return () => clearInterval(timer)
     }, [])
@@ -86,11 +87,9 @@ const AboutMe = memo(() => {
 
     return (
         <div className="relative w-full bg-[#060010] text-white py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden">
-            {/* Floating background elements */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-                <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+            {/* Interactive Particle Background */}
+            <div className="absolute inset-0 overflow-hidden">
+                <InteractiveBackground />
             </div>
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -121,8 +120,8 @@ const AboutMe = memo(() => {
                 >
                     {[
                         { label: 'Projects Completed', value: counters.projects, suffix: '+', icon: '🎯' },
-                        { label: 'Years Experience', value: counters.experience, suffix: '+', icon: '⏱️' },
-                        { label: 'Happy Clients', value: counters.clients, suffix: '+', icon: '😊' }
+                        { label: 'Years Experience', value: counters.experience, suffix: '+', icon: '⏱️', className: 'text-green-500' },
+                        { label: 'Learning Devops ', value: 'Currently ', suffix: '', icon: '😊', className: 'text-blue-500 bg-blue-500' }
                     ].map((stat) => (
                         <motion.div
                             key={stat.label}
@@ -132,7 +131,10 @@ const AboutMe = memo(() => {
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
                             <div className="relative bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 sm:p-8 text-center">
                                 <div className="text-4xl mb-3">{stat.icon}</div>
-                                <div className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-2">
+                                <div className={`text-2xl sm:text-3xl font-bold mb-2 px-2 min-h-[3rem] flex items-center justify-center whitespace-normal break-words ${typeof stat.value === 'number'
+                                    ? 'bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent'
+                                    : 'text-white'
+                                    }`}>
                                     {stat.value}{stat.suffix}
                                 </div>
                                 <div className="text-sm sm:text-base text-white/60">{stat.label}</div>
