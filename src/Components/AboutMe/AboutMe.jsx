@@ -120,8 +120,8 @@ const AboutMe = memo(() => {
                 >
                     {[
                         { label: 'Projects Completed', value: counters.projects, suffix: '+', icon: '🎯' },
-                        { label: 'Years Experience', value: counters.experience, suffix: '+', icon: '⏱️', className: 'text-green-500' },
-                        { label: 'Learning Devops ', value: 'Currently ', suffix: '', icon: '😊', className: 'text-blue-500 bg-blue-500' }
+                        { label: 'Years Experience', value: counters.experience, suffix: '+', icon: '⏱️' },
+                        { label: 'Learning Devops ', value: 'Currently ', suffix: '', icon: '😊', className: 'text-blue-400' }
                     ].map((stat) => (
                         <motion.div
                             key={stat.label}
@@ -133,7 +133,7 @@ const AboutMe = memo(() => {
                                 <div className="text-4xl mb-3">{stat.icon}</div>
                                 <div className={`text-2xl sm:text-3xl font-bold mb-2 px-2 min-h-[3rem] flex items-center justify-center whitespace-normal break-words ${typeof stat.value === 'number'
                                     ? 'bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent'
-                                    : 'text-white'
+                                    : (stat.className || 'text-white')
                                     }`}>
                                     {stat.value}{stat.suffix}
                                 </div>
