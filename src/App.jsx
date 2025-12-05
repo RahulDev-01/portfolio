@@ -11,7 +11,7 @@ const Skills = lazy(() => import('./Skills/Skills'))
 const Projects = lazy(() => import('./Projects/Projects'))
 const Experience = lazy(() => import('./Components/Experience/Experience'))
 const ContactMe = lazy(() => import('./ContactMe/ContactMe'))
-const NasaLive = lazy(() => import('./Components/NasaLive/NasaLive'))
+// const NasaLive = lazy(() => import('./Components/NasaLive/NasaLive'))
 // Preload components for better performance
 const preloadComponents = () => {
   import('./Components/Footer/Footer')
@@ -261,9 +261,9 @@ function App() {
           <ContactMe />
         </SectionLoader>
 
-        <SectionLoader id="nasa-section">
+        {/* <SectionLoader id="nasa-section">
           <NasaLive apiKey="1GQwQtqzaLGX0IQ4QIVu7rGwlW3qupujpObykRQP" />
-        </SectionLoader>
+        </SectionLoader> */}
 
         <SectionLoader id="footer-section">
           <Footer />
