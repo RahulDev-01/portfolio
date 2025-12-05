@@ -123,6 +123,7 @@ const useIntersectionObserver = (ref, options = {}) => {
 }
 
 // Optimized component wrapper
+// Optimized component wrapper
 const OptimizedComponent = memo(({ children, fallback = <LoadingSpinner /> }) => (
   <ErrorBoundary>
     <Suspense fallback={fallback}>
@@ -131,41 +132,32 @@ const OptimizedComponent = memo(({ children, fallback = <LoadingSpinner /> }) =>
   </ErrorBoundary>
 ))
 
-{
-  // // Skills component was lazy loaded
-  /* <div ref={skillsRef}>
-  {skillsVisible && (  // ← Only loaded when visible
-    <OptimizedComponent>
-      <Skills />
-    </OptimizedComponent>
-  )}
-</div>
+const SectionLoader = ({ children, id, className = "" }) => {
+  const ref = React.useRef(null)
+  const isVisible = useIntersectionObserver(ref, {
+    threshold: 0,
+    rootMargin: '300px' // Load 300px before the section comes into view
+  })
 
-// Skills component loads immediately
-<div ref={skillsRef}>
-  <OptimizedComponent>  // ← Loads right away
-    <Skills />
-  </OptimizedComponent>
-</div>
-
-*/}
+  return (
+    <div id={id} ref={ref} className={className}>
+      {isVisible ? (
+        <OptimizedComponent>
+          {children}
+        </OptimizedComponent>
+      ) : (
+        // Minimal placeholder to prevent layout thrashing, 
+        // though actual height prevents scroll jumping best.
+        // Given we don't know exact height, a small min-height helps.
+        <div className="min-h-[100px] w-full" />
+      )}
+    </div>
+  )
+}
 
 function App() {
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [aboutLoaded, setAboutLoaded] = useState(false)
-  const aboutRef = React.useRef(null)
-  const [skillsLoaded, setSkillsLoaded] = useState(false)
-  const [projectsLoaded, setProjectsLoaded] = useState(false)
-  const [experienceLoaded, setExperienceLoaded] = useState(false)
-  const [contactLoaded, setContactLoaded] = useState(false)
-  const [footerLoaded, setFooterLoaded] = useState(false)
-  const [nasaLoaded, setNasaLoaded] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [showMobileAlert, setShowMobileAlert] = useState(false)
-  const skillsRef = React.useRef(null)
-  const projectsRef = React.useRef(null)
-  const experienceRef = React.useRef(null)
-  const contactRef = React.useRef(null)
 
   // Memoized mobile detection function
   const checkMobile = useCallback(() => {
@@ -177,61 +169,6 @@ function App() {
       setTimeout(() => {
         setShowMobileAlert(false)
       }, 5000)
-    }
-  }, [])
-
-  // Progressive loading with optimized delays
-  useEffect(() => {
-    const timers = []
-
-    // Preload critical images immediately
-    preloadCriticalImages()
-    // Load About Me section after 150ms
-    timers.push(setTimeout(() => {
-      setAboutLoaded(true)
-    }, 150))
-    // Preload components after initial render
-    timers.push(setTimeout(() => {
-      preloadComponents()
-    }, 100))
-
-    // Load skills after 200ms (faster)
-    timers.push(setTimeout(() => {
-      setSkillsLoaded(true)
-    }, 200))
-
-    // Load projects after 400ms (faster)
-    timers.push(setTimeout(() => {
-      setProjectsLoaded(true)
-    }, 400))
-
-    // Load contact after 600ms (faster)
-    timers.push(setTimeout(() => {
-      setProjectsLoaded(true)
-    }, 400))
-
-    // Load experience after 500ms
-    timers.push(setTimeout(() => {
-      setExperienceLoaded(true)
-    }, 500))
-
-    // Load contact after 600ms (faster)
-    timers.push(setTimeout(() => {
-      setContactLoaded(true)
-    }, 600))
-
-    // Load NASA Live section before footer
-    timers.push(setTimeout(() => {
-      setNasaLoaded(true)
-    }, 700))
-
-    // Load footer after 800ms (faster)
-    timers.push(setTimeout(() => {
-      setFooterLoaded(true)
-    }, 800))
-
-    return () => {
-      timers.forEach(clearTimeout)
     }
   }, [])
 
@@ -252,16 +189,16 @@ function App() {
     }
   }, [checkMobile])
 
-  // Preload critical components after initial load
+  // Preload critical images immediately
   useEffect(() => {
+    preloadCriticalImages()
+    // Preload chunks after main thread is idle
     const timer = setTimeout(() => {
-      setIsLoaded(true)
-      // Log performance metrics in development
+      preloadComponents()
       if (process.env.NODE_ENV === 'development') {
         logMemoryUsage()
       }
-    }, 50) // Faster initial load
-
+    }, 2000)
     return () => clearTimeout(timer)
   }, [])
 
@@ -302,60 +239,35 @@ function App() {
             <HeroSection />
           </OptimizedComponent>
         </div>
-        {/* About Me Section */}
-        <div id="about-section" ref={aboutRef}>
-          {aboutLoaded && (
-            <OptimizedComponent>
-              <AboutMe />
-            </OptimizedComponent>
-          )}
-        </div>
-        {/* Progressive loading for below-the-fold components */}
-        <div id="skills-section" ref={skillsRef}>
-          {skillsLoaded && (
-            <OptimizedComponent>
-              <Skills />
-            </OptimizedComponent>
-          )}
-        </div>
 
-        <div id="projects-section" ref={projectsRef}>
-          {projectsLoaded && (
-            <OptimizedComponent>
-              <Projects />
-            </OptimizedComponent>
-          )}
-        </div>
+        {/* Lazy loaded below-the-fold components */}
+        <SectionLoader id="about-section">
+          <AboutMe />
+        </SectionLoader>
 
-        <div id="experience-section" ref={experienceRef}>
-          {experienceLoaded && (
-            <OptimizedComponent>
-              <Experience />
-            </OptimizedComponent>
-          )}
-        </div>
+        <SectionLoader id="skills-section">
+          <Skills />
+        </SectionLoader>
 
-        <div id="contact-section" ref={contactRef}>
-          {contactLoaded && (
-            <OptimizedComponent>
-              <ContactMe />
-            </OptimizedComponent>
-          )}
-        </div>
+        <SectionLoader id="projects-section">
+          <Projects />
+        </SectionLoader>
 
-        {/* NASA Live section just above the footer */}
-        {nasaLoaded && (
-          <OptimizedComponent>
-            <NasaLive apiKey="1GQwQtqzaLGX0IQ4QIVu7rGwlW3qupujpObykRQP" />
-          </OptimizedComponent>
-        )}
+        <SectionLoader id="experience-section">
+          <Experience />
+        </SectionLoader>
 
-        {/* Footer loads last */}
-        {footerLoaded && (
-          <OptimizedComponent>
-            <Footer />
-          </OptimizedComponent>
-        )}
+        <SectionLoader id="contact-section">
+          <ContactMe />
+        </SectionLoader>
+
+        <SectionLoader id="nasa-section">
+          <NasaLive apiKey="1GQwQtqzaLGX0IQ4QIVu7rGwlW3qupujpObykRQP" />
+        </SectionLoader>
+
+        <SectionLoader id="footer-section">
+          <Footer />
+        </SectionLoader>
       </div>
     </ErrorBoundary>
   )
