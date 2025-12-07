@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, memo, useCallback, useState, useEffect, useMemo } from 'react'
 import './App.css'
 import { debounce, throttle, preloadImages, measurePerformance, logMemoryUsage } from './utils/performance'
-
+// import { debounce, throttle, preloadImages, measurePerformance, logMemoryUsage } from './utils/performance'
 // Lazy load heavy components with preloading
 const Footer = lazy(() => import('./Components/Footer/Footer'))
 const Header = lazy(() => import('./Components/Header/Header'))
