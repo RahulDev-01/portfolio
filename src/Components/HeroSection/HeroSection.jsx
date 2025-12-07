@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, memo, useCallback, useMemo ,Suspense } from 'react'
+import React, { useState, useEffect, useRef, memo, useCallback, useMemo, Suspense } from 'react'
 import VariableProximity from '../ui/VariableProximity';
 // import React, { Suspense } from 'react';
 const LiquidEther = React.lazy(() => import('../ui/LiquidEther'));
@@ -12,7 +12,7 @@ const HeroSection = memo(() => {
   const desc2Ref = useRef(null);
   const [reloadKey, setReloadKey] = useState(0);
   const [isVPHover, setIsVPHover] = useState(false);
-  
+
   // Memoize the reload effect to prevent unnecessary re-renders
   useEffect(() => {
     const interval = setInterval(() => {
@@ -70,10 +70,10 @@ const HeroSection = memo(() => {
   }), []);
   return (
     <div className='text-white w-full relative min-h-[520px] sm:min-h-[580px] md:h-[700px] overflow-hidden'>
-      <Suspense fallback={<div aria-hidden="true" className="absolute inset-0 pointer-events-none" />}> 
+      <Suspense fallback={<div aria-hidden="true" className="absolute inset-0 pointer-events-none" />}>
         <LiquidEther {...liquidEtherProps} />
       </Suspense>
-      
+
       {/* Overlay content above the effect */}
       <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none px-2 sm:px-4">
         <div className="text-center px-3 sm:px-6">
@@ -92,38 +92,38 @@ const HeroSection = memo(() => {
             <div className='w-full'>
               {/* right section */}
               <div className='mb-4 sm:mb-8 md:mb-16 flex flex-col items-center md:items-start px-4 sm:px-6 md:px-0 max-w-[95vw] sm:max-w-[80vw] md:max-w-2xl lg:max-w-3xl'>
-                <SplitText 
-                  key={reloadKey} 
-                  text={"Hello ,"} 
-                  className="text-base sm:text-lg md:text-2xl font-semibold text-center md:text-left text-blue-300" 
-                  delay={100} 
-                  duration={0.6} 
-                  ease="power3.out" 
-                  splitType="chars" 
-                  from={{ opacity: 0, y: 40 }} 
-                  to={{ opacity: 1, y: 0 }} 
-                  threshold={0.1} 
-                  rootMargin="-100px" 
-                  textAlign="center" 
+                <SplitText
+                  key={reloadKey}
+                  text={"Hello ,"}
+                  className="text-base sm:text-lg md:text-2xl font-semibold text-center md:text-left text-blue-300"
+                  delay={100}
+                  duration={0.6}
+                  ease="power3.out"
+                  splitType="chars"
+                  from={{ opacity: 0, y: 40 }}
+                  to={{ opacity: 1, y: 0 }}
+                  threshold={0.1}
+                  rootMargin="-100px"
+                  textAlign="center"
                 />
-                
+
                 <div className="mt-2 sm:mt-3">
                   <div ref={titleRef} style={{ position: 'relative', display: 'inline-block' }}>
                     <VariableProximity
-                      label={`I'm Savvana Rahul a `}
+                      label={`I'm Savvan Rahul a `}
                       className={'mt-2 sm:mt-3 text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center md:text-left'}
                       containerRef={titleRef}
                       {...variableProximityProps}
                     />
                   </div>
                 </div>
-                
+
                 <div className="w-full flex justify-center md:justify-start">
                   <TextType {...textTypeProps} />
                 </div>
-                
+
                 <div className="mt-2 w-full"></div>
-                
+
                 <div className="mt-6 sm:mt-10">
                   <div ref={desc1Ref} style={{ position: 'relative', display: 'inline-block' }}>
                     <VariableProximity
@@ -134,7 +134,7 @@ const HeroSection = memo(() => {
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <div ref={desc2Ref} style={{ position: 'relative', display: 'inline-block' }}>
                     <VariableProximity
@@ -145,15 +145,15 @@ const HeroSection = memo(() => {
                     />
                   </div>
                 </div>
-                
+
                 {/* Download Resume Button */}
                 <div className="pointer-events-auto mt-6 sm:mt-8 w-full flex justify-center md:justify-start">
                   <button
                     onClick={() => {
                       try {
                         const link = document.createElement('a');
-                        link.href = '/Savvana_Rahul_Resume.pdf';
-                        link.download = 'Savvana_Rahul_Resume.pdf';
+                        link.href = '/Savvan_Rahul_Resume.pdf';
+                        link.download = 'Savvan_Rahul_Resume.pdf';
                         link.style.display = 'none';
                         document.body.appendChild(link);
                         link.click();
@@ -170,10 +170,10 @@ const HeroSection = memo(() => {
                       </svg>
                       Download My Resume
                     </span>
-                    
+
                     {/* Animated background gradient */}
                     <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    
+
                     {/* Shine effect */}
                     <div className="absolute inset-0 -top-2 -left-2 w-0 h-0 bg-white/20 rounded-full group-hover:w-full group-hover:h-full group-hover:top-0 group-hover:left-0 transition-all duration-500 ease-out"></div>
                   </button>

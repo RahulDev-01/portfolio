@@ -1,5 +1,5 @@
-# 🚀 Rahul's Portfolio
-🔗 **Live Demo**: [savvana-rahul.tech](https://www.savvana-rahul.tech)
+# 🚀 Savvan Rahul's Portfolio
+🔗 **Live Demo**: [savvan-rahul.tech](https://www.savvan-rahul.tech)
 
 A cutting-edge, interactive portfolio website built with React and modern web technologies. Features stunning animations, real-time NASA data integration, and a futuristic design that showcases technical skills and creativity.
 
@@ -129,7 +129,7 @@ portfolio/
 │   ├── Logos/               # Technology logos
 │   ├── NasaPhotos/          # NASA placeholder images
 │   ├── Projects/            # Project screenshots
-│   └── Savvana_Rahul_Resume.pdf
+│   └── Savvan_Rahul_Resume.pdf
 ├── src/
 │   ├── Components/
 │   │   ├── Header/          # Navigation header
@@ -250,7 +250,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-**Rahul S**
+**Savvan Rahul S**
 - Email: s.rahul5116@gmail.com
 - LinkedIn: [linkedin.com/in/s-rahul-885613312](https://www.linkedin.com/in/s-rahul-885613312/)
 - GitHub: [github.com/RahulDev-01](https://github.com/RahulDev-01)

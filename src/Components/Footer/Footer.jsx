@@ -15,30 +15,34 @@ function Footer() {
 
   const items = [
     { icon: <IconBrandLinkedin size={18} />, label: 'LinkedIn', onClick: () => window.open('https://www.linkedin.com/in/s-rahul-885613312/', '_blank') },
-    { icon: <IconMail size={18} />, label: 'Email', onClick: () => { 
-      navigator.clipboard.writeText('s.rahul5116@gmail.com').then(() => {
-        showToast('Email copied to Clipboard 📋');
-      }).catch(() => {
-        showToast('Email: s.rahul5116@gmail.com');
-      });
-    } },
-    { icon: <IconBrandGithub size={18} />, label: 'GitHub', onClick: () => window.open('https://github.com/RahulDev-01', '_blank') },
-    { icon: <IconFileText size={18} />, label: 'Resume', onClick: () => {
-      try {
-        // Direct download without opening in new tab
-        const link = document.createElement('a');
-        link.href = '/Savvana_Rahul_Resume.pdf';
-        link.download = 'Savvana_Rahul_Resume.pdf';
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        showToast('Resume download started!');
-      } catch (error) {
-        console.error('Download error:', error);
-        showToast('Resume file not accessible. Please contact me directly.');
+    {
+      icon: <IconMail size={18} />, label: 'Email', onClick: () => {
+        navigator.clipboard.writeText('s.rahul5116@gmail.com').then(() => {
+          showToast('Email copied to Clipboard 📋');
+        }).catch(() => {
+          showToast('Email: s.rahul5116@gmail.com');
+        });
       }
-    } },
+    },
+    { icon: <IconBrandGithub size={18} />, label: 'GitHub', onClick: () => window.open('https://github.com/RahulDev-01', '_blank') },
+    {
+      icon: <IconFileText size={18} />, label: 'Resume', onClick: () => {
+        try {
+          // Direct download without opening in new tab
+          const link = document.createElement('a');
+          link.href = '/Savvan_Rahul_Resume.pdf';
+          link.download = 'Savvan_Rahul_Resume.pdf';
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          showToast('Resume download started!');
+        } catch (error) {
+          console.error('Download error:', error);
+          showToast('Resume file not accessible. Please contact me directly.');
+        }
+      }
+    },
   ];
   return (
     <>
@@ -118,28 +122,28 @@ function Footer() {
           fontSize: '2rem',
           zIndex: 6
         }}>
-           {/* Your content here */}
-           <nav className='w-full'>
-              <div className='flex items-center w-full px-8 overflow-hidden gap-8'>
-                <div className='flex items-center gap-4 justify-between w-full'>
-                <div className='text-gray-500 text-[16px] flex-shrink-0  hidden md:block '>© 2025 Savvana Rahul⚡. All Rights Reserved .</div>
+          {/* Your content here */}
+          <nav className='w-full'>
+            <div className='flex items-center w-full px-8 overflow-hidden gap-8'>
+              <div className='flex items-center gap-4 justify-between w-full'>
+                <div className='text-gray-500 text-[16px] flex-shrink-0  hidden md:block '>© 2025 Savvan Rahul⚡. All Rights Reserved .</div>
                 <div className='text-gray-500 text-[16px] flex-shrink-0 '> For Contact - s.rahul5116@gmail.com</div>
-                </div>
               </div>
-           </nav>
-                      <Dock
-                        items={items}
-                        panelHeight={60}
-                        baseItemSize={40}
-                        magnification={60}
-                        itemAlignment='items-center'
-                        className='max-w-fit cursor-pointer mb-25 sm:mb-25 md:mb-34 lg:mb-3'
-                        style={{ 
-                          position: 'relative',
-                          top: '0px',
-                          transform: 'translateY(0px)'
-                        }}
-                      />
+            </div>
+          </nav>
+          <Dock
+            items={items}
+            panelHeight={60}
+            baseItemSize={40}
+            magnification={60}
+            itemAlignment='items-center'
+            className='max-w-fit cursor-pointer mb-25 sm:mb-25 md:mb-34 lg:mb-3'
+            style={{
+              position: 'relative',
+              top: '0px',
+              transform: 'translateY(0px)'
+            }}
+          />
         </div>
 
         <img
