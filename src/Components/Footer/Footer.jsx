@@ -30,7 +30,8 @@ function Footer() {
         try {
           // Direct download without opening in new tab
           const link = document.createElement('a');
-          link.href = '/Savvan_Rahul_Resume.pdf';
+          // Add cache-busting parameter to force fresh download
+          link.href = `/Savvan_Rahul_Resume.pdf?t=${Date.now()}`;
           link.download = 'Savvan_Rahul_Resume.pdf';
           link.style.display = 'none';
           document.body.appendChild(link);
@@ -127,7 +128,7 @@ function Footer() {
             <div className='flex items-center w-full px-8 overflow-hidden gap-8'>
               <div className='flex items-center gap-4 justify-between w-full'>
                 <div className='text-gray-500 text-[16px] flex-shrink-0  hidden md:block '>© 2025 Savvan Rahul⚡. All Rights Reserved .</div>
-                <div className='text-gray-500 text-[16px] flex-shrink-0 '> For Contact - s.rahul5116@gmail.com</div>
+                <div className='text-gray-500 text-[16px] flex-shrink-0 '>For Contact - s.rahul5116@gmail.com</div>
               </div>
             </div>
           </nav>

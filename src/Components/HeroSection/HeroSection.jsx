@@ -152,7 +152,8 @@ const HeroSection = memo(() => {
                     onClick={() => {
                       try {
                         const link = document.createElement('a');
-                        link.href = '/Savvan_Rahul_Resume.pdf';
+                        // Add cache-busting parameter to force fresh download
+                        link.href = `/Savvan_Rahul_Resume.pdf?t=${Date.now()}`;
                         link.download = 'Savvan_Rahul_Resume.pdf';
                         link.style.display = 'none';
                         document.body.appendChild(link);
