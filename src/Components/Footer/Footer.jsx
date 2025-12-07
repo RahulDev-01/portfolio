@@ -1,9 +1,8 @@
 import React, { useRef, useState } from 'react'
 import LaserFlow from './LaserFlow'
 import Dock from '../ui/Dock'
-// import resume from '../../../public/Savvana_Rahul.pdf'
 import { IconBrandLinkedin, IconMail, IconBrandGithub, IconFileText } from '@tabler/icons-react'
-// import github from '../../../public/image.png'
+
 function Footer() {
   const revealImgRef = useRef(null);
   const [toast, setToast] = useState({ show: false, message: '' });
@@ -26,17 +25,30 @@ function Footer() {
     },
     { icon: <IconBrandGithub size={18} />, label: 'GitHub', onClick: () => window.open('https://github.com/RahulDev-01', '_blank') },
     {
-      icon: <IconFileText size={18} />, label: 'Resume', onClick: () => {
+      icon: <IconFileText size={18} />, label: 'Resume', onClick: async () => {
         try {
-          // Direct download without opening in new tab
+          // Fetch the PDF file
+          const response = await fetch(`/Savvan_Rahul_Resume.pdf?t=${Date.now()}`);
+          if (!response.ok) throw new Error('File not found');
+
+          // Convert to blob
+          const blob = await response.blob();
+
+          // Create blob URL and download
+          const url = window.URL.createObjectURL(blob);
           const link = document.createElement('a');
-          // Add cache-busting parameter to force fresh download
-          link.href = `/Savvan_Rahul_Resume.pdf?t=${Date.now()}`;
+          link.href = url;
           link.download = 'Savvan_Rahul_Resume.pdf';
           link.style.display = 'none';
           document.body.appendChild(link);
           link.click();
-          document.body.removeChild(link);
+
+          // Cleanup
+          setTimeout(() => {
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+          }, 100);
+
           showToast('Resume download started!');
         } catch (error) {
           console.error('Download error:', error);
@@ -45,6 +57,7 @@ function Footer() {
       }
     },
   ];
+
   return (
     <>
       {/* Toast Notification */}
@@ -127,8 +140,8 @@ function Footer() {
           <nav className='w-full'>
             <div className='flex items-center w-full px-8 overflow-hidden gap-8'>
               <div className='flex items-center gap-4 justify-between w-full'>
-                <div className='text-gray-500 text-[16px] flex-shrink-0  hidden md:block '>© 2025 Savvan Rahul⚡. All Rights Reserved .</div>
-                <div className='text-gray-500 text-[16px] flex-shrink-0 '>For Contact - s.rahul5116@gmail.com</div>
+                <div className='text-gray-500 text-[16px] flex-shrink-0 hidden md:block'>© 2025 Savvan Rahul⚡. All Rights Reserved .</div>
+                <div className='text-gray-500 text-[16px] flex-shrink-0'>For Contact - s.rahul5116@gmail.com</div>
               </div>
             </div>
           </nav>
@@ -152,7 +165,6 @@ function Footer() {
           src="/image.png"
           alt="Reveal effect"
           style={{
-
             position: 'absolute',
             left: 0,
             top: 0,
@@ -173,7 +185,8 @@ function Footer() {
             maskRepeat: 'no-repeat'
           }}
         />
-      </div></>
+      </div>
+    </>
   )
 }
 

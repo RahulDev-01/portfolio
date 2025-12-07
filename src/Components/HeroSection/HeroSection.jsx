@@ -149,18 +149,32 @@ const HeroSection = memo(() => {
                 {/* Download Resume Button */}
                 <div className="pointer-events-auto mt-6 sm:mt-8 w-full flex justify-center md:justify-start">
                   <button
-                    onClick={() => {
+                    onClick={async () => {
                       try {
+                        // Fetch the PDF file
+                        const response = await fetch(`/Savvan_Rahul_Resume.pdf?t=${Date.now()}`);
+                        if (!response.ok) throw new Error('File not found');
+
+                        // Convert to blob
+                        const blob = await response.blob();
+
+                        // Create blob URL and download
+                        const url = window.URL.createObjectURL(blob);
                         const link = document.createElement('a');
-                        // Add cache-busting parameter to force fresh download
-                        link.href = `/Savvan_Rahul_Resume.pdf?t=${Date.now()}`;
+                        link.href = url;
                         link.download = 'Savvan_Rahul_Resume.pdf';
                         link.style.display = 'none';
                         document.body.appendChild(link);
                         link.click();
-                        document.body.removeChild(link);
+
+                        // Cleanup
+                        setTimeout(() => {
+                          document.body.removeChild(link);
+                          window.URL.revokeObjectURL(url);
+                        }, 100);
                       } catch (error) {
                         console.error('Download error:', error);
+                        alert('Resume download failed. Please try again or contact directly.');
                       }
                     }}
                     className="group relative   block sm:inline-flex justify-center px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 hover:from-blue-500 hover:via-purple-500 hover:to-cyan-400 text-white font-semibold text-sm sm:text-base rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out overflow-hidden cursor-pointer"
