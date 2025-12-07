@@ -132,23 +132,15 @@ const OptimizedComponent = memo(({ children, fallback = <LoadingSpinner /> }) =>
   </ErrorBoundary>
 ))
 
-const SectionLoader = ({ children, id, className = "" }) => {
-  const ref = React.useRef(null)
-  const isVisible = useIntersectionObserver(ref, {
-    threshold: 0,
-    rootMargin: '300px' // Load 300px before the section comes into view
-  })
-
+// Shared Group Loader Component
+const GroupLoader = ({ children, triggerResult, id, className = "" }) => {
   return (
-    <div id={id} ref={ref} className={className}>
-      {isVisible ? (
+    <div id={id} className={className}>
+      {triggerResult ? (
         <OptimizedComponent>
           {children}
         </OptimizedComponent>
       ) : (
-        // Minimal placeholder to prevent layout thrashing, 
-        // though actual height prevents scroll jumping best.
-        // Given we don't know exact height, a small min-height helps.
         <div className="min-h-[100px] w-full" />
       )}
     </div>
@@ -202,6 +194,22 @@ function App() {
     return () => clearTimeout(timer)
   }, [])
 
+  // refs for intersection triggers
+  const aboutRef = React.useRef(null)
+  const projectsRef = React.useRef(null)
+  const contactRef = React.useRef(null)
+
+  // Intersection Observers for triggers
+  // Group 1: About triggers About + Skills
+  const isAboutVisible = useIntersectionObserver(aboutRef, { threshold: 0, rootMargin: '300px' })
+
+  // Group 2: Projects triggers Projects + Experience
+  const isProjectsVisible = useIntersectionObserver(projectsRef, { threshold: 0, rootMargin: '300px' })
+
+  // Group 3: Contact triggers Contact + Footer
+  const isContactVisible = useIntersectionObserver(contactRef, { threshold: 0, rootMargin: '300px' })
+
+
   return (
     <ErrorBoundary>
       <div className='h-full w-full bg-[#060010] overflow-x-hidden'>
@@ -240,34 +248,46 @@ function App() {
           </OptimizedComponent>
         </div>
 
-        {/* Lazy loaded below-the-fold components */}
-        <SectionLoader id="about-section">
-          <AboutMe />
-        </SectionLoader>
+        {/* GROUP 1: About & Skills */}
+        {/* Trigger for Group 1 */}
+        <div ref={aboutRef}>
+          <GroupLoader triggerResult={isAboutVisible} id="about-section">
+            <AboutMe />
+          </GroupLoader>
+        </div>
 
-        <SectionLoader id="skills-section">
+        <GroupLoader triggerResult={isAboutVisible} id="skills-section">
           <Skills />
-        </SectionLoader>
+        </GroupLoader>
 
-        <SectionLoader id="projects-section">
-          <Projects />
-        </SectionLoader>
+        {/* GROUP 2: Projects & Experience */}
+        {/* Trigger for Group 2 */}
+        <div ref={projectsRef}>
+          <GroupLoader triggerResult={isProjectsVisible} id="projects-section">
+            <Projects />
+          </GroupLoader>
+        </div>
 
-        <SectionLoader id="experience-section">
+        <GroupLoader triggerResult={isProjectsVisible} id="experience-section">
           <Experience />
-        </SectionLoader>
+        </GroupLoader>
 
-        <SectionLoader id="contact-section">
-          <ContactMe />
-        </SectionLoader>
+        {/* GROUP 3: Contact & Footer */}
+        {/* Trigger for Group 3 */}
+        <div ref={contactRef}>
+          <GroupLoader triggerResult={isContactVisible} id="contact-section">
+            <ContactMe />
+          </GroupLoader>
+        </div>
 
         {/* <SectionLoader id="nasa-section">
           <NasaLive apiKey="1GQwQtqzaLGX0IQ4QIVu7rGwlW3qupujpObykRQP" />
         </SectionLoader> */}
 
-        <SectionLoader id="footer-section">
+        <GroupLoader triggerResult={isContactVisible} id="footer-section">
           <Footer />
-        </SectionLoader>
+        </GroupLoader>
+
       </div>
     </ErrorBoundary>
   )
