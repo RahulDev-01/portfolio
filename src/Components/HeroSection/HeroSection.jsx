@@ -150,32 +150,13 @@ const HeroSection = memo(() => {
                 <div className="pointer-events-auto mt-6 sm:mt-8 w-full flex justify-center md:justify-start">
                   <button
                     onClick={async () => {
-                      try {
-                        // Fetch the PDF file
-                        const response = await fetch(`/Savvan_Rahul_Resume.pdf?t=${Date.now()}`);
-                        if (!response.ok) throw new Error('File not found');
-
-                        // Convert to blob
-                        const blob = await response.blob();
-
-                        // Create blob URL and download
-                        const url = window.URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.download = 'Savvan_Rahul_Resume.pdf';
-                        link.style.display = 'none';
-                        document.body.appendChild(link);
-                        link.click();
-
-                        // Cleanup
-                        setTimeout(() => {
-                          document.body.removeChild(link);
-                          window.URL.revokeObjectURL(url);
-                        }, 100);
-                      } catch (error) {
-                        console.error('Download error:', error);
-                        alert('Resume download failed. Please try again or contact directly.');
-                      }
+                      // Direct download approach for better reliability
+                      const link = document.createElement('a');
+                      link.href = `/Savvan_Rahul_Resume.pdf?v=${Date.now()}`; // Add timestamp to prevent caching
+                      link.download = 'Savvan_Rahul_Resume.pdf';
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
                     }}
                     className="group relative   block sm:inline-flex justify-center px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 hover:from-blue-500 hover:via-purple-500 hover:to-cyan-400 text-white font-semibold text-sm sm:text-base rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-out overflow-hidden cursor-pointer"
                   >

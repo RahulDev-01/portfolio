@@ -26,34 +26,14 @@ function Footer() {
     { icon: <IconBrandGithub size={18} />, label: 'GitHub', onClick: () => window.open('https://github.com/RahulDev-01', '_blank') },
     {
       icon: <IconFileText size={18} />, label: 'Resume', onClick: async () => {
-        try {
-          // Fetch the PDF file
-          const response = await fetch(`/Savvan_Rahul_Resume.pdf?t=${Date.now()}`);
-          if (!response.ok) throw new Error('File not found');
+        const link = document.createElement('a');
+        link.href = `/Savvan_Rahul_Resume.pdf?v=${Date.now()}`;
+        link.download = 'Savvan_Rahul_Resume.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
-          // Convert to blob
-          const blob = await response.blob();
-
-          // Create blob URL and download
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'Savvan_Rahul_Resume.pdf';
-          link.style.display = 'none';
-          document.body.appendChild(link);
-          link.click();
-
-          // Cleanup
-          setTimeout(() => {
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-          }, 100);
-
-          showToast('Resume download started!');
-        } catch (error) {
-          console.error('Download error:', error);
-          showToast('Resume file not accessible. Please contact me directly.');
-        }
+        showToast('Resume download started!');
       }
     },
   ];
