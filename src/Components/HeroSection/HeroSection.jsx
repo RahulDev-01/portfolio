@@ -150,10 +150,9 @@ const HeroSection = memo(() => {
                 <div className="pointer-events-auto mt-6 sm:mt-8 w-full flex justify-center md:justify-start">
                   <button
                     onClick={async () => {
-                      // Direct download approach for better reliability
                       const link = document.createElement('a');
-                      link.href = `/Savvan_Rahul_Resume.pdf?v=${Date.now()}`; // Add timestamp to prevent caching
-                      link.download = 'Savvan_Rahul_Resume.pdf';
+                      link.href = `/Resume.pdf?v=${Date.now()}`; // Add timestamp to prevent caching
+                      link.download = 'Resume.pdf';
                       document.body.appendChild(link);
                       link.click();
                       document.body.removeChild(link);

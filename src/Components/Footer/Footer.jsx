@@ -27,8 +27,8 @@ function Footer() {
     {
       icon: <IconFileText size={18} />, label: 'Resume', onClick: async () => {
         const link = document.createElement('a');
-        link.href = `/Savvan_Rahul_Resume.pdf?v=${Date.now()}`;
-        link.download = 'Savvan_Rahul_Resume.pdf';
+        link.href = `/Resume.pdf?v=${Date.now()}`;
+        link.download = 'Resume.pdf';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
