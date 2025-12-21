@@ -15,24 +15,25 @@ function GlobeScene({ data, globeConfig }) {
       .globeImageUrl("//unpkg.com/three-globe/example/img/earth-blue-marble.jpg")
       .bumpImageUrl("//unpkg.com/three-globe/example/img/earth-topology.png");
 
-    // Add hex polygons for dotted pattern like the image
+    // Add hex polygons with reduced resolution for faster loading
     fetch('./data/globe.json')
       .then(res => res.json())
       .then(countries => {
         globe
           .hexPolygonsData(countries.features)
-          .hexPolygonResolution(3)
+          .hexPolygonResolution(2) // Reduced from 3 to 2 for better performance
           .hexPolygonMargin(0.7)
           .hexPolygonColor(() => `rgba(${Math.floor(Math.random() * 128) + 128}, ${Math.floor(Math.random() * 128) + 128}, ${Math.floor(Math.random() * 128) + 128}, ${Math.random() * 0.4 + 0.3})`)
           .hexPolygonAltitude(0.01);
       })
       .catch(err => console.log('Error loading globe data:', err));
 
-    // Add arcs data for animated lines
+    // Add arcs data with reduced count for faster initial load
     if (data && data.length > 0) {
-      // 50+ lines (random selection), up to 100 if available
-      const desired = Math.max(50, Math.min(100, data.length));
+      // Reduced to 15-25 lines for faster initial rendering
+      const desired = Math.max(15, Math.min(25, data.length));
       const reducedData = [...data].sort(() => 0.5 - Math.random()).slice(0, desired);
+
       globe
         .arcsData(reducedData)
         .arcColor(() => ['#2da8ff', '#7cc7ff'])
@@ -42,23 +43,40 @@ function GlobeScene({ data, globeConfig }) {
         .arcDashAnimateTime(4500)
         .arcStroke(1.25)
         .arcsTransitionDuration(700);
-      
-      // Subtle, fewer points
+
+      // Reduced points data for better performance
       globe
-        .pointsData(reducedData)
+        .pointsData(reducedData.slice(0, 15)) // Even fewer points initially
         .pointColor(() => '#cccccc')
         .pointAltitude(0.04)
         .pointRadius(1.5)
         .pointsMerge(true);
-      
-      // Subtle rings
-      globe
-        .ringsData(reducedData)
-        .ringColor(() => '#d0d0d0')
-        .ringMaxRadius(2.5)
-        .ringPropagationSpeed(1.5)
-        .ringRepeatPeriod(1200)
-        .ringResolution(24);
+
+      // Progressive enhancement: Add rings after idle
+      const addRingsWhenIdle = () => {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => {
+            globe
+              .ringsData(reducedData.slice(0, 10)) // Reduced ring count
+              .ringColor(() => '#d0d0d0')
+              .ringMaxRadius(2.5)
+              .ringPropagationSpeed(1.5)
+              .ringRepeatPeriod(1200)
+              .ringResolution(20); // Reduced from 24
+          });
+        } else {
+          setTimeout(() => {
+            globe
+              .ringsData(reducedData.slice(0, 10))
+              .ringColor(() => '#d0d0d0')
+              .ringMaxRadius(2.5)
+              .ringPropagationSpeed(1.5)
+              .ringRepeatPeriod(1200)
+              .ringResolution(20);
+          }, 1000);
+        }
+      };
+      addRingsWhenIdle();
     }
 
     // Configure atmosphere with brighter settings
@@ -85,7 +103,7 @@ function GlobeScene({ data, globeConfig }) {
     // Position the globe
     globe.rotateY(-Math.PI * (5 / 9));
     globe.rotateZ(-Math.PI / 6);
-    
+
     // Add to scene
     scene.add(globe);
     globeRef.current = globe;
@@ -119,9 +137,15 @@ function World({ data, globeConfig }) {
   const onPointerOver = (e) => { e.currentTarget.style.cursor = 'grab'; };
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <Canvas 
+      <Canvas
         camera={{ position: [0, 0, 300], fov: 50 }}
-        gl={{ alpha: true, antialias: true }}
+        gl={{
+          alpha: true,
+          antialias: true,
+          powerPreference: 'high-performance',
+          pixelRatio: Math.min(window.devicePixelRatio, 2)
+        }}
+        dpr={[1, 1.5]}
         style={{ background: 'transparent', cursor: 'grab' }}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
@@ -133,9 +157,9 @@ function World({ data, globeConfig }) {
         <directionalLight position={[5, 3, 5]} intensity={1.0} color="#ffffff" />
         <directionalLight position={[-5, -3, -5]} intensity={0.5} color="#ffffff" />
         <GlobeScene data={data} globeConfig={globeConfig} />
-        <OrbitControls 
-          enableZoom={true} 
-          enablePan={false} 
+        <OrbitControls
+          enableZoom={true}
+          enablePan={false}
           enableRotate={true}
           minDistance={200}
           maxDistance={500}
