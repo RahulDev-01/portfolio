@@ -85,7 +85,9 @@ const HeroSection = memo(() => {
                 src="/profile.jpg"
                 alt="Profile"
                 className='w-28 h-28 xs:w-32 xs:h-32 sm:w-40 sm:h-40 md:w-72 md:h-72 lg:w-96 lg:h-96 rounded-full object-cover border-2 border-white/10 shadow-xl'
-                loading="lazy"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
               />
             </div>
 

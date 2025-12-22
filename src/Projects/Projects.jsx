@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useCallback } from 'react'
+import React, { memo, useMemo, useCallback, useEffect, useRef, useState } from 'react'
 import Hyperspeed from '../Components/ui/Hyperspeed';
 import PixelTrail from '../Components/ui/PixelTrail';
 import SplashCursor from '../Components/ui/SplashCursor'
@@ -7,8 +7,52 @@ import { motion } from "motion/react";
 import { LinkPreview } from "../Components/ui/link-preview";
 
 const Projects = memo(() => {
+  const projectsRef = useRef(null);
+  const [imagesPreloaded, setImagesPreloaded] = useState(false);
+
+  // Preload images when section is about to enter viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !imagesPreloaded) {
+            // Preload all project images
+            const imagesToPreload = [
+              '/Projects/SwiftResumeAi.png',
+              '/Projects/destinAi.png',
+              '/Projects/gemini.png',
+              '/Projects/Map.png'
+            ];
+
+            imagesToPreload.forEach((src) => {
+              const img = new Image();
+              img.src = src;
+            });
+
+            setImagesPreloaded(true);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '200px', // Start preloading 200px before section enters viewport
+        threshold: 0.1
+      }
+    );
+
+    if (projectsRef.current) {
+      observer.observe(projectsRef.current);
+    }
+
+    return () => {
+      if (projectsRef.current) {
+        observer.unobserve(projectsRef.current);
+      }
+    };
+  }, [imagesPreloaded]);
+
   return (
-    <div className='relative text-white w-full overflow-hidden'>
+    <div ref={projectsRef} className='relative text-white w-full overflow-hidden'>
       {/* Hyperspeed Background */}
       <div className='absolute inset-0 z-0'>
         <Hyperspeed
@@ -75,7 +119,10 @@ const Projects = memo(() => {
                     height="1100"
                     width="1100"
                     className="h-48 md:h-60 w-full object-contain border border-purple-400/30 rounded-xl group-hover/card:shadow-xl transition-transform duration-300 group-hover/card:scale-105 group-hover/card:-translate-y-1"
-                    alt="thumbnail"
+                    alt="Swift Resume AI Project Screenshot"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
                   />
                 </CardItem>
                 <div className="flex justify-between items-center m-4">
@@ -138,7 +185,10 @@ const Projects = memo(() => {
                     height="1000"
                     width="1000"
                     className="h-48 md:h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl transition-transform duration-300 group-hover/card:scale-105 group-hover/card:-translate-y-1"
-                    alt="thumbnail"
+                    alt="Destin AI Project Screenshot"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
                   />
                 </CardItem>
                 <div className="flex justify-between items-center m-4">
@@ -197,7 +247,10 @@ const Projects = memo(() => {
                 height="1000"
                 width="1000"
                 className="h-48 md:h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl transition-transform duration-300 group-hover/card:scale-105 group-hover/card:-translate-y-1"
-                alt="thumbnail"
+                alt="Gemini AI Clone Project Screenshot"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
               />
             </CardItem>
             <div className="flex justify-between items-center m-4">
@@ -257,7 +310,10 @@ const Projects = memo(() => {
                 height="1000"
                 width="1000"
                 className="h-48 md:h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl transition-transform duration-300 group-hover/card:scale-105 group-hover/card:-translate-y-1"
-                alt="thumbnail"
+                alt="Interactive Map Project Screenshot"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
               />
             </CardItem>
             <div className="flex justify-between items-center m-4">
