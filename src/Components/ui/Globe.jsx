@@ -1,19 +1,46 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import Globe from "three-globe";
 
-function GlobeScene({ data, globeConfig }) {
+function GlobeScene({ data, globeConfig, onLoad }) {
   const globeRef = useRef();
   const { scene, camera } = useThree();
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Create the globe instance
+    let loadedCount = 0;
+    const totalAssets = 2; // globe image + bump image
+
+    const checkAllLoaded = () => {
+      loadedCount++;
+      if (loadedCount >= totalAssets && !isLoaded) {
+        setIsLoaded(true);
+        if (onLoad) onLoad();
+      }
+    };
+
+    // Create the globe instance with optimized loading
     const globe = new Globe()
-      .globeImageUrl("//unpkg.com/three-globe/example/img/earth-blue-marble.jpg")
-      .bumpImageUrl("//unpkg.com/three-globe/example/img/earth-topology.png");
+      .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg")
+      .bumpImageUrl("https://unpkg.com/three-globe/example/img/earth-topology.png");
+
+    // Preload textures for faster display
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(
+      "https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg",
+      () => checkAllLoaded(),
+      undefined,
+      (err) => { console.error('Error loading globe texture:', err); checkAllLoaded(); }
+    );
+    textureLoader.load(
+      "https://unpkg.com/three-globe/example/img/earth-topology.png",
+      () => checkAllLoaded(),
+      undefined,
+      (err) => { console.error('Error loading bump texture:', err); checkAllLoaded(); }
+    );
 
     // Add hex polygons with reduced resolution for faster loading
     fetch('./data/globe.json')
@@ -131,42 +158,68 @@ function GlobeScene({ data, globeConfig }) {
 }
 
 function World({ data, globeConfig }) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleGlobeLoad = () => {
+    // Add small delay for smooth transition
+    setTimeout(() => setIsLoading(false), 300);
+  };
+
   const onPointerDown = (e) => { e.currentTarget.style.cursor = 'grabbing'; };
   const onPointerUp = (e) => { e.currentTarget.style.cursor = 'grab'; };
   const onPointerLeave = (e) => { e.currentTarget.style.cursor = 'grab'; };
   const onPointerOver = (e) => { e.currentTarget.style.cursor = 'grab'; };
+
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <Canvas
-        camera={{ position: [0, 0, 300], fov: 50 }}
-        gl={{
-          alpha: true,
-          antialias: true,
-          powerPreference: 'high-performance',
-          pixelRatio: Math.min(window.devicePixelRatio, 2)
-        }}
-        dpr={[1, 1.5]}
-        style={{ background: 'transparent', cursor: 'grab' }}
-        onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
-        onPointerLeave={onPointerLeave}
-        onPointerOver={onPointerOver}
-      >
-        {/* Neutral lighting for natural colors */}
-        <ambientLight intensity={0.6} color="#ffffff" />
-        <directionalLight position={[5, 3, 5]} intensity={1.0} color="#ffffff" />
-        <directionalLight position={[-5, -3, -5]} intensity={0.5} color="#ffffff" />
-        <GlobeScene data={data} globeConfig={globeConfig} />
-        <OrbitControls
-          enableZoom={true}
-          enablePan={false}
-          enableRotate={true}
-          minDistance={200}
-          maxDistance={500}
-          autoRotate={false}
-          rotateSpeed={0.5}
-        />
-      </Canvas>
+    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+      {/* Loading Spinner */}
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center z-20 bg-transparent">
+          <div className="relative">
+            {/* Outer rotating ring */}
+            <div className="w-24 h-24 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
+            {/* Inner pulsing circle */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-blue-500/20 rounded-full animate-pulse"></div>
+            {/* Center dot */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-blue-500 rounded-full"></div>
+          </div>
+          <p className="absolute bottom-8 text-white/70 text-sm animate-pulse">Loading Globe...</p>
+        </div>
+      )}
+
+      {/* Globe Canvas */}
+      <div style={{ opacity: isLoading ? 0 : 1, transition: 'opacity 0.5s ease-in-out' }}>
+        <Canvas
+          camera={{ position: [0, 0, 300], fov: 50 }}
+          gl={{
+            alpha: true,
+            antialias: true,
+            powerPreference: 'high-performance',
+            pixelRatio: Math.min(window.devicePixelRatio, 2)
+          }}
+          dpr={[1, 1.5]}
+          style={{ background: 'transparent', cursor: 'grab' }}
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+          onPointerLeave={onPointerLeave}
+          onPointerOver={onPointerOver}
+        >
+          {/* Neutral lighting for natural colors */}
+          <ambientLight intensity={0.6} color="#ffffff" />
+          <directionalLight position={[5, 3, 5]} intensity={1.0} color="#ffffff" />
+          <directionalLight position={[-5, -3, -5]} intensity={0.5} color="#ffffff" />
+          <GlobeScene data={data} globeConfig={globeConfig} onLoad={handleGlobeLoad} />
+          <OrbitControls
+            enableZoom={true}
+            enablePan={false}
+            enableRotate={true}
+            minDistance={200}
+            maxDistance={500}
+            autoRotate={false}
+            rotateSpeed={0.5}
+          />
+        </Canvas>
+      </div>
     </div>
   );
 }
