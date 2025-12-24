@@ -1,129 +1,76 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import Globe from "three-globe";
 
-function GlobeScene({ data, globeConfig, onLoad }) {
+function GlobeScene({ data, globeConfig }) {
   const globeRef = useRef();
   const { scene, camera } = useThree();
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    let loadedCount = 0;
-    const totalAssets = 2; // globe image + bump image
-
-    const checkAllLoaded = () => {
-      loadedCount++;
-      if (loadedCount >= totalAssets && !isLoaded) {
-        setIsLoaded(true);
-        if (onLoad) onLoad();
-      }
-    };
-
-    // Create the globe instance with optimized loading
+    // Create the globe instance
     const globe = new Globe()
-      .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg")
-      .bumpImageUrl("https://unpkg.com/three-globe/example/img/earth-topology.png");
+      .globeImageUrl("//unpkg.com/three-globe/example/img/earth-night.jpg")
+      .bumpImageUrl("//unpkg.com/three-globe/example/img/earth-topology.png");
 
-    // Preload textures for faster display
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.load(
-      "https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg",
-      () => checkAllLoaded(),
-      undefined,
-      (err) => { console.error('Error loading globe texture:', err); checkAllLoaded(); }
-    );
-    textureLoader.load(
-      "https://unpkg.com/three-globe/example/img/earth-topology.png",
-      () => checkAllLoaded(),
-      undefined,
-      (err) => { console.error('Error loading bump texture:', err); checkAllLoaded(); }
-    );
-
-    // Add hex polygons with reduced resolution for faster loading
+    // Add hex polygons for dotted pattern like the image
     fetch('./data/globe.json')
       .then(res => res.json())
       .then(countries => {
         globe
           .hexPolygonsData(countries.features)
-          .hexPolygonResolution(2) // Reduced from 3 to 2 for better performance
+          .hexPolygonResolution(3)
           .hexPolygonMargin(0.7)
           .hexPolygonColor(() => `rgba(${Math.floor(Math.random() * 128) + 128}, ${Math.floor(Math.random() * 128) + 128}, ${Math.floor(Math.random() * 128) + 128}, ${Math.random() * 0.4 + 0.3})`)
           .hexPolygonAltitude(0.01);
       })
       .catch(err => console.log('Error loading globe data:', err));
 
-    // Add arcs data with reduced count for faster initial load
+    // Add arcs data for animated lines
     if (data && data.length > 0) {
-      // Reduced to 15-25 lines for faster initial rendering
-      const desired = Math.max(15, Math.min(25, data.length));
-      const reducedData = [...data].sort(() => 0.5 - Math.random()).slice(0, desired);
-
       globe
-        .arcsData(reducedData)
-        .arcColor(() => ['#2da8ff', '#7cc7ff'])
-        .arcDashLength(1.4)
-        .arcDashGap(1.2)
+        .arcsData(data)
+        .arcColor('color')
+        .arcDashLength(0.9)
+        .arcDashGap(0.4)
         .arcDashInitialGap(() => Math.random() * 5)
-        .arcDashAnimateTime(4500)
-        .arcStroke(1.25)
-        .arcsTransitionDuration(700);
+        .arcDashAnimateTime(3000)
+        .arcStroke(0.5)
+        .arcsTransitionDuration(1000);
 
-      // Reduced points data for better performance
+      // Add points data for the cyan glowing circles - EXTREMELY bright
       globe
-        .pointsData(reducedData.slice(0, 15)) // Even fewer points initially
-        .pointColor(() => '#cccccc')
-        .pointAltitude(0.04)
-        .pointRadius(1.5)
+        .pointsData(data)
+        .pointColor(() => '#66ffff')
+        .pointAltitude(0.05)
+        .pointRadius(2)
         .pointsMerge(true);
 
-      // Progressive enhancement: Add rings after idle
-      const addRingsWhenIdle = () => {
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(() => {
-            globe
-              .ringsData(reducedData.slice(0, 10)) // Reduced ring count
-              .ringColor(() => '#d0d0d0')
-              .ringMaxRadius(2.5)
-              .ringPropagationSpeed(1.5)
-              .ringRepeatPeriod(1200)
-              .ringResolution(20); // Reduced from 24
-          });
-        } else {
-          setTimeout(() => {
-            globe
-              .ringsData(reducedData.slice(0, 10))
-              .ringColor(() => '#d0d0d0')
-              .ringMaxRadius(2.5)
-              .ringPropagationSpeed(1.5)
-              .ringRepeatPeriod(1200)
-              .ringResolution(20);
-          }, 1000);
-        }
-      };
-      addRingsWhenIdle();
+      // Add rings around cities for intense glow effect
+      globe
+        .ringsData(data)
+        .ringColor(() => '#00ffff')
+        .ringMaxRadius(3.5)
+        .ringPropagationSpeed(2)
+        .ringRepeatPeriod(800);
     }
 
-    // Configure atmosphere with brighter settings
+    // Configure atmosphere
     globe
       .showAtmosphere(true)
       .atmosphereColor("#ffffff")
-      .atmosphereAltitude(0.3);
+      .atmosphereAltitude(0.25);
 
-    // Enhance globe material for brightness
+    // Add custom material for dark blue gradient
     setTimeout(() => {
       const globeMaterial = globe.globeMaterial();
       if (globeMaterial) {
-        // Neutral material to let the texture show natural colors
-        globeMaterial.color = new THREE.Color(0xffffff);
-        globeMaterial.emissive = new THREE.Color(0x000000);
-        globeMaterial.emissiveIntensity = 0.1;
-        // Natural material response
-        if ('metalness' in globeMaterial) globeMaterial.metalness = 0.0;
-        if ('roughness' in globeMaterial) globeMaterial.roughness = 0.9;
-        if ('shininess' in globeMaterial) globeMaterial.shininess = 10;
+        globeMaterial.color = new THREE.Color(0x0a1929);
+        globeMaterial.emissive = new THREE.Color(0x001a33);
+        globeMaterial.emissiveIntensity = 0.2;
+        globeMaterial.shininess = 0.9;
       }
     }, 100);
 
@@ -158,68 +105,31 @@ function GlobeScene({ data, globeConfig, onLoad }) {
 }
 
 function World({ data, globeConfig }) {
-  const [isLoading, setIsLoading] = useState(true);
-
-  const handleGlobeLoad = () => {
-    // Add small delay for smooth transition
-    setTimeout(() => setIsLoading(false), 300);
-  };
-
-  const onPointerDown = (e) => { e.currentTarget.style.cursor = 'grabbing'; };
-  const onPointerUp = (e) => { e.currentTarget.style.cursor = 'grab'; };
-  const onPointerLeave = (e) => { e.currentTarget.style.cursor = 'grab'; };
-  const onPointerOver = (e) => { e.currentTarget.style.cursor = 'grab'; };
-
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      {/* Loading Spinner */}
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center z-20 bg-transparent">
-          <div className="relative">
-            {/* Outer rotating ring */}
-            <div className="w-24 h-24 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
-            {/* Inner pulsing circle */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-blue-500/20 rounded-full animate-pulse"></div>
-            {/* Center dot */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-blue-500 rounded-full"></div>
-          </div>
-          <p className="absolute bottom-8 text-white/70 text-sm animate-pulse">Loading Globe...</p>
-        </div>
-      )}
-
-      {/* Globe Canvas */}
-      <div style={{ opacity: isLoading ? 0 : 1, transition: 'opacity 0.5s ease-in-out' }}>
-        <Canvas
-          camera={{ position: [0, 0, 300], fov: 50 }}
-          gl={{
-            alpha: true,
-            antialias: true,
-            powerPreference: 'high-performance',
-            pixelRatio: Math.min(window.devicePixelRatio, 2)
-          }}
-          dpr={[1, 1.5]}
-          style={{ background: 'transparent', cursor: 'grab' }}
-          onPointerDown={onPointerDown}
-          onPointerUp={onPointerUp}
-          onPointerLeave={onPointerLeave}
-          onPointerOver={onPointerOver}
-        >
-          {/* Neutral lighting for natural colors */}
-          <ambientLight intensity={0.6} color="#ffffff" />
-          <directionalLight position={[5, 3, 5]} intensity={1.0} color="#ffffff" />
-          <directionalLight position={[-5, -3, -5]} intensity={0.5} color="#ffffff" />
-          <GlobeScene data={data} globeConfig={globeConfig} onLoad={handleGlobeLoad} />
-          <OrbitControls
-            enableZoom={true}
-            enablePan={false}
-            enableRotate={true}
-            minDistance={200}
-            maxDistance={500}
-            autoRotate={false}
-            rotateSpeed={0.5}
-          />
-        </Canvas>
-      </div>
+    <div style={{ width: '100%', height: '100%' }}>
+      <Canvas
+        camera={{ position: [0, 0, 300], fov: 50 }}
+        gl={{ alpha: true, antialias: true }}
+        style={{ background: 'transparent' }}
+      >
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[-8, 5, 8]} intensity={0.6} />
+        <pointLight position={[10, 10, 10]} intensity={3} color="#00ffff" />
+        <pointLight position={[-10, -10, -10]} intensity={1.5} color="#3b82f6" />
+        <pointLight position={[0, 0, 10]} intensity={2.5} color="#66ffff" />
+        <pointLight position={[5, 5, 5]} intensity={2.5} color="#00ffff" />
+        <pointLight position={[-5, 0, 5]} intensity={2} color="#00d9ff" />
+        <GlobeScene data={data} globeConfig={globeConfig} />
+        <OrbitControls
+          enableZoom={true}
+          enablePan={false}
+          enableRotate={true}
+          minDistance={200}
+          maxDistance={500}
+          autoRotate={false}
+          rotateSpeed={0.5}
+        />
+      </Canvas>
     </div>
   );
 }
