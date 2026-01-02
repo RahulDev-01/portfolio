@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { TextHoverEffect } from '../ui/text-hover-effect';
+import { useUpsideDown } from '../../contexts/UpsideDownContext';
 
 const DEFAULT_PARTICLE_COUNT = 12;
 const DEFAULT_SPOTLIGHT_RADIUS = 300;
@@ -478,10 +479,14 @@ const MagicBento = ({
   enableMagnetism = true,
   onNavigate = null
 }) => {
+  const { isUpsideDown } = useUpsideDown();
   const gridRef = useRef(null);
   const isMobile = useMobileDetection();
   // Always allow animations regardless of screen size
   const shouldDisableAnimations = disableAnimations;
+
+  // Change glow color based on Upside Down mode
+  const activeGlowColor = isUpsideDown ? '220, 38, 38' : glowColor;
 
   return (
     <>
@@ -492,13 +497,13 @@ const MagicBento = ({
             --glow-y: 50%;
             --glow-intensity: 0;
             --glow-radius: 200px;
-            --glow-color: ${glowColor};
-            --border-color: #392e4e;
-            --background-dark: #060010;
+            --glow-color: ${activeGlowColor};
+            --border-color: ${isUpsideDown ? '#4a0000' : '#392e4e'};
+            --background-dark: ${isUpsideDown ? '#0a0000' : '#060010'};
             --white: hsl(0, 0%, 100%);
-            --purple-primary: rgba(132, 0, 255, 1);
-            --purple-glow: rgba(132, 0, 255, 0.2);
-            --purple-border: rgba(132, 0, 255, 0.8);
+            --purple-primary: ${isUpsideDown ? 'rgba(220, 38, 38, 1)' : 'rgba(132, 0, 255, 1)'};
+            --purple-glow: ${isUpsideDown ? 'rgba(220, 38, 38, 0.2)' : 'rgba(132, 0, 255, 0.2)'};
+            --purple-border: ${isUpsideDown ? 'rgba(220, 38, 38, 0.8)' : 'rgba(132, 0, 255, 0.8)'};
           }
           /* Hide scrollbar for nav on small screens */
           .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -621,7 +626,7 @@ const MagicBento = ({
           disableAnimations={shouldDisableAnimations}
           enabled={enableSpotlight}
           spotlightRadius={spotlightRadius}
-          glowColor={glowColor}
+          glowColor={activeGlowColor}
         />
       )}
 
