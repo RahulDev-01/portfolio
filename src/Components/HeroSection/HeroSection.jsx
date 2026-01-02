@@ -76,11 +76,11 @@ const HeroSection = memo(() => {
 
       {/* Upside Down Button - Vertical on Right */}
       <button
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-20 pointer-events-auto
+        className="absolute right-0 top-70 -translate-y-1/2 z-20 pointer-events-auto
                    bg-gradient-to-b from-red-900/80 via-black/90 to-red-950/80
                    hover:from-red-800 hover:via-red-950 hover:to-black
                    text-white font-bold
-                   px-3 py-6 sm:px-4 sm:py-8
+                   px-2 py-4 sm:px-2.5 sm:py-6
                    rounded-l-xl
                    shadow-[0_0_20px_rgba(139,0,0,0.5)]
                    hover:shadow-[0_0_30px_rgba(220,38,38,0.8)]
@@ -110,7 +110,7 @@ const HeroSection = memo(() => {
       </button>
 
       {/* Overlay content above the effect */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none px-2 sm:px-4">
+      <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none px-2 sm:px-4 pr-12 sm:pr-16 md:pr-20">
         <div className="text-center px-3 sm:px-6">
           {/* Main Div */}
           <div className='flex flex-col-reverse md:flex-row items-center justify-center gap-4 sm:gap-8 md:gap-16 lg:gap-40 mb-6 sm:mb-10 md:mb-20'>
