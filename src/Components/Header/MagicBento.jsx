@@ -628,7 +628,7 @@ const MagicBento = ({
       <BentoCardGrid gridRef={gridRef}>
         <div className="w-full flex items-center justify-between py-1">
           <ParticleCard
-            className={`card group flex items-center justify-center relative px-1 py-0.5 h-10 sm:px-2 sm:py-0.5 sm:h-12 md:px-3 md:py-1 md:h-14 rounded-[6px] sm:rounded-[8px] font-light cursor-pointer transition-all duration-300 ease-in-out`}
+            className={`card group hidden md:flex items-center justify-center relative px-1 py-0.5 h-10 sm:px-2 sm:py-0.5 sm:h-12 md:px-3 md:py-1 md:h-14 rounded-[6px] sm:rounded-[8px] font-light cursor-pointer transition-all duration-300 ease-in-out`}
             style={{
               backgroundColor: 'transparent',
               borderColor: '#000000c8',
