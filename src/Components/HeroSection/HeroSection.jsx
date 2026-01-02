@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef, memo, useCallback, useMemo, Suspense } from 'react'
 import VariableProximity from '../ui/VariableProximity';
+import { useUpsideDown } from '../../contexts/UpsideDownContext';
+import FloatingParticles from '../ui/FloatingParticles';
+import VineOverlay from '../ui/VineOverlay';
+import GlitchText from '../ui/GlitchText';
 // import React, { Suspense } from 'react';
 const LiquidEther = React.lazy(() => import('../ui/LiquidEther'));
 import SplitText from "../ui/SplitText";
 import TextType from '../ui/TextType';
 
 const HeroSection = memo(() => {
+  const { isUpsideDown, toggleUpsideDown } = useUpsideDown();
   const containerRef = useRef(null);
   const titleRef = useRef(null);
   const desc1Ref = useRef(null);
@@ -29,7 +34,7 @@ const HeroSection = memo(() => {
   const liquidEtherProps = useMemo(() => ({
     className: isVPHover ? '!pointer-events-none !touch-none' : '!pointer-events-auto !touch-auto',
     style: { pointerEvents: isVPHover ? 'none' : 'auto', touchAction: isVPHover ? 'none' : 'auto' },
-    colors: ['#5227FF', '#FF9FFC', '#B19EEF'],
+    colors: isUpsideDown ? ['#8B0000', '#2a0a0a', '#4a0000'] : ['#5227FF', '#FF9FFC', '#B19EEF'],
     mouseForce: 20,
     cursorSize: 70,
     isViscous: false,
@@ -44,7 +49,7 @@ const HeroSection = memo(() => {
     takeoverDuration: 0.25,
     autoResumeDelay: 3000,
     autoRampDuration: 0.6,
-  }), [isVPHover]);
+  }), [isVPHover, isUpsideDown]);
 
   // Memoize VariableProximity props
   const variableProximityProps = useMemo(() => ({
@@ -69,13 +74,21 @@ const HeroSection = memo(() => {
     className: 'text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 sm:mt-3 md:mt-5 text-red-300 font-bold text-center md:text-left'
   }), []);
   return (
-    <div className='text-white w-full relative min-h-[520px] sm:min-h-[580px] md:h-[700px] overflow-hidden'>
+    <div className={`text-white w-full relative min-h-[520px] sm:min-h-[580px] md:h-[700px] overflow-hidden transition-all duration-700 ${isUpsideDown ? 'bg-gradient-to-b from-black via-red-950/20 to-black' : ''
+      }`}>
       <Suspense fallback={<div aria-hidden="true" className="absolute inset-0 pointer-events-none" />}>
         <LiquidEther {...liquidEtherProps} />
       </Suspense>
 
+      {/* Floating Particles - Only in Upside Down mode */}
+      {isUpsideDown && <FloatingParticles count={60} />}
+
+      {/* Vine Overlay - Only in Upside Down mode */}
+      {isUpsideDown && <VineOverlay />}
+
       {/* Upside Down Button - Vertical on Right */}
       <button
+        onClick={toggleUpsideDown}
         className="absolute right-0 top-70 -translate-y-1/2 z-20 pointer-events-auto
                    bg-gradient-to-b from-red-900/80 via-black/90 to-red-950/80
                    hover:from-red-800 hover:via-red-950 hover:to-black
@@ -119,7 +132,11 @@ const HeroSection = memo(() => {
               <img
                 src="/profile.jpg"
                 alt="Profile"
-                className='w-28 h-28 xs:w-32 xs:h-32 sm:w-40 sm:h-40 md:w-72 md:h-72 lg:w-96 lg:h-96 rounded-full object-cover border-2 border-white/10 shadow-xl'
+                className={`w-28 h-28 xs:w-32 xs:h-32 sm:w-40 sm:h-40 md:w-72 md:h-72 lg:w-96 lg:h-96 rounded-full object-cover border-2 shadow-xl transition-all duration-700 ${isUpsideDown
+                  ? 'border-red-900/50 saturate-50 brightness-75 contrast-125 hue-rotate-15'
+                  : 'border-white/10'
+                  }`}
+                style={isUpsideDown ? { filter: 'sepia(0.3) hue-rotate(-10deg)' } : {}}
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
@@ -146,12 +163,18 @@ const HeroSection = memo(() => {
 
                 <div className="mt-2 sm:mt-3">
                   <div ref={titleRef} style={{ position: 'relative', display: 'inline-block' }}>
-                    <VariableProximity
-                      label={`I'm Savvan Rahul a `}
-                      className={'mt-2 sm:mt-3 text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center md:text-left'}
-                      containerRef={titleRef}
-                      {...variableProximityProps}
-                    />
+                    {isUpsideDown ? (
+                      <GlitchText className={'mt-2 sm:mt-3 text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center md:text-left text-red-300'}>
+                        I'm Savvana Rahul a
+                      </GlitchText>
+                    ) : (
+                      <VariableProximity
+                        label={`I'm Savvan Rahul a `}
+                        className={'mt-2 sm:mt-3 text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center md:text-left'}
+                        containerRef={titleRef}
+                        {...variableProximityProps}
+                      />
+                    )}
                   </div>
                 </div>
 
