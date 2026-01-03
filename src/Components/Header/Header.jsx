@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import MagicBento from './MagicBento'
+import { useUpsideDown } from '../../contexts/UpsideDownContext'
 
 function Header() {
   const [isScrollingUp, setIsScrollingUp] = useState(false)
   const [hasScrolled, setHasScrolled] = useState(false)
+  const { isUpsideDown } = useUpsideDown()
 
   useEffect(() => {
     let lastY = window.scrollY
@@ -32,10 +34,14 @@ function Header() {
     }
   }
 
-  const glassWhenUp = 'backdrop-blur-0 bg-transparent border-b-0 shadow-none'
+  const glassWhenUp = isUpsideDown ? '' : 'backdrop-blur-0 bg-transparent border-b-0 shadow-none'
+  const headerStyle = isUpsideDown ? { backgroundColor: '#090303ff' } : {}
 
   return (
-    <header className={`relative z-50 w-full transition-all duration-300 ${glassWhenUp}`}>
+    <header
+      className={`relative z-50 w-full transition-all duration-300 ${glassWhenUp}`}
+      style={headerStyle}
+    >
       <div className="w-full flex justify-center py-1 sm:py-2">
         <MagicBento
           textAutoHide={true}
