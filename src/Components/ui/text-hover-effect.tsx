@@ -8,12 +8,14 @@ export const TextHoverEffect = ({
   auto = false,
   intervalMs = 3000,
   refreshEveryMs = 0,
+  redMode = false,
 }: {
   text: string;
   duration?: number;
   auto?: boolean;
   intervalMs?: number;
   refreshEveryMs?: number;
+  redMode?: boolean;
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
@@ -77,11 +79,23 @@ export const TextHoverEffect = ({
         >
           {hovered && (
             <>
-              <stop offset="0%" stopColor="#eab308" />
-              <stop offset="25%" stopColor="#ef4444" />
-              <stop offset="50%" stopColor="#3b82f6" />
-              <stop offset="75%" stopColor="#06b6d4" />
-              <stop offset="100%" stopColor="#8b5cf6" />
+              {redMode ? (
+                <>
+                  <stop offset="0%" stopColor="#7f1d1d" />
+                  <stop offset="25%" stopColor="#dc2626" />
+                  <stop offset="50%" stopColor="#ff0000" />
+                  <stop offset="75%" stopColor="#dc2626" />
+                  <stop offset="100%" stopColor="#7f1d1d" />
+                </>
+              ) : (
+                <>
+                  <stop offset="0%" stopColor="#eab308" />
+                  <stop offset="25%" stopColor="#ef4444" />
+                  <stop offset="50%" stopColor="#3b82f6" />
+                  <stop offset="75%" stopColor="#06b6d4" />
+                  <stop offset="100%" stopColor="#8b5cf6" />
+                </>
+              )}
             </>
           )}
         </linearGradient>
