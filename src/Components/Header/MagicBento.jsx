@@ -105,6 +105,11 @@ const ParticleCard = ({
     particlesInitialized.current = true;
   }, [particleCount, glowColor]);
 
+  useEffect(() => {
+    particlesInitialized.current = false;
+    memoizedParticles.current = [];
+  }, [glowColor]);
+
   const clearAllParticles = useCallback(() => {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
@@ -549,8 +554,8 @@ const MagicBento = ({
             inset: 0;
             padding: 3px;
             background: radial-gradient(var(--glow-radius) circle at var(--glow-x) var(--glow-y),
-                rgba(${glowColor}, calc(var(--glow-intensity) * 0.8)) 0%,
-                rgba(${glowColor}, calc(var(--glow-intensity) * 0.4)) 30%,
+                rgba(${activeGlowColor}, calc(var(--glow-intensity) * 0.8)) 0%,
+                rgba(${activeGlowColor}, calc(var(--glow-intensity) * 0.4)) 30%,
                 transparent 60%);
             border-radius: 8px;
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -567,7 +572,7 @@ const MagicBento = ({
           }
           
           .card--border-glow:hover {
-            box-shadow: 0 4px 20px rgba(46, 24, 78, 0.4), 0 0 30px rgba(${glowColor}, 0.2);
+            box-shadow: 0 4px 20px rgba(46, 24, 78, 0.4), 0 0 30px rgba(${activeGlowColor}, 0.2);
           }
           
           .particle::before {
@@ -636,7 +641,7 @@ const MagicBento = ({
             className={`card group hidden md:flex items-center justify-center relative px-1 py-0.5 h-10 sm:px-2 sm:py-0.5 sm:h-12 md:px-3 md:py-1 md:h-14 rounded-[6px] sm:rounded-[8px] font-light cursor-pointer transition-all duration-300 ease-in-out`}
             style={{
               backgroundColor: 'transparent',
-              borderColor: '#000000c8',
+              borderColor: isUpsideDown ? 'rgba(220, 38, 38, 0.5)' : '#000000c8',
               color: 'var(--white)',
               '--glow-x': '50%',
               '--glow-y': '50%',
@@ -646,19 +651,68 @@ const MagicBento = ({
             }}
             disableAnimations={shouldDisableAnimations}
             particleCount={particleCount}
-            glowColor={glowColor}
+            glowColor={activeGlowColor}
             enableTilt={false}
             clickEffect={false}
             enableMagnetism={false}
           >
-            <div className="flex items-center justify-center h-8 w-32 sm:h-10 sm:w-40 md:h-12 md:w-48 overflow-visible">
-              <TextHoverEffect text="PORTFOLIO" auto intervalMs={5000} refreshEveryMs={5000} />
+            <div className="flex items-center justify-center h-8 w-32 sm:h-10 sm:w-40 md:h-12 md:w-48 overflow-visible relative">
+              <TextHoverEffect text="PORTFOLIO" auto intervalMs={5000} refreshEveryMs={5000} redMode={isUpsideDown} />
+              {isUpsideDown && (
+                <>
+                  {/* Top Right Vine (Main) */}
+                  <div
+                    className="absolute -top-10 -right-6 w-24 h-24 pointer-events-none opacity-100 z-20"
+                    style={{
+                      backgroundImage: 'url(/vine_corner.png)',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      transform: 'rotate(90deg)',
+                      filter: 'brightness(1.5) contrast(1.2)'
+                    }}
+                  />
+                  {/* Top Left Vine (Small) */}
+                  <div
+                    className="absolute -top-8 -left-17 w-26 h-26 pointer-events-none opacity-100 z-20"
+                    style={{
+                      backgroundImage: 'url(/vine_corner.png)',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      transform: 'rotate(-45deg)',
+                      filter: 'brightness(1.5) contrast(1.2)'
+                    }}
+                  />
+                  {/* Bottom Right Vine (Small) */}
+                  <div
+                    className="absolute -bottom-6 -right-6 w-20 h-20 pointer-events-none opacity-100 z-20"
+                    style={{
+                      backgroundImage: 'url(/vine_corner.png)',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      transform: 'rotate(135deg)',
+                      filter: 'brightness(1.5) contrast(1.2)'
+                    }}
+                  />
+                  <div
+                    className="absolute -bottom-6 - left-6 w-20 h-20 pointer-events-none opacity-100 z-20"
+                    style={{
+                      backgroundImage: 'url(/vine_corner.png)',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      transform: 'rotate(180deg)',
+                      filter: 'brightness(1.5) contrast(1.2)'
+                    }}
+                  />
+                </>
+              )}
             </div>
           </ParticleCard>
           <div className="flex-1 flex items-center gap-2 sm:gap-4 justify-end mr-1 sm:mr-2 overflow-x-auto no-scrollbar md:gap-8 md:mr-10">
             {cardData.map((card, index) => {
-              const baseClassName = `card group flex items-center justify-center relative px-2 py-1 h-8 sm:px-3 sm:py-1 sm:h-9 md:px-5 md:py-2 md:h-10 rounded-[6px] sm:rounded-[8px] border border-solid font-light cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_15px_rgba(0,0,0,0.15)] hover:border-[#274DA5]  ${enableBorderGlow ? 'card--border-glow' : ''
-                }`;
+              const baseClassName = `card group flex items-center justify-center relative px-2 py-1 h-8 sm:px-3 sm:py-1 sm:h-9 md:px-5 md:py-2 md:h-10 rounded-[6px] sm:rounded-[8px] border border-solid font-light cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-0.5 ${isUpsideDown
+                ? 'hover:shadow-[0_0_20px_rgba(220,38,38,0.6)] hover:border-red-500 border-red-900/50'
+                : 'hover:shadow-[0_8px_15px_rgba(0,0,0,0.15)] hover:border-[#274DA5]'
+                } ${enableBorderGlow ? 'card--border-glow' : ''}`;
 
               const cardStyle = {
                 backgroundColor: 'transparent',
@@ -678,7 +732,7 @@ const MagicBento = ({
                     style={cardStyle}
                     disableAnimations={shouldDisableAnimations}
                     particleCount={particleCount}
-                    glowColor={glowColor}
+                    glowColor={activeGlowColor}
                     enableTilt={enableTilt}
                     clickEffect={clickEffect}
                     enableMagnetism={enableMagnetism}
@@ -688,8 +742,8 @@ const MagicBento = ({
                       }
                     }}
                   >
-                    <div className="card__content flex items-center justify-center relative text-white group-hover:text-white">
-                      <h3 className={`card__title font-semibold text-xs sm:text-sm md:text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''}`}>
+                    <div className={`card__content flex items-center justify-center relative text-white group-hover:text-white`}>
+                      <h3 className={`card__title font-semibold text-xs sm:text-sm md:text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''} ${isUpsideDown ? 'drop-shadow-[0_0_8px_rgba(220,38,38,0.8)]' : ''}`}>
                         {card.title}
                       </h3>
                     </div>
@@ -816,8 +870,11 @@ const MagicBento = ({
                     el.addEventListener('click', handleClick);
                   }}
                 >
-                  <div className="card__content flex items-center justify-center relative text-white group-hover:text-[#274DA5]">
-                    <h3 className={`card__title font-semibold text-xs sm:text-sm md:text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''}`}>
+                  <div className={`card__content flex items-center justify-center relative text-white ${isUpsideDown ? '' : 'group-hover:text-[#274DA5]'}`}>
+                    <h3
+                      className={`card__title font-semibold text-xs sm:text-sm md:text-lg m-0 ${textAutoHide ? 'text-clamp-1' : ''}`}
+                      style={isUpsideDown ? { textShadow: 'none', filter: 'none' } : {}}
+                    >
                       {card.title}
                     </h3>
                   </div>
@@ -826,7 +883,7 @@ const MagicBento = ({
             })}
           </div>
         </div>
-      </BentoCardGrid>
+      </BentoCardGrid >
     </>
   );
 };
