@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-const InteractiveBackground = () => {
+const InteractiveBackground = ({ redMode = false }) => {
     const canvasRef = useRef(null)
     const particlesRef = useRef([])
     const mouseRef = useRef({ x: 0, y: 0 })
@@ -29,7 +29,9 @@ const InteractiveBackground = () => {
                 this.vx = (Math.random() - 0.5) * 1.5
                 this.vy = (Math.random() - 0.5) * 1.5
                 this.radius = Math.random() * 3 + 2
-                const colors = ['#3b82f6', '#8b5cf6', '#06b6d4', '#ec4899']
+                const colors = redMode
+                    ? ['#dc2626', '#b91c1c', '#991b1b', '#7f1d1d']
+                    : ['#3b82f6', '#8b5cf6', '#06b6d4', '#ec4899']
                 this.color = colors[Math.floor(Math.random() * colors.length)]
                 this.opacity = Math.random() * 0.5 + 0.4
             }
@@ -120,7 +122,7 @@ const InteractiveBackground = () => {
             })
 
             // Draw connections
-            ctx.strokeStyle = '#8b5cf6'
+            ctx.strokeStyle = redMode ? '#dc2626' : '#8b5cf6'
             ctx.lineWidth = 1
             for (let i = 0; i < particles.length; i++) {
                 for (let j = i + 1; j < particles.length; j++) {
