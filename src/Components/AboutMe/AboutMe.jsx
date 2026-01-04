@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useRef, memo } from 'react'
 import { motion, useInView } from 'motion/react'
 import InteractiveBackground from './InteractiveBackground'
+import { useUpsideDown } from '../../contexts/UpsideDownContext'
+import FloatingParticles from '../ui/FloatingParticles'
+import StrangerVines from '../ui/StrangerVines'
 
 const AboutMe = memo(() => {
+    const { isUpsideDown } = useUpsideDown()
     const [counters, setCounters] = useState({ projects: 0, experience: 0, clients: 0 })
     const [activeInterestIndex, setActiveInterestIndex] = useState(0)
     const statsRef = useRef(null)
@@ -86,11 +90,15 @@ const AboutMe = memo(() => {
     ]
 
     return (
-        <div className="relative w-full bg-[#060010] text-white py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden">
+        <div className={`relative w-full text-white py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden transition-colors duration-700 ${isUpsideDown ? 'bg-gradient-to-b from-red-950 via-black to-red-950' : 'bg-[#060010]'
+            }`}>
             {/* Interactive Particle Background */}
             <div className="absolute inset-0 overflow-hidden">
-                <InteractiveBackground />
+                <InteractiveBackground redMode={isUpsideDown} />
             </div>
+
+            {/* Upside Down Vines Overlay */}
+            {isUpsideDown && <StrangerVines />}
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
@@ -101,11 +109,22 @@ const AboutMe = memo(() => {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-12 sm:mb-16"
                 >
-                    <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                        About Me
+                    <h2 className={`text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent ${isUpsideDown
+                        ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600'
+                        : 'bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400'
+                        }`}
+                        style={isUpsideDown ? {
+                            textShadow: '0 0 20px rgba(220, 38, 38, 0.5), 0 0 40px rgba(139, 0, 0, 0.3)',
+                            animation: 'flicker 3s infinite'
+                        } : {}}>
+                        {isUpsideDown ? 'WHO AM I IN THE UPSIDE DOWN' : 'About Me'}
                     </h2>
-                    <p className="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto">
-                        Passionate developer crafting digital experiences that blend creativity with functionality
+                    <p className={`text-lg sm:text-xl max-w-3xl mx-auto ${isUpsideDown ? 'text-red-300/70' : 'text-white/70'
+                        }`}>
+                        {isUpsideDown
+                            ? 'Surviving in the darkness... navigating the shadow realm since 2023'
+                            : 'Passionate developer crafting digital experiences that blend creativity with functionality'
+                        }
                     </p>
                 </motion.div>
 
@@ -118,26 +137,54 @@ const AboutMe = memo(() => {
                     transition={{ duration: 0.6, delay: 0.2 }}
                     className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16 sm:mb-20"
                 >
-                    {[
+                    {(isUpsideDown ? [
+                        { label: 'Crawls Completed ', value: counters.projects, suffix: '+', icon: '💀' },
+                        { label: 'Killed Demogorons', value: counters.experience, suffix: '+', icon: '⚰️' },
+                        { label: 'Portals Opened', value: 'Countless', suffix: '', icon: '🕷️', className: 'text-red-400' }
+                    ] : [
                         { label: 'Projects Completed', value: counters.projects, suffix: '+', icon: '🎯' },
                         { label: 'Years Experience', value: counters.experience, suffix: '+', icon: '⏱️' },
                         { label: 'Learning Devops ', value: 'Currently ', suffix: '', icon: '😊', className: 'text-blue-400' }
-                    ].map((stat) => (
+                    ]).map((stat) => (
                         <motion.div
                             key={stat.label}
-                            whileHover={{ scale: 1.05, y: -5 }}
+                            whileHover={{ y: -5 }}
                             className="relative group"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
-                            <div className="relative bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 sm:p-8 text-center">
+                            {/* Full Tentacle Frame on OUTSIDE of box - only in Upside Down mode */}
+                            {isUpsideDown && (
+                                <div className="absolute -inset-16 pointer-events-none z-30"
+                                    style={{
+                                        backgroundImage: 'url(/stats_horror_frame.png)',
+
+                                        scale: 1,
+                                        // transform: 'translate(-50%, -50%)',
+                                        backgroundSize: '98% 90%',
+                                        backgroundRepeat: 'no-repeat',
+                                        filter: 'drop-shadow(0 0 15px rgba(220,38,38,0.8))',
+                                        opacity: .8
+                                    }}
+                                />
+                            )}
+                            <div className={`absolute inset-0 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300 ${isUpsideDown
+                                ? 'bg-gradient-to-r from-red-900 via-red-800 to-red-900'
+                                : 'bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500'
+                                }`}></div>
+                            <div className={`relative backdrop-blur-lg rounded-2xl p-6 sm:p-8 text-center ${isUpsideDown
+                                ? 'bg-black/50 border border-red-900/50'
+                                : 'bg-white/5 border border-white/10'
+                                }`}>
                                 <div className="text-4xl mb-3">{stat.icon}</div>
                                 <div className={`text-2xl sm:text-3xl font-bold mb-2 px-2 min-h-[3rem] flex items-center justify-center whitespace-normal break-words ${typeof stat.value === 'number'
-                                    ? 'bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent'
+                                    ? isUpsideDown
+                                        ? 'bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent'
+                                        : 'bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent'
                                     : (stat.className || 'text-white')
-                                    }`}>
+                                    }`}
+                                    style={isUpsideDown ? { animation: 'flicker 2s infinite' } : {}}>
                                     {stat.value}{stat.suffix}
                                 </div>
-                                <div className="text-sm sm:text-base text-white/60">{stat.label}</div>
+                                <div className={`text-sm sm:text-base ${isUpsideDown ? 'text-red-300/60' : 'text-white/60'}`}>{stat.label}</div>
                             </div>
                         </motion.div>
                     ))}
@@ -151,12 +198,18 @@ const AboutMe = memo(() => {
                     transition={{ duration: 0.6 }}
                     className="mb-16 sm:mb-20"
                 >
-                    <h3 className="text-3xl sm:text-4xl font-bold text-center mb-12 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                        My Journey
+                    <h3 className={`text-3xl sm:text-4xl font-bold text-center mb-12 bg-clip-text text-transparent ${isUpsideDown
+                        ? 'bg-gradient-to-r from-red-400 to-red-600'
+                        : 'bg-gradient-to-r from-purple-400 to-pink-400'
+                        }`}>
+                        {isUpsideDown ? 'THE CORRUPTION TIMELINE' : 'My Journey'}
                     </h3>
                     <div className="relative">
                         {/* Timeline line */}
-                        <div className="absolute left-4 sm:left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-cyan-500"></div>
+                        <div className={`absolute left-4 sm:left-8 md:left-1/2 top-0 bottom-0 w-0.5 ${isUpsideDown
+                            ? 'bg-gradient-to-b from-red-900 via-red-600 to-red-900'
+                            : 'bg-gradient-to-b from-blue-500 via-purple-500 to-cyan-500'
+                            }`}></div>
 
                         {timeline.map((item, index) => (
                             <motion.div
@@ -169,23 +222,43 @@ const AboutMe = memo(() => {
                                     }`}
                             >
                                 {/* Timeline dot */}
-                                <div className="absolute left-4 sm:left-8 md:left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transform -translate-x-1/2 z-10 ring-2 sm:ring-4 ring-[#060010]"></div>
+                                <div className={`absolute left-4 sm:left-8 md:left-1/2 w-3 h-3 sm:w-4 sm:h-4 rounded-full transform -translate-x-1/2 z-10 ring-2 sm:ring-4 ${isUpsideDown
+                                    ? 'bg-gradient-to-r from-red-600 to-red-800 ring-black'
+                                    : 'bg-gradient-to-r from-blue-500 to-purple-500 ring-[#060010]'
+                                    }`}></div>
 
                                 {/* Content card */}
                                 <div className={`w-full md:w-5/12 pl-10 sm:pl-16 md:pl-0 pr-4 sm:pr-6 ${index % 2 === 0 ? 'md:mr-auto md:pr-8 lg:pr-12' : 'md:ml-auto md:pl-8 lg:pl-12'
                                     }`}>
                                     <motion.div
-                                        whileHover={{ scale: 1.03, y: -5 }}
+                                        whileHover={{ y: -5 }}
                                         className="relative group"
                                     >
-                                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-                                        <div className="relative bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-4 sm:p-6">
+                                        {/* Full Tentacle Frame on OUTSIDE of box - only in Upside Down mode */}
+                                        {isUpsideDown && (
+                                            <div className="absolute -inset-6 pointer-events-none z-30"
+                                                style={{
+                                                    backgroundImage: 'url(/tentacle_frame.png)',
+                                                    backgroundSize: '100% 100%',
+                                                    backgroundRepeat: 'no-repeat',
+                                                    filter: 'drop-shadow(0 0 8px rgba(220,38,38,0.5))'
+                                                }}
+                                            />
+                                        )}
+                                        <div className={`absolute inset-0 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300 ${isUpsideDown
+                                            ? 'bg-gradient-to-r from-red-900 via-red-800 to-red-900'
+                                            : 'bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500'
+                                            }`}></div>
+                                        <div className={`relative backdrop-blur-lg rounded-xl p-4 sm:p-6 ${isUpsideDown
+                                            ? 'bg-black/50 border border-red-900/50'
+                                            : 'bg-white/5 border border-white/10'
+                                            }`}>
                                             <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                                                <span className="text-2xl sm:text-3xl">{item.icon}</span>
-                                                <span className="text-xs sm:text-sm font-semibold text-cyan-400">{item.year}</span>
+                                                <span className="text-2xl sm:text-3xl">{isUpsideDown ? (index === 0 ? '🦑' : index === 1 ? '👁️' : '🔥') : item.icon}</span>
+                                                <span className={`text-xs sm:text-sm font-semibold ${isUpsideDown ? 'text-red-400' : 'text-cyan-400'}`}>{item.year}</span>
                                             </div>
                                             <h4 className="text-lg sm:text-xl font-bold mb-1 sm:mb-2 text-white">{item.title}</h4>
-                                            <p className="text-sm sm:text-base text-white/70">{item.description}</p>
+                                            <p className={`text-sm sm:text-base ${isUpsideDown ? 'text-red-300/70' : 'text-white/70'}`}>{item.description}</p>
                                         </div>
                                     </motion.div>
                                 </div>
@@ -202,8 +275,11 @@ const AboutMe = memo(() => {
                     transition={{ duration: 0.6 }}
                     className="mb-16 sm:mb-20"
                 >
-                    <h3 className="text-3xl sm:text-4xl font-bold text-center mb-12 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                        Skills & Expertise
+                    <h3 className={`text-3xl sm:text-4xl font-bold text-center mb-12 bg-clip-text text-transparent ${isUpsideDown
+                        ? 'bg-gradient-to-r from-red-400 to-red-600'
+                        : 'bg-gradient-to-r from-cyan-400 to-blue-400'
+                        }`}>
+                        {isUpsideDown ? 'POWERS UNLOCKED' : 'Skills & Expertise'}
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {skills.map((skill, index) => (
@@ -213,22 +289,43 @@ const AboutMe = memo(() => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, amount: 0.5 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                                whileHover={{ scale: 1.02 }}
+                                whileHover={{ y: -2 }}
                                 className="relative group"
                             >
-                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-cyan-500/20 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                <div className="relative bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
+                                {/* Full Tentacle Frame on OUTSIDE of box - only in Upside Down mode */}
+                                {isUpsideDown && (
+                                    <div className="absolute -inset-6 pointer-events-none z-30"
+                                        style={{
+                                            backgroundImage: 'url(/tentacle_frame.png)',
+                                            backgroundSize: '100% 100%',
+                                            backgroundRepeat: 'no-repeat',
+                                            filter: 'drop-shadow(0 0 8px rgba(220,38,38,0.5))'
+                                        }}
+                                    />
+                                )}
+                                <div className={`absolute inset-0 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isUpsideDown
+                                    ? 'bg-gradient-to-r from-red-900/30 via-red-800/30 to-red-900/30'
+                                    : 'bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-cyan-500/20'
+                                    }`}></div>
+                                <div className={`relative backdrop-blur-lg rounded-xl p-6 ${isUpsideDown
+                                    ? 'bg-black/50 border border-red-900/50'
+                                    : 'bg-white/5 border border-white/10'
+                                    }`}>
                                     <div className="flex justify-between items-center mb-3">
                                         <span className="font-semibold text-white">{skill.name}</span>
-                                        <span className="text-sm text-cyan-400">{skill.level}%</span>
+                                        <span className={`text-sm ${isUpsideDown ? 'text-red-400' : 'text-cyan-400'}`}>{skill.level}%</span>
                                     </div>
-                                    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                                    <div className={`h-2 rounded-full overflow-hidden ${isUpsideDown ? 'bg-red-950/50' : 'bg-white/10'}`}>
                                         <motion.div
                                             initial={{ width: 0 }}
                                             whileInView={{ width: `${skill.level}%` }}
                                             viewport={{ once: true, amount: 0.5 }}
                                             transition={{ duration: 1, delay: index * 0.1 }}
-                                            className={`h-full bg-gradient-to-r ${skill.color} rounded-full`}
+                                            className={`h-full rounded-full ${isUpsideDown
+                                                ? 'bg-gradient-to-r from-red-600 to-red-400'
+                                                : `bg-gradient-to-r ${skill.color}`
+                                                }`}
+                                            style={isUpsideDown ? { boxShadow: '0 0 10px rgba(220, 38, 38, 0.5)' } : {}}
                                         ></motion.div>
                                     </div>
                                 </div>
@@ -244,11 +341,21 @@ const AboutMe = memo(() => {
                     viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h3 className="text-3xl sm:text-4xl font-bold text-center mb-12 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-                        Beyond Code
+                    <h3 className={`text-3xl sm:text-4xl font-bold text-center mb-12 bg-clip-text text-transparent ${isUpsideDown
+                        ? 'bg-gradient-to-r from-red-400 to-red-600'
+                        : 'bg-gradient-to-r from-pink-400 to-purple-400'
+                        }`}>
+                        {isUpsideDown ? 'FORBIDDEN KNOWLEDGE' : 'Beyond Code'}
                     </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
-                        {interests.map((interest, index) => (
+                        {(isUpsideDown ? [
+                            { icon: '🔮', title: 'Dark Arts', description: 'Coding in the void' },
+                            { icon: '🩸', title: 'Creation', description: 'Designing nightmares' },
+                            { icon: '📜', title: 'Secrets', description: 'Ancient knowledge' },
+                            { icon: '🎰', title: 'Fortune', description: 'Testing fate' },
+                            { icon: '📻', title: 'Signals', description: 'Messages from beyond' },
+                            { icon: '🚀', title: 'Escape', description: 'Dimension hopping' }
+                        ] : interests).map((interest, index) => (
                             <motion.div
                                 key={interest.title}
                                 initial={{ opacity: 0, scale: 0.8 }}
@@ -256,18 +363,35 @@ const AboutMe = memo(() => {
                                 viewport={{ once: true, amount: 0.5 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
                                 animate={{
-                                    scale: activeInterestIndex === index ? 1.1 : 1,
+                                    scale: 1,
                                     rotate: activeInterestIndex === index ? 5 : 0
                                 }}
-                                whileHover={{ scale: 1.1, rotate: 5 }}
+                                whileHover={{ rotate: 5 }}
                                 className="relative group cursor-pointer"
                             >
-                                <div className={`absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-500 rounded-2xl blur-lg transition-opacity duration-500 ${activeInterestIndex === index ? 'opacity-50' : 'opacity-0 group-hover:opacity-50'
+                                {/* Full Tentacle Frame on OUTSIDE of box - only in Upside Down mode */}
+                                {isUpsideDown && (
+                                    <div className="absolute -inset-4 pointer-events-none z-30"
+                                        style={{
+                                            backgroundImage: 'url(/tentacle_frame.png)',
+                                            backgroundSize: '100% 100%',
+                                            backgroundRepeat: 'no-repeat',
+                                            filter: 'drop-shadow(0 0 6px rgba(220,38,38,0.5))'
+                                        }}
+                                    />
+                                )}
+                                <div className={`absolute inset-0 rounded-2xl blur-lg transition-opacity duration-500 ${activeInterestIndex === index ? 'opacity-50' : 'opacity-0 group-hover:opacity-50'
+                                    } ${isUpsideDown
+                                        ? 'bg-gradient-to-br from-red-900 via-red-800 to-red-900'
+                                        : 'bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-500'
                                     }`}></div>
-                                <div className="relative bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-4 sm:p-6 text-center">
+                                <div className={`relative backdrop-blur-lg rounded-2xl p-4 sm:p-6 text-center ${isUpsideDown
+                                    ? 'bg-black/50 border border-red-900/50'
+                                    : 'bg-white/5 border border-white/10'
+                                    }`}>
                                     <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">{interest.icon}</div>
                                     <h4 className="font-semibold text-sm sm:text-base mb-1">{interest.title}</h4>
-                                    <p className="text-xs text-white/60 hidden sm:block">{interest.description}</p>
+                                    <p className={`text-xs hidden sm:block ${isUpsideDown ? 'text-red-300/60' : 'text-white/60'}`}>{interest.description}</p>
                                 </div>
                             </motion.div>
                         ))}
