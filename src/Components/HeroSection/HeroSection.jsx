@@ -5,6 +5,8 @@ import FloatingParticles from '../ui/FloatingParticles';
 import GlitchText from '../ui/GlitchText';
 import VShapedPortalTransition from '../ui/VShapedPortalTransition';
 import StrangerVines, { VineRing } from '../ui/StrangerVines';
+import StrangerThingsLoader from '../ui/StrangerThingsLoader';
+import UpsideDownAudio from '../ui/UpsideDownAudio';
 // import React, { Suspense } from 'react';
 const LiquidEther = React.lazy(() => import('../ui/LiquidEther'));
 import SplitText from "../ui/SplitText";
@@ -110,6 +112,13 @@ const HeroSection = memo(() => {
       {/* Floating Particles - Only in Upside Down mode */}
       {isUpsideDown && <FloatingParticles count={40} />}
 
+      {/* Stranger Things Loading Screen - Shows only when ENTERING Upside Down */}
+      {isTransitioning && isUpsideDown && <StrangerThingsLoader />}
+
+      {/* Ambient Audio - Only in Upside Down mode */}
+      {/* Temporarily disabled until audio file is added to /public folder */}
+      {/* {isUpsideDown && <UpsideDownAudio key="upside-down-audio" />} */}
+
       {/* Stranger Things Vines - Left and Right sides */}
       {isUpsideDown && <StrangerVines />}
 
@@ -134,7 +143,7 @@ const HeroSection = memo(() => {
         <span className="relative z-10 text-sm sm:text-base md:text-lg tracking-wider
                          transition-all duration-300
                          drop-shadow-[0_0_8px_rgba(220,38,38,0.8)]">
-          Enter Into  UPSIDE DOWN
+          {isUpsideDown ? "ESCAPE THE UPSIDE DOWN" : "ENTER INTO UPSIDE DOWN"}
         </span>
 
         {/* Animated particles effect */}
