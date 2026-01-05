@@ -8,6 +8,20 @@ const DEFAULT_SPOTLIGHT_RADIUS = 300;
 const DEFAULT_GLOW_COLOR = '132, 0, 255';
 const MOBILE_BREAKPOINT = 768;
 
+const PROJECT_IMAGES = [
+  '/Projects/SwiftResumeAi.png',
+  '/Projects/destinAi.png',
+  '/Projects/gemini.png',
+  '/Projects/Map.png'
+];
+
+const UPSIDE_DOWN_PROJECT_IMAGES = [
+  '/Projects/UpsideDown/SwiftResumeAi.png',
+  '/Projects/UpsideDown/destinAi.png',
+  '/Projects/UpsideDown/gemini.png',
+  '/Projects/UpsideDown/Map.png'
+];
+
 const cardData = [
   {
     color: '#060010',
@@ -485,6 +499,15 @@ const MagicBento = ({
   onNavigate = null
 }) => {
   const { isUpsideDown } = useUpsideDown();
+  const [currentProjectImageIndex, setCurrentProjectImageIndex] = useState(0);
+
+  useEffect(() => {
+    if (!isUpsideDown) return;
+    const interval = setInterval(() => {
+      setCurrentProjectImageIndex((prev) => (prev + 1) % PROJECT_IMAGES.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [isUpsideDown]);
   const gridRef = useRef(null);
   const isMobile = useMobileDetection();
   // Always allow animations regardless of screen size
@@ -657,7 +680,7 @@ const MagicBento = ({
             enableMagnetism={false}
           >
             <div className="flex items-center justify-center h-8 w-32 sm:h-10 sm:w-40 md:h-12 md:w-48 overflow-visible relative">
-              <TextHoverEffect text="PORTFOLIO" auto intervalMs={5000} refreshEveryMs={5000} redMode={isUpsideDown} />
+              <TextHoverEffect text="PORTFOLIO" auto intervalMs={5000} refreshEveryMs={5000} redMode={isUpsideDown} imageFill={isUpsideDown ? UPSIDE_DOWN_PROJECT_IMAGES[currentProjectImageIndex] : ''} />
               {isUpsideDown && (
                 <>
                   {/* Top Right Vine (Main) */}
