@@ -97,8 +97,7 @@ const AboutMe = memo(() => {
                 <InteractiveBackground redMode={isUpsideDown} />
             </div>
 
-            {/* Upside Down Vines Overlay */}
-            {isUpsideDown && <StrangerVines />}
+
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
@@ -153,27 +152,19 @@ const AboutMe = memo(() => {
                         >
                             {/* Full Tentacle Frame on OUTSIDE of box - only in Upside Down mode */}
                             {isUpsideDown && (
-                                <div className="absolute -inset-16 pointer-events-none z-30"
+                                <div className="absolute -inset-16 pointer-events-none z-30 rounded-lg overflow-hidden"
                                     style={{
                                         backgroundImage: 'url(/stats_horror_frame.png)',
-
                                         scale: 1,
-                                        // transform: 'translate(-50%, -50%)',
                                         backgroundSize: '98% 90%',
                                         backgroundRepeat: 'no-repeat',
                                         filter: 'drop-shadow(0 0 15px rgba(220,38,38,0.8))',
-                                        opacity: .8
+                                        opacity: .6
                                     }}
                                 />
                             )}
-                            <div className={`absolute inset-0 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300 ${isUpsideDown
-                                ? 'bg-gradient-to-r from-red-900 via-red-800 to-red-900'
-                                : 'bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500'
-                                }`}></div>
-                            <div className={`relative backdrop-blur-lg rounded-2xl p-6 sm:p-8 text-center ${isUpsideDown
-                                ? 'bg-black/50 border border-red-900/50'
-                                : 'bg-white/5 border border-white/10'
-                                }`}>
+                            <div className={`absolute inset-0 blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300 ${isUpsideDown ? 'rounded-lg bg-gradient-to-r from-red-900 via-red-800 to-red-900' : 'rounded-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500'}`}></div>
+                            <div className={`relative backdrop-blur-lg p-6 sm:p-8 text-center overflow-hidden ${isUpsideDown ? 'rounded-lg bg-black/50 border border-red-900/50' : 'rounded-3xl bg-white/5 border border-white/10'}`}>
                                 <div className="text-4xl mb-3">{stat.icon}</div>
                                 <div className={`text-2xl sm:text-3xl font-bold mb-2 px-2 min-h-[3rem] flex items-center justify-center whitespace-normal break-words ${typeof stat.value === 'number'
                                     ? isUpsideDown
@@ -236,23 +227,23 @@ const AboutMe = memo(() => {
                                     >
                                         {/* Full Tentacle Frame on OUTSIDE of box - only in Upside Down mode */}
                                         {isUpsideDown && (
-                                            <div className="absolute -inset-6 pointer-events-none z-30"
+                                            <div className="absolute -inset-8 pointer-events-none z-30 rounded-lg overflow-hidden"
                                                 style={{
-                                                    backgroundImage: 'url(/tentacle_frame.png)',
-                                                    backgroundSize: '100% 100%',
+                                                    backgroundImage: 'url(/timeline_tentacle_frame.png?v=2)',
+                                                    backgroundSize: '90% 90%',
+                                                    backgroundPosition: 'center',
+                                                    scale: '1.1',
+                                                    height: '350px',
+                                                    margin: 'auto',
+                                                    padding: 'auto',
                                                     backgroundRepeat: 'no-repeat',
-                                                    filter: 'drop-shadow(0 0 8px rgba(220,38,38,0.5))'
+                                                    filter: 'drop-shadow(0 0 8px rgba(220,38,38,0.5))',
+                                                    opacity: 0.6
                                                 }}
                                             />
                                         )}
-                                        <div className={`absolute inset-0 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300 ${isUpsideDown
-                                            ? 'bg-gradient-to-r from-red-900 via-red-800 to-red-900'
-                                            : 'bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500'
-                                            }`}></div>
-                                        <div className={`relative backdrop-blur-lg rounded-xl p-4 sm:p-6 ${isUpsideDown
-                                            ? 'bg-black/50 border border-red-900/50'
-                                            : 'bg-white/5 border border-white/10'
-                                            }`}>
+                                        <div className={`absolute inset-0 blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300 ${isUpsideDown ? 'rounded-lg bg-gradient-to-r from-red-900 via-red-800 to-red-900' : 'rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500'}`}></div>
+                                        <div className={`relative backdrop-blur-lg p-4 sm:p-6 overflow-hidden ${isUpsideDown ? 'rounded-lg bg-black/50 border border-red-900/50' : 'rounded-2xl bg-white/5 border border-white/10'}`}>
                                             <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                                                 <span className="text-2xl sm:text-3xl">{isUpsideDown ? (index === 0 ? '🦑' : index === 1 ? '👁️' : '🔥') : item.icon}</span>
                                                 <span className={`text-xs sm:text-sm font-semibold ${isUpsideDown ? 'text-red-400' : 'text-cyan-400'}`}>{item.year}</span>
@@ -294,7 +285,7 @@ const AboutMe = memo(() => {
                             >
                                 {/* Full Tentacle Frame on OUTSIDE of box - only in Upside Down mode */}
                                 {isUpsideDown && (
-                                    <div className="absolute -inset-6 pointer-events-none z-30"
+                                    <div className="absolute -inset-6 pointer-events-none z-30 rounded-lg overflow-hidden"
                                         style={{
                                             backgroundImage: 'url(/tentacle_frame.png)',
                                             backgroundSize: '100% 100%',
@@ -303,14 +294,16 @@ const AboutMe = memo(() => {
                                         }}
                                     />
                                 )}
-                                <div className={`absolute inset-0 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isUpsideDown
-                                    ? 'bg-gradient-to-r from-red-900/30 via-red-800/30 to-red-900/30'
-                                    : 'bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-cyan-500/20'
-                                    }`}></div>
-                                <div className={`relative backdrop-blur-lg rounded-xl p-6 ${isUpsideDown
-                                    ? 'bg-black/50 border border-red-900/50'
-                                    : 'bg-white/5 border border-white/10'
-                                    }`}>
+                                <div className={`absolute inset-0 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isUpsideDown ? 'rounded-lg bg-gradient-to-r from-red-900/30 via-red-800/30 to-red-900/30' : 'rounded-xl bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-cyan-500/20'}`}></div>
+                                <div
+                                    className={`relative backdrop-blur-lg p-6 ${isUpsideDown ? 'rounded-lg bg-black/50 border border-red-900/50' : 'rounded-xl bg-white/5 border border-white/10'}`}
+                                    style={isUpsideDown ? {
+                                        backgroundImage: 'url(/skill_power_bg.png?v=1)',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
+                                        backgroundBlendMode: 'screen'
+                                    } : {}}
+                                >
                                     <div className="flex justify-between items-center mb-3">
                                         <span className="font-semibold text-white">{skill.name}</span>
                                         <span className={`text-sm ${isUpsideDown ? 'text-red-400' : 'text-cyan-400'}`}>{skill.level}%</span>
@@ -369,26 +362,9 @@ const AboutMe = memo(() => {
                                 whileHover={{ rotate: 5 }}
                                 className="relative group cursor-pointer"
                             >
-                                {/* Full Tentacle Frame on OUTSIDE of box - only in Upside Down mode */}
-                                {isUpsideDown && (
-                                    <div className="absolute -inset-4 pointer-events-none z-30"
-                                        style={{
-                                            backgroundImage: 'url(/tentacle_frame.png)',
-                                            backgroundSize: '100% 100%',
-                                            backgroundRepeat: 'no-repeat',
-                                            filter: 'drop-shadow(0 0 6px rgba(220,38,38,0.5))'
-                                        }}
-                                    />
-                                )}
-                                <div className={`absolute inset-0 rounded-2xl blur-lg transition-opacity duration-500 ${activeInterestIndex === index ? 'opacity-50' : 'opacity-0 group-hover:opacity-50'
-                                    } ${isUpsideDown
-                                        ? 'bg-gradient-to-br from-red-900 via-red-800 to-red-900'
-                                        : 'bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-500'
-                                    }`}></div>
-                                <div className={`relative backdrop-blur-lg rounded-2xl p-4 sm:p-6 text-center ${isUpsideDown
-                                    ? 'bg-black/50 border border-red-900/50'
-                                    : 'bg-white/5 border border-white/10'
-                                    }`}>
+
+                                <div className={`absolute inset-0 blur-lg transition-opacity duration-500 ${activeInterestIndex === index ? 'opacity-50' : 'opacity-0 group-hover:opacity-50'} ${isUpsideDown ? 'rounded-lg bg-gradient-to-br from-red-900 via-red-800 to-red-900' : 'rounded-3xl bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-500'}`}></div>
+                                <div className={`relative backdrop-blur-lg p-4 sm:p-6 text-center overflow-hidden ${isUpsideDown ? 'rounded-lg bg-black/50 border border-red-900/50' : 'rounded-3xl bg-white/5 border border-white/10'}`}>
                                     <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">{interest.icon}</div>
                                     <h4 className="font-semibold text-sm sm:text-base mb-1">{interest.title}</h4>
                                     <p className={`text-xs hidden sm:block ${isUpsideDown ? 'text-red-300/60' : 'text-white/60'}`}>{interest.description}</p>
