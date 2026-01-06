@@ -9,6 +9,7 @@ export const TextHoverEffect = ({
   intervalMs = 3000,
   refreshEveryMs = 0,
   redMode = false,
+  imageFill = "",
 }: {
   text: string;
   duration?: number;
@@ -16,6 +17,7 @@ export const TextHoverEffect = ({
   intervalMs?: number;
   refreshEveryMs?: number;
   redMode?: boolean;
+  imageFill?: string;
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
@@ -100,6 +102,22 @@ export const TextHoverEffect = ({
           )}
         </linearGradient>
 
+        {imageFill && (
+          <pattern
+            id="imagePattern"
+            patternUnits="userSpaceOnUse"
+            width="300"
+            height="100"
+          >
+            <image
+              href={imageFill}
+              width="300"
+              height="100"
+              preserveAspectRatio="xMidYMid slice"
+            />
+          </pattern>
+        )}
+
         <motion.radialGradient
           id="revealMask"
           gradientUnits="userSpaceOnUse"
@@ -136,7 +154,7 @@ export const TextHoverEffect = ({
         dominantBaseline="middle"
         strokeWidth="0.3"
         className="fill-transparent stroke-neutral-200 font-[helvetica] text-7xl font-bold dark:stroke-neutral-800"
-        style={{ opacity: hovered ? 0.7 : 0 }}
+        style={{ opacity: hovered ? (redMode ? 0.4 : 0.7) : 0 }}
       >
         {text}
       </text>
@@ -164,10 +182,11 @@ export const TextHoverEffect = ({
         y="50%"
         textAnchor="middle"
         dominantBaseline="middle"
-        stroke="url(#textGradient)"
+        stroke={imageFill ? "url(#imagePattern)" : "url(#textGradient)"}
         strokeWidth="0.3"
         mask="url(#textMask)"
-        className="fill-transparent font-[helvetica] text-7xl font-bold"
+        className={`font-[helvetica] text-7xl font-bold ${imageFill ? "" : "fill-transparent"}`}
+        style={imageFill ? { fill: "url(#imagePattern)" } : {}}
       >
         {text}
       </text>
