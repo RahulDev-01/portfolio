@@ -5,8 +5,10 @@ import SplashCursor from '../Components/ui/SplashCursor'
 import { CardContainer, CardBody, CardItem } from '../Components/ui/3d-card'
 import { motion } from "motion/react";
 import { LinkPreview } from "../Components/ui/link-preview";
+import { useUpsideDown } from '../contexts/UpsideDownContext';
 
 const Projects = memo(() => {
+  const { isUpsideDown } = useUpsideDown();
   const projectsRef = useRef(null);
   const [imagesPreloaded, setImagesPreloaded] = useState(false);
 
@@ -82,7 +84,16 @@ const Projects = memo(() => {
             carWidthPercentage: [0.3, 0.5],
             carShiftX: [-0.8, 0.8],
             carFloorSeparation: [0, 5],
-            colors: {
+            colors: isUpsideDown ? {
+              roadColor: 0x080000,
+              islandColor: 0x0a0000,
+              background: 0x000000,
+              shoulderLines: 0xaa0000,
+              brokenLines: 0xaa0000,
+              leftCars: [0xff0000, 0x880000, 0x440000],
+              rightCars: [0xff4444, 0xaa0000, 0x550000],
+              sticks: 0xff0000,
+            } : {
               roadColor: 0x080808,
               islandColor: 0x0a0a0a,
               background: 0x000000,
@@ -99,14 +110,14 @@ const Projects = memo(() => {
       {/* Content Overlay */}
       <div className='relative z-10 flex flex-col items-start justify-start '>
         <div className='w-full flex flex-col items-start justify-start '>
-          <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent m-6 md:m-8 lg:m-10 animate-gradient-x '>
-            My Projects  <hr className='w-full h-1 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 mt-5 animate-gradient-x border-0' />
+          <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent m-6 md:m-8 lg:m-10 animate-gradient-x ${isUpsideDown ? 'bg-gradient-to-r from-red-600 via-red-900 to-black' : 'bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400'}`}>
+            My Projects  <hr className={`w-full h-1 mt-5 animate-gradient-x border-0 ${isUpsideDown ? 'bg-gradient-to-r from-red-600 via-red-900 to-black' : 'bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400'}`} />
           </h1>
           {/* Main Div */}
           {/* Swift Resume AI */}
           <div className='w-full flex flex-col lg:flex-row h-auto lg:h-[600px] p-4 md:p-6 lg:p-10 rounded-xl gap-4 lg:gap-5'>
             <CardContainer className="inter-var">
-              <CardBody className="bg-black/20 backdrop-blur-md relative group/card hover:shadow-2xl hover:shadow-purple-500/[0.3] border-purple-400/30 w-full lg:w-auto lg:sm:w-[30rem] h-[400px] md:h-[450px] rounded-xl p-4 md:p-6 border">
+              <CardBody className={`bg-black/20 backdrop-blur-md relative group/card w-full lg:w-auto lg:sm:w-[30rem] h-[400px] md:h-[450px] rounded-xl p-4 md:p-6 border transition-all duration-300 ${isUpsideDown ? 'hover:shadow-2xl hover:shadow-red-500/[0.4] border-red-900/50' : 'hover:shadow-2xl hover:shadow-purple-500/[0.3] border-purple-400/30'}`}>
                 <CardItem translateZ="50" className="text-lg md:text-xl font-bold text-neutral-600 dark:text-white ">
                   Swift Resume AI 📝
                 </CardItem>
@@ -115,10 +126,10 @@ const Projects = memo(() => {
                 </CardItem>
                 <CardItem translateZ="100" className="w-full mt-4">
                   <img
-                    src="/Projects/SwiftResumeAi.png"
+                    src={isUpsideDown ? "/Projects/UpsideDown/SwiftResumeAi.png" : "/Projects/SwiftResumeAi.png"}
                     height="1100"
                     width="1100"
-                    className="h-48 md:h-60 w-full object-contain border border-purple-400/30 rounded-xl group-hover/card:shadow-xl transition-transform duration-300 group-hover/card:scale-105 group-hover/card:-translate-y-1"
+                    className={`h-48 md:h-60 w-full object-contain border rounded-2xl group-hover/card:shadow-xl transition-transform duration-300 group-hover/card:scale-105 group-hover/card:-translate-y-1 ${isUpsideDown ? 'border-red-950/50' : 'border-purple-400/30'}`}
                     alt="Swift Resume AI Project Screenshot"
                     loading="eager"
                     fetchPriority="high"
@@ -131,14 +142,14 @@ const Projects = memo(() => {
                     as="a"
                     href="https://swiftresumeai.vercel.app/"
                     target="_blank"
-                    className="px-3 md:px-4 py-2 rounded-xl text-xs font-normal text-gray-100  hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/50"
+                    className={`px-3 md:px-4 py-2 rounded-xl text-xs font-normal text-gray-100 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-lg ${isUpsideDown ? 'hover:from-red-600 hover:to-black hover:shadow-red-500/50' : 'hover:from-purple-600 hover:to-pink-600 hover:shadow-purple-500/50'}`}
                   >
                     Click Here →
                   </CardItem>
                 </div>
               </CardBody>
             </CardContainer>
-            <div className='bg-black/20 backdrop-blur-sm w-full flex h-[400px] md:h-[450px] p-4 md:p-6 lg:p-10 rounded-xl border border-purple-400/30 mt-4 lg:mt-8 hover:shadow-2xl hover:shadow-purple-500/[0.3] transition-all duration-300 hover:scale-102 hover:-translate-y-1'>
+            <div className={`bg-black/20 backdrop-blur-sm w-full flex h-[400px] md:h-[450px] p-4 md:p-6 lg:p-10 rounded-xl border mt-4 lg:mt-8 transition-all duration-300 hover:scale-102 hover:-translate-y-1 ${isUpsideDown ? 'hover:shadow-2xl hover:shadow-red-500/[0.4] border-red-900/50' : 'border-purple-400/30 hover:shadow-2xl hover:shadow-purple-500/[0.3]'}`}>
               <div className="flex justify-center items-center h-full flex-col px-2 md:px-4">
                 <div className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
                   <LinkPreview
@@ -165,7 +176,7 @@ const Projects = memo(() => {
           </div>
           <div className='w-full flex flex-col lg:flex-row h-auto lg:h-[600px] p-4 md:p-6 lg:p-10 rounded-xl gap-4 lg:gap-5'>
             <CardContainer className="inter-var">
-              <CardBody className="bg-black/20 backdrop-blur-md relative group/card hover:shadow-2xl hover:shadow-purple-500/[0.3] border-purple-400/30 w-full lg:w-auto lg:sm:w-[30rem] h-[400px] md:h-[450px] rounded-xl p-4 md:p-6 border">
+              <CardBody className={`bg-black/20 backdrop-blur-md relative group/card w-full lg:w-auto lg:sm:w-[30rem] h-[400px] md:h-[450px] rounded-xl p-4 md:p-6 border transition-all duration-300 ${isUpsideDown ? 'hover:shadow-2xl hover:shadow-red-500/[0.4] border-red-900/50' : 'hover:shadow-2xl hover:shadow-purple-500/[0.3] border-purple-400/30'}`}>
                 <CardItem
                   translateZ="50"
                   className="text-lg md:text-xl font-bold text-neutral-600 dark:text-white"
@@ -181,10 +192,10 @@ const Projects = memo(() => {
                 </CardItem>
                 <CardItem translateZ="100" className="w-full mt-4">
                   <img
-                    src="/Projects/destinAi.png"
+                    src={isUpsideDown ? "/Projects/UpsideDown/destinAi.png" : "/Projects/destinAi.png"}
                     height="1000"
                     width="1000"
-                    className="h-48 md:h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl transition-transform duration-300 group-hover/card:scale-105 group-hover/card:-translate-y-1"
+                    className={`h-48 md:h-60 w-full object-cover rounded-2xl group-hover/card:shadow-xl transition-transform duration-300 group-hover/card:scale-105 group-hover/card:-translate-y-1 ${isUpsideDown ? 'border-red-950/50' : ''}`}
                     alt="Destin AI Project Screenshot"
                     loading="eager"
                     fetchPriority="high"
@@ -197,7 +208,7 @@ const Projects = memo(() => {
                     as="a"
                     href="https://destinai-rahul.vercel.app/"
                     target="__blank"
-                    className="px-3 md:px-4 py-2 rounded-xl text-xs font-normal text-gray-100  hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/50"
+                    className={`px-3 md:px-4 py-2 rounded-xl text-xs font-normal text-gray-100 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-lg ${isUpsideDown ? 'hover:from-red-600 hover:to-black hover:shadow-red-500/50' : 'hover:from-purple-600 hover:to-pink-600 hover:shadow-purple-500/50'}`}
                   >
                     Click Here →
                   </CardItem>
@@ -205,7 +216,7 @@ const Projects = memo(() => {
               </CardBody>
             </CardContainer>
             {/* Right Section */}
-            <div className='bg-black/20 backdrop-blur-sm w-full flex h-[400px] md:h-[450px] p-4 md:p-6 lg:p-10 rounded-xl border border-purple-400/30 mt-4 lg:mt-8 hover:shadow-2xl hover:shadow-purple-500/[0.3] transition-all duration-300 hover:scale-102 hover:-translate-y-1'>
+            <div className={`bg-black/20 backdrop-blur-sm w-full flex h-[400px] md:h-[450px] p-4 md:p-6 lg:p-10 rounded-xl border mt-4 lg:mt-8 transition-all duration-300 hover:scale-102 hover:-translate-y-1 ${isUpsideDown ? 'hover:shadow-2xl hover:shadow-red-500/[0.4] border-red-900/50' : 'border-purple-400/30 hover:shadow-2xl hover:shadow-purple-500/[0.3]'}`}>
               <div className="flex justify-center items-center h-full flex-col px-2 md:px-4">
                 <div className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
                   <LinkPreview
@@ -234,7 +245,7 @@ const Projects = memo(() => {
       {/* Gemini  AI Clone  */}
       <div className='w-full flex flex-col lg:flex-row h-auto lg:h-[600px] p-4 md:p-6 lg:p-10 rounded-xl gap-4 lg:gap-5'>
         <CardContainer className="inter-var">
-          <CardBody className="bg-black/20 backdrop-blur-md relative group/card hover:shadow-2xl hover:shadow-purple-500/[0.3] border-purple-400/30 w-full lg:w-auto lg:sm:w-[30rem] h-[400px] md:h-[450px] rounded-xl p-4 md:p-6 border">
+          <CardBody className={`bg-black/20 backdrop-blur-md relative group/card w-full lg:w-auto lg:sm:w-[30rem] h-[400px] md:h-[450px] rounded-xl p-4 md:p-6 border transition-all duration-300 ${isUpsideDown ? 'hover:shadow-2xl hover:shadow-red-500/[0.4] border-red-900/50' : 'hover:shadow-2xl hover:shadow-purple-500/[0.3] border-purple-400/30'}`}>
             <CardItem translateZ="50" className="text-lg md:text-xl font-bold text-neutral-600 dark:text-white">
               Gemini AI Clone 🚀
             </CardItem>
@@ -243,10 +254,10 @@ const Projects = memo(() => {
             </CardItem>
             <CardItem translateZ="100" className="w-full mt-4">
               <img
-                src="/Projects/gemini.png"
+                src={isUpsideDown ? "/Projects/UpsideDown/gemini.png" : "/Projects/gemini.png"}
                 height="1000"
                 width="1000"
-                className="h-48 md:h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl transition-transform duration-300 group-hover/card:scale-105 group-hover/card:-translate-y-1"
+                className={`h-48 md:h-60 w-full object-cover rounded-2xl group-hover/card:shadow-xl transition-transform duration-300 group-hover/card:scale-105 group-hover/card:-translate-y-1 ${isUpsideDown ? 'border-red-950/50' : ''}`}
                 alt="Gemini AI Clone Project Screenshot"
                 loading="eager"
                 fetchPriority="high"
@@ -259,14 +270,14 @@ const Projects = memo(() => {
                 as="a"
                 href="https://gemini-clone-six-ruby.vercel.app/"
                 target="__blank"
-                className="px-3 md:px-4 py-2 rounded-xl text-xs font-normal text-gray-100  transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/50"
+                className={`px-3 md:px-4 py-2 rounded-xl text-xs font-normal text-gray-100 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-lg ${isUpsideDown ? 'hover:from-red-600 hover:to-black hover:shadow-red-500/50' : 'hover:from-purple-600 hover:to-pink-600 hover:shadow-purple-500/50'}`}
               >
                 Click Here →
               </CardItem>
             </div>
           </CardBody>
         </CardContainer>
-        <div className='bg-black/20 backdrop-blur-sm w-full flex h-[400px] md:h-[450px] p-4 md:p-6 lg:p-10 rounded-xl border border-purple-400/30 mt-4 lg:mt-8 hover:shadow-2xl hover:shadow-purple-500/[0.3] transition-all duration-300 hover:scale-102 hover:-translate-y-1'>
+        <div className={`bg-black/20 backdrop-blur-sm w-full flex h-[400px] md:h-[450px] p-4 md:p-6 lg:p-10 rounded-xl border mt-4 lg:mt-8 transition-all duration-300 hover:scale-102 hover:-translate-y-1 ${isUpsideDown ? 'hover:shadow-2xl hover:shadow-red-500/[0.4] border-red-900/50' : 'border-purple-400/30 hover:shadow-2xl hover:shadow-purple-500/[0.3]'}`}>
           <div className="flex justify-center items-center h-full flex-col px-2 md:px-4">
             <div className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
               <LinkPreview
@@ -297,7 +308,7 @@ const Projects = memo(() => {
       {/* Interactive Map */}
       <div className='w-full flex flex-col lg:flex-row h-auto lg:h-[600px] p-4 md:p-6 lg:p-10 rounded-xl gap-4 lg:gap-5'>
         <CardContainer className="inter-var">
-          <CardBody className="bg-black/20 backdrop-blur-md relative group/card hover:shadow-2xl hover:shadow-purple-500/[0.3] border-purple-400/30 w-full lg:w-auto lg:sm:w-[30rem] h-[400px] md:h-[450px] rounded-xl p-4 md:p-6 border">
+          <CardBody className={`bg-black/20 backdrop-blur-md relative group/card w-full lg:w-auto lg:sm:w-[30rem] h-[400px] md:h-[450px] rounded-xl p-4 md:p-6 border transition-all duration-300 ${isUpsideDown ? 'hover:shadow-2xl hover:shadow-red-500/[0.4] border-red-900/50' : 'hover:shadow-2xl hover:shadow-purple-500/[0.3] border-purple-400/30'}`}>
             <CardItem translateZ="50" className="text-lg md:text-xl font-bold text-neutral-600 dark:text-white ">
               Interactive Map 🗺️
             </CardItem>
@@ -306,10 +317,10 @@ const Projects = memo(() => {
             </CardItem>
             <CardItem translateZ="100" className="w-full mt-4">
               <img
-                src="/Projects/Map.png"
+                src={isUpsideDown ? "/Projects/UpsideDown/Map.png" : "/Projects/Map.png"}
                 height="1000"
                 width="1000"
-                className="h-48 md:h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl transition-transform duration-300 group-hover/card:scale-105 group-hover/card:-translate-y-1"
+                className={`h-48 md:h-60 w-full object-cover rounded-2xl group-hover/card:shadow-xl transition-transform duration-300 group-hover/card:scale-105 group-hover/card:-translate-y-1 ${isUpsideDown ? 'border-red-950/50' : ''}`}
                 alt="Interactive Map Project Screenshot"
                 loading="eager"
                 fetchPriority="high"
@@ -329,7 +340,7 @@ const Projects = memo(() => {
             </div>
           </CardBody>
         </CardContainer>
-        <div className='bg-black/20 backdrop-blur-sm w-full flex h-[400px] md:h-[450px] p-4 md:p-6 lg:p-10 rounded-xl border border-purple-400/30 mt-4 lg:mt-8 hover:shadow-2xl hover:shadow-purple-500/[0.3] transition-all duration-300 hover:scale-102 hover:-translate-y-1'>
+        <div className={`bg-black/20 backdrop-blur-sm w-full flex h-[400px] md:h-[450px] p-4 md:p-6 lg:p-10 rounded-xl border mt-4 lg:mt-8 transition-all duration-300 hover:scale-102 hover:-translate-y-1 ${isUpsideDown ? 'hover:shadow-2xl hover:shadow-red-500/[0.4] border-red-900/50' : 'border-purple-400/30 hover:shadow-2xl hover:shadow-purple-500/[0.3]'}`}>
           <div className="flex justify-center items-center h-full flex-col px-2 md:px-4">
             <div className="text-neutral-500 dark:text-neutral-400 text-sm md:text-base lg:text-lg xl:text-2xl max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-3xl mx-auto mb-4 md:mb-6 lg:mb-10">
               <LinkPreview
