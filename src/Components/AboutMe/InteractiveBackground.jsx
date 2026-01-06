@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from 'react'
 const InteractiveBackground = ({ redMode = false }) => {
     const canvasRef = useRef(null)
     const particlesRef = useRef([])
+    const sporesRef = useRef([])
     const mouseRef = useRef({ x: 0, y: 0 })
     const animationFrameRef = useRef(null)
 
@@ -12,6 +13,7 @@ const InteractiveBackground = ({ redMode = false }) => {
 
         const ctx = canvas.getContext('2d')
         const particles = particlesRef.current
+        const spores = sporesRef.current
 
         // Set canvas size
         const resizeCanvas = () => {
@@ -79,10 +81,51 @@ const InteractiveBackground = ({ redMode = false }) => {
             }
         }
 
-        // Initialize particles
-        const particleCount = Math.floor((canvas.width * canvas.height) / 10000)
-        for (let i = 0; i < Math.min(particleCount, 100); i++) {
+        // Floating air particle/spore class
+        class FloatingSpore {
+            constructor() {
+                this.x = Math.random() * canvas.width
+                this.y = Math.random() * canvas.height
+                this.vx = (Math.random() - 0.5) * 0.3
+                this.vy = -Math.random() * 0.5 - 0.2 // Slowly float upward
+                this.radius = Math.random() * 2 + 0.5
+                this.opacity = Math.random() * 0.3 + 0.1
+                this.color = redMode ? '#dc2626' : '#8b5cf6'
+            }
+
+            update() {
+                this.x += this.vx
+                this.y += this.vy
+
+                // Wrap around edges
+                if (this.x < 0) this.x = canvas.width
+                if (this.x > canvas.width) this.x = 0
+                if (this.y < 0) this.y = canvas.height
+                if (this.y > canvas.height) this.y = 0
+            }
+
+            draw() {
+                ctx.beginPath()
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
+                ctx.fillStyle = this.color
+                ctx.globalAlpha = this.opacity
+                ctx.fill()
+                ctx.globalAlpha = 1
+            }
+        }
+
+        // Clear and reinitialize particles when redMode changes
+        particles.length = 0
+        const particleCount = Math.floor((canvas.width * canvas.height) / 8000)
+        for (let i = 0; i < Math.min(particleCount, 200); i++) {
             particles.push(new Particle())
+        }
+
+        // Clear and reinitialize floating spores when redMode changes
+        spores.length = 0
+        const sporeCount = Math.floor((canvas.width * canvas.height) / 1200)
+        for (let i = 0; i < Math.min(sporeCount, 800); i++) {
+            spores.push(new FloatingSpore())
         }
 
         // Mouse move handler
@@ -114,6 +157,12 @@ const InteractiveBackground = ({ redMode = false }) => {
         // Animation loop
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+            // Update and draw floating spores first (background layer)
+            spores.forEach(spore => {
+                spore.update()
+                spore.draw()
+            })
 
             // Update and draw particles
             particles.forEach(particle => {
@@ -155,21 +204,44 @@ const InteractiveBackground = ({ redMode = false }) => {
                 cancelAnimationFrame(animationFrameRef.current)
             }
         }
-    }, [])
+    }, [redMode])
 
     return (
-        <canvas
-            ref={canvasRef}
-            style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                zIndex: 1,
-                pointerEvents: 'auto'
-            }}
-        />
+        <>
+            <canvas
+                ref={canvasRef}
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 1,
+                    pointerEvents: 'auto'
+                }}
+            />
+            {/* Floating particle image overlay - disabled until background is properly removed */}
+            {/* {redMode && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundImage: 'url(/air_particles.png)',
+                        backgroundSize: '800px 800px',
+                        backgroundRepeat: 'repeat',
+                        opacity: 0.4,
+                        zIndex: 2,
+                        pointerEvents: 'none',
+                        animation: 'floatParticles 60s linear infinite',
+                        mixBlendMode: 'color-dodge',
+                        filter: 'saturate(3) brightness(0.6)'
+                    }}
+                />
+            )} */}
+        </>
     )
 }
 
