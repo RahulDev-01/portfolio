@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState, memo, useMemo } from 'react'
-import FuzzyText  from '../Components/ui/FuzzyText';
+import FuzzyText from '../Components/ui/FuzzyText';
 // Placeholder images. Replace these URLs with your own when ready.
 const imageUrls = [
   '/Logos/figma.png',
@@ -58,24 +58,24 @@ const Skills = memo(() => {
   const smoothScrollTo = useCallback((targetY, duration = SMOOTH_SCROLL_DURATION) => {
     const startY = window.pageYOffset;
     const distance = targetY - startY;
-    
+
     // Don't scroll if distance is too small
     if (Math.abs(distance) < 10) {
       return;
     }
-    
+
     const startTime = performance.now();
     setIsTransitioning(true);
 
     const animateScroll = (currentTime) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
+
       // Apply smooth cubic-bezier easing for more natural feel
-      const easeProgress = progress < 0.5 
-        ? 2 * progress * progress 
+      const easeProgress = progress < 0.5
+        ? 2 * progress * progress
         : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-      
+
       const currentY = startY + distance * easeProgress;
       window.scrollTo(0, currentY);
 
@@ -95,10 +95,10 @@ const Skills = memo(() => {
     const skillsContent = skillsContentRef.current;
     const horizontalSection = horizontalSectionRef.current;
     if (!stickyWrapper || !skillsContent || !horizontalSection) return;
-    
+
     // Store current transform before updating
     const currentTransform = skillsContent.style.transform;
-    
+
     const visibleWidth = horizontalSection.offsetWidth;
     const maxShift = Math.max(0, skillsContent.scrollWidth - visibleWidth);
     // Reduce required vertical distance by SPEED so the user reaches the end sooner
@@ -107,7 +107,7 @@ const Skills = memo(() => {
     const heightMultiplier = 0.7; // Reduce height by 30%
     const finalHeight = (window.innerHeight + requiredVertical) * heightMultiplier;
     stickyWrapper.style.height = `${finalHeight}px`;
-    
+
     // Restore the transform to maintain scroll position
     if (currentTransform) {
       skillsContent.style.transform = currentTransform;
@@ -132,28 +132,28 @@ const Skills = memo(() => {
       const visibleWidth = horizontalSection.offsetWidth;
       const maxShift = Math.max(0, skillsContent.scrollWidth - visibleWidth);
       const totalScrollableDistance = Math.max(1, wrapperHeight - window.innerHeight);
-      
+
       // Check if we're in the skills section - more flexible detection for all screen sizes
       const isInSkillsSection = rect.top < window.innerHeight && rect.bottom > 0;
       const isSticky = rect.top <= 0 && rect.bottom >= 0;
-      
+
       if (isInSkillsSection || isSticky) {
         // Calculate scroll progress - proper direction-based calculation
-        const scrollProgress = totalScrollableDistance > 0 
+        const scrollProgress = totalScrollableDistance > 0
           ? Math.max(0, Math.min(1, -rect.top / totalScrollableDistance))
           : 0;
         const rawProgress = scrollProgress;
-        
+
         // Apply smooth easing function for better scroll experience
-        const easeProgress = rawProgress < 0.5 
-          ? 2 * rawProgress * rawProgress 
+        const easeProgress = rawProgress < 0.5
+          ? 2 * rawProgress * rawProgress
           : 1 - Math.pow(-2 * rawProgress + 2, 2) / 2;
-        
+
         const clampedProgress = Math.max(0, Math.min(1, easeProgress));
-        
+
         // Apply SPEED to move horizontally; clamp to maxShift
         let translateAmount = Math.min(maxShift, clampedProgress * maxShift * Math.max(0.1, SPEED));
-        
+
         // Snap to exact end to avoid subpixel remainder near the end
         if (maxShift > 0 && maxShift - translateAmount < 1) {
           translateAmount = maxShift;
@@ -199,12 +199,12 @@ const Skills = memo(() => {
         handleScroll();
       }, 4); // ~250fps for faster, more responsive scrolling
     };
-    
+
     // Add scroll event with passive for better performance
     window.addEventListener('scroll', handleScrollSmooth, { passive: true });
     window.addEventListener('resize', onResize);
     window.addEventListener('load', onLoad);
-    
+
     // Add touch support for mobile devices
     let touchStartX = 0;
     let touchStartY = 0;
@@ -212,28 +212,28 @@ const Skills = memo(() => {
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
     };
-    
+
     const handleTouchMove = (e) => {
-      
+
       const touchCurrentX = e.touches[0].clientX;
       const touchCurrentY = e.touches[0].clientY;
       const deltaX = touchStartX - touchCurrentX;
       const deltaY = touchStartY - touchCurrentY;
-      
+
       // Only handle vertical touch movement for horizontal scroll
       if (Math.abs(deltaY) > Math.abs(deltaX)) {
         const skillsContent = skillsContentRef.current;
         const horizontalSection = horizontalSectionRef.current;
         if (!skillsContent || !horizontalSection) return;
-        
+
         const visibleWidth = horizontalSection.offsetWidth;
         const maxShift = Math.max(0, skillsContent.scrollWidth - visibleWidth);
         if (maxShift <= 0) return;
-        
+
         const touchSensitivity = 0.5;
         let next = offsetRef.current + (deltaY * touchSensitivity);
         next = Math.max(0, Math.min(maxShift, next));
-        
+
         // If at start and user swipes down (deltaY < 0), navigate to previous section
         const atStart = next <= 1;
         if (atStart && deltaY < 0 && !snapGuardRef.current) {
@@ -251,7 +251,7 @@ const Skills = memo(() => {
         }
       }
     };
-    
+
     const horizontalSection = horizontalSectionRef.current;
     horizontalSection?.addEventListener('touchstart', handleTouchStart, { passive: true });
     horizontalSection?.addEventListener('touchmove', handleTouchMove, { passive: false });
@@ -264,30 +264,30 @@ const Skills = memo(() => {
       const skillsContent = skillsContentRef.current;
       const horizontalSection = horizontalSectionRef.current;
       if (!stickyWrapper || !skillsContent || !horizontalSection || isTransitioning) return;
-      
+
       // Debounce wheel events to prevent rapid changes
       if (wheelDebounceRef.current) {
         clearTimeout(wheelDebounceRef.current);
       }
-      
+
       const visibleWidth = horizontalSection.offsetWidth;
       const maxShift = Math.max(0, skillsContent.scrollWidth - visibleWidth);
       if (maxShift <= 0) return;
-      
+
       // Handle wheel scroll - deltaY > 0 means scrolling down (move images right)
       // Apply smooth easing to wheel scroll with minimum threshold
       const wheelSensitivity = 0.4; // Further reduced sensitivity for more controlled scrolling
       const deltaThreshold = 3; // Increased threshold to prevent micro-movements
-      
+
       if (Math.abs(e.deltaY) < deltaThreshold) return;
-      
+
       let next = offsetRef.current + (e.deltaY * wheelSensitivity);
       next = Math.max(0, Math.min(maxShift, next));
-      
+
       // Check if we're at the very end (98% or more)
       const atEnd = next >= maxShift * 0.98;
       const atStart = next <= 1;
-      
+
       // When reaching end and user scrolls down, smoothly advance to next section in document flow
       // Only advance if we're at 98% or more of max shift
       if (atEnd && e.deltaY > 0 && !snapGuardRef.current) {
@@ -298,7 +298,7 @@ const Skills = memo(() => {
         setTimeout(() => { snapGuardRef.current = false; }, SMOOTH_SCROLL_DURATION + 300);
         return;
       }
-      
+
       // When at start and user scrolls up, smoothly go to the previous section
       if (atStart && e.deltaY < 0 && !snapGuardRef.current) {
         snapGuardRef.current = true;
@@ -307,12 +307,12 @@ const Skills = memo(() => {
         setTimeout(() => { snapGuardRef.current = false; }, SMOOTH_SCROLL_DURATION + 300);
         return;
       }
-      
+
       if (next !== offsetRef.current) {
         e.preventDefault();
         offsetRef.current = next;
         skillsContent.style.transform = `translate3d(-${next}px, 0, 0)`;
-        
+
         // Set debounce timeout
         wheelDebounceRef.current = setTimeout(() => {
           // Reset debounce after processing
@@ -349,9 +349,9 @@ const Skills = memo(() => {
       <section ref={stickyWrapperRef} id="sticky-wrapper" className={`relative w-full bg-[#060010] text-white transition-opacity duration-300 ${isTransitioning ? 'opacity-95' : 'opacity-100'}`}>
 
         {/* This is the element that becomes STICKY */}
-        <div 
-          ref={horizontalSectionRef} 
-          id="horizontal-scroll-section" 
+        <div
+          ref={horizontalSectionRef}
+          id="horizontal-scroll-section"
           className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-start p-2 sm:p-4 md:p-6 lg:p-8"
           onMouseEnter={() => setIsMouseOver(true)}
           onMouseLeave={() => setIsMouseOver(false)}
@@ -382,7 +382,7 @@ const Skills = memo(() => {
                   <img
                     src={url}
                     alt={`Skill ${index + 1}`}
-                    className="max-h-full max-w-full w-auto h-auto object-contain select-none pointer-events-none mt-4 sm:mt-6 md:mt-8 lg:mt-10 xl:mt-12"
+                    className="max-h-full max-w-full w-auto h-auto object-contain select-none pointer-events-none mt-4 sm:mt-6 md:mt-8 lg:mt-10 xl:mt-12 rounded-xl"
                     loading="lazy"
                     draggable={false}
                   />
