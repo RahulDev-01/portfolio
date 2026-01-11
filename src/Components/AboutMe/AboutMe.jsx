@@ -295,17 +295,7 @@ const AboutMe = memo(() => {
                                     />
                                 )}
                                 <div className={`absolute inset-0 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isUpsideDown ? 'rounded-lg bg-gradient-to-r from-red-900/30 via-red-800/30 to-red-900/30' : 'rounded-xl bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-cyan-500/20'}`}></div>
-                                <div
-                                    className={`relative backdrop-blur-lg p-6 ${isUpsideDown ? 'rounded-lg bg-black/50 border border-red-900/50' : 'rounded-xl bg-white/5 border border-white/10'}`}
-                                    style={isUpsideDown ? {
-                                        backgroundImage: 'url(/skill_power_bg.png?v=1)',
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center',
-                                        backgroundBlendMode: 'lighten',
-                                        opacity: 0.3,
-                                        filter: 'brightness(0.7) contrast(1.5)'
-                                    } : {}}
-                                >
+                                <div className={`relative backdrop-blur-lg p-6 ${isUpsideDown ? 'rounded-lg bg-black/50 border border-red-900/50' : 'rounded-xl bg-white/5 border border-white/10'}`}>
                                     <div className="flex justify-between items-center mb-3">
                                         <span className="font-semibold text-white">{skill.name}</span>
                                         <span className={`text-sm ${isUpsideDown ? 'text-red-400' : 'text-cyan-400'}`}>{skill.level}%</span>
