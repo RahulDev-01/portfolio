@@ -280,21 +280,20 @@ const AboutMe = memo(() => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, amount: 0.5 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                                whileHover={{ y: -2 }}
-                                className="relative group"
+                                className="relative overflow-hidden"
                             >
-                                {/* Full Tentacle Frame on OUTSIDE of box - only in Upside Down mode */}
+                                {/* Tentacle Frame INSIDE the box - only in Upside Down mode */}
                                 {isUpsideDown && (
-                                    <div className="absolute -inset-6 pointer-events-none z-30 rounded-lg overflow-hidden"
+                                    <div className="absolute inset-0 pointer-events-none z-10 rounded-lg"
                                         style={{
                                             backgroundImage: 'url(/tentacle_frame.png)',
                                             backgroundSize: '100% 100%',
                                             backgroundRepeat: 'no-repeat',
-                                            filter: 'drop-shadow(0 0 8px rgba(220,38,38,0.5))'
+                                            opacity: 0.4
                                         }}
                                     />
                                 )}
-                                <div className={`absolute inset-0 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isUpsideDown ? 'rounded-lg bg-gradient-to-r from-red-900/30 via-red-800/30 to-red-900/30' : 'rounded-xl bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-cyan-500/20'}`}></div>
+
                                 <div className={`relative backdrop-blur-lg p-6 ${isUpsideDown ? 'rounded-lg bg-black/50 border border-red-900/50' : 'rounded-xl bg-white/5 border border-white/10'}`}>
                                     <div className="flex justify-between items-center mb-3">
                                         <span className="font-semibold text-white">{skill.name}</span>
