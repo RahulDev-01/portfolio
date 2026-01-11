@@ -8,19 +8,7 @@ const DEFAULT_SPOTLIGHT_RADIUS = 300;
 const DEFAULT_GLOW_COLOR = '132, 0, 255';
 const MOBILE_BREAKPOINT = 768;
 
-const PROJECT_IMAGES = [
-  '/Projects/SwiftResumeAi.png',
-  '/Projects/destinAi.png',
-  '/Projects/gemini.png',
-  '/Projects/Map.png'
-];
 
-const UPSIDE_DOWN_PROJECT_IMAGES = [
-  '/Projects/UpsideDown/SwiftResumeAi.png',
-  '/Projects/UpsideDown/destinAi.png',
-  '/Projects/UpsideDown/gemini.png',
-  '/Projects/UpsideDown/Map.png'
-];
 
 const cardData = [
   {
