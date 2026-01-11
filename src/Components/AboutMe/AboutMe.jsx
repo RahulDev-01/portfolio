@@ -301,7 +301,9 @@ const AboutMe = memo(() => {
                                         backgroundImage: 'url(/skill_power_bg.png?v=1)',
                                         backgroundSize: 'cover',
                                         backgroundPosition: 'center',
-                                        backgroundBlendMode: 'screen'
+                                        backgroundBlendMode: 'lighten',
+                                        opacity: 0.3,
+                                        filter: 'brightness(0.7) contrast(1.5)'
                                     } : {}}
                                 >
                                     <div className="flex justify-between items-center mb-3">
