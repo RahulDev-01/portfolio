@@ -487,15 +487,6 @@ const MagicBento = ({
   onNavigate = null
 }) => {
   const { isUpsideDown } = useUpsideDown();
-  const [currentProjectImageIndex, setCurrentProjectImageIndex] = useState(0);
-
-  useEffect(() => {
-    if (!isUpsideDown) return;
-    const interval = setInterval(() => {
-      setCurrentProjectImageIndex((prev) => (prev + 1) % PROJECT_IMAGES.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [isUpsideDown]);
   const gridRef = useRef(null);
   const isMobile = useMobileDetection();
   // Always allow animations regardless of screen size
@@ -668,54 +659,7 @@ const MagicBento = ({
             enableMagnetism={false}
           >
             <div className="flex items-center justify-center h-8 w-32 sm:h-10 sm:w-40 md:h-12 md:w-48 overflow-visible relative">
-              <TextHoverEffect text="PORTFOLIO" auto intervalMs={5000} refreshEveryMs={5000} redMode={isUpsideDown} imageFill={isUpsideDown ? UPSIDE_DOWN_PROJECT_IMAGES[currentProjectImageIndex] : ''} />
-              {isUpsideDown && (
-                <>
-                  {/* Top Right Vine (Main) */}
-                  <div
-                    className="absolute -top-10 -right-6 w-24 h-24 pointer-events-none opacity-100 z-20"
-                    style={{
-                      backgroundImage: 'url(/vine_corner.png)',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      transform: 'rotate(90deg)',
-                      filter: 'brightness(1.5) contrast(1.2)'
-                    }}
-                  />
-                  {/* Top Left Vine (Small) */}
-                  <div
-                    className="absolute -top-8 -left-17 w-26 h-26 pointer-events-none opacity-100 z-20"
-                    style={{
-                      backgroundImage: 'url(/vine_corner.png)',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      transform: 'rotate(-45deg)',
-                      filter: 'brightness(1.5) contrast(1.2)'
-                    }}
-                  />
-                  {/* Bottom Right Vine (Small) */}
-                  <div
-                    className="absolute -bottom-6 -right-6 w-20 h-20 pointer-events-none opacity-100 z-20"
-                    style={{
-                      backgroundImage: 'url(/vine_corner.png)',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      transform: 'rotate(135deg)',
-                      filter: 'brightness(1.5) contrast(1.2)'
-                    }}
-                  />
-                  <div
-                    className="absolute -bottom-6 - left-6 w-20 h-20 pointer-events-none opacity-100 z-20"
-                    style={{
-                      backgroundImage: 'url(/vine_corner.png)',
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      transform: 'rotate(180deg)',
-                      filter: 'brightness(1.5) contrast(1.2)'
-                    }}
-                  />
-                </>
-              )}
+              <TextHoverEffect text="PORTFOLIO" auto intervalMs={5000} refreshEveryMs={5000} redMode={isUpsideDown} />
             </div>
           </ParticleCard>
           <div className="flex-1 flex items-center gap-2 sm:gap-4 justify-end mr-1 sm:mr-2 overflow-x-auto no-scrollbar md:gap-8 md:mr-10">
