@@ -1,10 +1,17 @@
 import React, { useRef, useState } from 'react'
 import { motion, useInView } from 'motion/react'
+import { useUpsideDown } from '../../contexts/UpsideDownContext';
 
 const Experience = () => {
+    const { isUpsideDown } = useUpsideDown();
     const sectionRef = useRef(null)
     const isInView = useInView(sectionRef, { once: true, amount: 0.3 })
     const [hoveredSkill, setHoveredSkill] = useState(null)
+
+    // Hide Experience section in Upside Down mode
+    if (isUpsideDown) {
+        return null;
+    }
 
     const skills = [
         { name: 'React', icon: '⚛️', color: 'from-blue-400 to-cyan-400' },
