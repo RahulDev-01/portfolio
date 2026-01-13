@@ -2,8 +2,10 @@ import React, { useRef, useState } from 'react'
 import LaserFlow from './LaserFlow'
 import Dock from '../ui/Dock'
 import { IconBrandLinkedin, IconMail, IconBrandGithub, IconFileText } from '@tabler/icons-react'
+import { useUpsideDown } from '../../contexts/UpsideDownContext';
 
 function Footer() {
+  const { isUpsideDown } = useUpsideDown();
   const revealImgRef = useRef(null);
   const [toast, setToast] = useState({ show: false, message: '' });
 
@@ -46,7 +48,7 @@ function Footer() {
           position: 'fixed',
           top: '20px',
           right: '20px',
-          backgroundColor: '#274DA5',
+          backgroundColor: isUpsideDown ? '#7f1d1d' : '#274DA5',
           color: 'white',
           padding: '12px 20px',
           borderRadius: '8px',
@@ -71,7 +73,7 @@ function Footer() {
           height: '1000px',
           position: 'relative',
           overflow: 'hidden',
-          backgroundColor: '#060010'
+          backgroundColor: isUpsideDown ? '#0a0000' : '#060010'
         }}
         onMouseMove={(e) => {
           const el = revealImgRef.current;
@@ -94,7 +96,7 @@ function Footer() {
         <LaserFlow
           horizontalBeamOffset={0.3}
           verticalBeamOffset={-0.4}
-          color="#274DA5"
+          color={isUpsideDown ? "#dc2626" : "#274DA5"}
           flowSpeed={1.0}
           wispSpeed={25.0}
         />
@@ -106,9 +108,9 @@ function Footer() {
           transform: 'translateX(-50%)',
           width: '100%',
           height: '10%',
-          backgroundColor: '#060010',
+          backgroundColor: isUpsideDown ? '#0a0000' : '#060010',
           borderRadius: '20px',
-          border: '2px solid #274DA5',
+          border: `2px solid ${isUpsideDown ? '#dc2626' : '#274DA5'}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
