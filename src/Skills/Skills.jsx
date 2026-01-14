@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useCallback, useState, memo, useMemo } from 'react'
 import FuzzyText from '../Components/ui/FuzzyText';
+import { useUpsideDown } from '../contexts/UpsideDownContext';
 // Placeholder images. Replace these URLs with your own when ready.
 const imageUrls = [
   '/Logos/figma.png',
@@ -26,6 +27,7 @@ const imageUrls = [
 ];
 
 const Skills = memo(() => {
+  const { isUpsideDown } = useUpsideDown();
   // Use refs to get direct access to the DOM elements
   // Fix: Define hoverIntensity and enableHover for FuzzyText
   const hoverIntensity = 0;
@@ -346,13 +348,25 @@ const Skills = memo(() => {
     <div id="app">
 
       {/* 2. The STICKY WRAPPER (h-[500vh] controls the vertical scroll duration) */}
-      <section ref={stickyWrapperRef} id="sticky-wrapper" className={`relative w-full bg-[#060010] text-white transition-opacity duration-300 ${isTransitioning ? 'opacity-95' : 'opacity-100'}`}>
+      <section ref={stickyWrapperRef} id="sticky-wrapper" className={`relative w-full text-white transition-all duration-700 ${isTransitioning ? 'opacity-95' : 'opacity-100'} ${isUpsideDown ? 'bg-gradient-to-b from-red-950 via-black to-red-950' : 'bg-[#060010]'}`}>
+
+        {/* Red spore particles overlay for Upside Down mode */}
+        {isUpsideDown && (
+          <div
+            className="absolute inset-0 pointer-events-none z-0"
+            style={{
+              backgroundImage: `radial-gradient(circle, rgba(220, 38, 38, 0.3) 1px, transparent 1px)`,
+              backgroundSize: '50px 50px',
+              animation: 'float 20s ease-in-out infinite'
+            }}
+          />
+        )}
 
         {/* This is the element that becomes STICKY */}
         <div
           ref={horizontalSectionRef}
           id="horizontal-scroll-section"
-          className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-start p-2 sm:p-4 md:p-6 lg:p-8"
+          className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-start p-2 sm:p-4 md:p-6 lg:p-8 relative z-10"
           onMouseEnter={() => setIsMouseOver(true)}
           onMouseLeave={() => setIsMouseOver(false)}
         >
@@ -364,11 +378,11 @@ const Skills = memo(() => {
               fontWeight={700}
               baseIntensity={0.2}
               hoverIntensity={hoverIntensity}
+              style={{ color: isUpsideDown ? '#dc2626' : 'inherit' }}
             >
               Skills
             </FuzzyText>
-            {/* Subtle indicator when approaching end */}
-            <div className={`text-xs sm:text-sm text-gray-400 transition-opacity duration-500 ${isTransitioning ? 'opacity-100' : 'opacity-0'}`}>
+            <div className={`text-xs sm:text-sm transition-opacity duration-500 ${isTransitioning ? 'opacity-100' : 'opacity-0'} ${isUpsideDown ? 'text-red-400' : 'text-gray-400'}`}>
               Scroll to continue →
             </div>
           </div>
