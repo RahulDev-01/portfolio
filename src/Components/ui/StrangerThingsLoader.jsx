@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useUpsideDown } from '../../contexts/UpsideDownContext';
 
 const StrangerThingsLoader = () => {
+    const { isUpsideDown } = useUpsideDown();
     const [dots, setDots] = useState('');
     const [lights, setLights] = useState([]);
 
@@ -10,13 +12,14 @@ const StrangerThingsLoader = () => {
             setDots(prev => prev.length >= 3 ? '' : prev + '.');
         }, 400);
 
-        // Generate random Christmas lights
+        // Generate random Christmas lights - all red in Upside Down mode
+        const colors = isUpsideDown ? ['red'] : ['red', 'yellow', 'blue', 'green'];
         const generatedLights = Array.from({ length: 30 }, (_, i) => ({
             id: i,
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
             delay: Math.random() * 2,
-            color: ['red', 'yellow', 'blue', 'green'][Math.floor(Math.random() * 4)]
+            color: colors[Math.floor(Math.random() * colors.length)]
         }));
         setLights(generatedLights);
 
@@ -24,7 +27,7 @@ const StrangerThingsLoader = () => {
     }, []);
 
     return (
-        <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-blue-950 via-blue-900 to-black flex items-center justify-center overflow-hidden">
+        <div className={`fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden ${isUpsideDown ? 'bg-gradient-to-br from-red-950 via-red-900 to-black' : 'bg-gradient-to-br from-blue-950 via-blue-900 to-black'}`}>
             {/* Intense static/noise overlay */}
             <div
                 className="absolute inset-0 opacity-30 mix-blend-overlay pointer-events-none"
