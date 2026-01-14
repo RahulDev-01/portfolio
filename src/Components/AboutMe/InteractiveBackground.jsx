@@ -114,17 +114,17 @@ const InteractiveBackground = ({ redMode = false }) => {
             }
         }
 
-        // Clear and reinitialize particles when redMode changes
+        // Clear and reinitialize particles when redMode changes - OPTIMIZED for performance
         particles.length = 0
-        const particleCount = Math.floor((canvas.width * canvas.height) / 8000)
-        for (let i = 0; i < Math.min(particleCount, 200); i++) {
+        const particleCount = Math.floor((canvas.width * canvas.height) / 20000)
+        for (let i = 0; i < Math.min(particleCount, 50); i++) {
             particles.push(new Particle())
         }
 
-        // Clear and reinitialize floating spores when redMode changes
+        // Clear and reinitialize floating spores when redMode changes - OPTIMIZED for performance
         spores.length = 0
-        const sporeCount = Math.floor((canvas.width * canvas.height) / 1200)
-        for (let i = 0; i < Math.min(sporeCount, 800); i++) {
+        const sporeCount = Math.floor((canvas.width * canvas.height) / 10000)
+        for (let i = 0; i < Math.min(sporeCount, 100); i++) {
             spores.push(new FloatingSpore())
         }
 
