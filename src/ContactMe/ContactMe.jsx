@@ -434,14 +434,20 @@ const ContactMe = memo(() => {
 
   // Handle Byers Lights typing - each letter lights up
   const handleByersInput = (e) => {
-    const newValue = e.target.value.toUpperCase();
+    // Allow only alphabets and spaces
+    const rawValue = e.target.value.toUpperCase();
+    const newValue = rawValue.replace(/[^A-Z\s]/g, '');
+
     const oldValue = byersMessage;
+
+    // Only update if the value actually changed (or is valid)
     setByersMessage(newValue);
     byersMessageRef.current = newValue;
 
-    // If a new letter was added, activate it via typing logic
+    // If a new valid char was added, activate it via typing logic
     if (newValue.length > oldValue.length) {
       const newLetter = newValue[newValue.length - 1];
+      // Only light up if it's a letter (A-Z), ignoring spaces
       if (/[A-Z]/.test(newLetter)) {
         handleTypingActivate(newLetter);
       }
@@ -681,9 +687,9 @@ const ContactMe = memo(() => {
 
   // Render Upside Down Mode View (Byers Lights Wall)
   const renderUpsideDownView = () => (
-    <div className='relative w-full h-[800px] mt-10 overflow-hidden flex items-center justify-center'
+    <div className='relative w-full h-[800px] overflow-hidden flex items-center justify-center'
       style={{
-        background: 'radial-gradient(ellipse at center, #1a1208 0%, #0d0a05 40%, #050403 100%)',
+        background: 'linear-gradient(to bottom, #1a0505 0%, #000000 100%)',
         boxShadow: 'inset 0 0 150px rgba(0,0,0,0.9)'
       }}
     >
@@ -709,6 +715,16 @@ const ContactMe = memo(() => {
       />
 
       <div className="relative w-full max-w-[1200px] h-[600px] p-10 flex flex-col items-center justify-center pb-32">
+        {/* Heading */}
+        <h2 className="text-xl sm:text-2xl md:text-4xl font-black bg-clip-text text-transparent mb-24 text-center tracking-[0.2em] uppercase whitespace-nowrap" style={{
+          backgroundImage: 'linear-gradient(to bottom, #ef4444, #7f1d1d)',
+          fontFamily: "'ITC Benguiat', 'Times New Roman', serif", // Stranger Things style
+          textShadow: '0 0 5px rgba(220, 38, 38, 0.4), 1px 1px 0px rgba(0,0,0,0.8)',
+          filter: 'drop-shadow(0 0 2px rgba(220, 38, 38, 0.4))'
+        }}>
+          Send a Signal to the Home World
+        </h2>
+
         {/* Row 1: A-H */}
         <div className="relative w-full flex justify-center gap-[4vw]">
           {/* Wire Thread */}
@@ -838,7 +854,12 @@ const ContactMe = memo(() => {
   );
 
   return (
-    <div className='relative w-full overflow-hidden'>
+    <div
+      className='relative w-full overflow-hidden'
+      style={isUpsideDown ? {
+        background: 'linear-gradient(to bottom, #1a0505 0%, #000000 100%)'
+      } : {}}
+    >
       {/* Toast Notification */}
       {showToast && (
         <div className={`fixed top-4 right-4 z-50 ${toastType === 'error' ? 'bg-red-500' : 'bg-green-500'} text-white px-6 py-3 rounded-lg shadow-lg animate-bounce`}>
