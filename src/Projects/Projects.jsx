@@ -54,7 +54,7 @@ const Projects = memo(() => {
   }, [imagesPreloaded]);
 
   return (
-    <div ref={projectsRef} className='relative text-white w-full overflow-hidden'>
+    <div ref={projectsRef} className={`relative text-white w-full overflow-hidden transition-colors duration-700 ${isUpsideDown ? 'bg-gradient-to-b from-red-950 via-black to-red-950' : ''}`}>
       {/* Hyperspeed Background */}
       <div className='absolute inset-0 z-0'>
         <Hyperspeed
