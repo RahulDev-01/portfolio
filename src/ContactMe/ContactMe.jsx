@@ -1,4 +1,4 @@
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useRef } from 'react'
 import BlobCursor from '../Components/ui/BlobCursor';
 import Lanyard from '../Components/ui/Lanyard'
 import ElectricBorder from '../Components/ui/ElectricBorder'
@@ -8,416 +8,422 @@ import { cn } from "../lib/utils";
 import { useState } from "react";
 import { motion } from "motion/react";
 import { World } from "../Components/ui/Globe";
-const globeConfig = {
-  pointSize: 4,
-  globeColor: "#062056",
-  showAtmosphere: true,
-  atmosphereColor: "#FFFFFF",
-  atmosphereAltitude: 0.1,
-  emissive: "#062056",
-  emissiveIntensity: 0.1,
-  shininess: 0.9,
-  polygonColor: "rgba(255,255,255,0.7)",
-  ambientLight: "#38bdf8",
-  directionalLeftLight: "#ffffff",
-  directionalTopLight: "#ffffff",
-  pointLight: "#ffffff",
-  arcTime: 1000,
-  arcLength: 0.9,
-  rings: 1,
-  maxRings: 3,
-  initialPosition: { lat: 22.3193, lng: 114.1694 },
-  autoRotate: true,
-  autoRotateSpeed: 0.5,
-};
-const colors = ["#06b6d4", "#3b82f6", "#6366f1"];
-const sampleArcs = [
-  {
-    order: 1,
-    startLat: -19.885592,
-    startLng: -43.951191,
-    endLat: -22.9068,
-    endLng: -43.1729,
-    arcAlt: 0.1,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 1,
-    startLat: 28.6139,
-    startLng: 77.209,
-    endLat: 3.139,
-    endLng: 101.6869,
-    arcAlt: 0.2,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 1,
-    startLat: -19.885592,
-    startLng: -43.951191,
-    endLat: -1.303396,
-    endLng: 36.852443,
-    arcAlt: 0.5,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 2,
-    startLat: 1.3521,
-    startLng: 103.8198,
-    endLat: 35.6762,
-    endLng: 139.6503,
-    arcAlt: 0.2,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 2,
-    startLat: 51.5072,
-    startLng: -0.1276,
-    endLat: 3.139,
-    endLng: 101.6869,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 2,
-    startLat: -15.785493,
-    startLng: -47.909029,
-    endLat: 36.162809,
-    endLng: -115.119411,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 3,
-    startLat: -33.8688,
-    startLng: 151.2093,
-    endLat: 22.3193,
-    endLng: 114.1694,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 3,
-    startLat: 21.3099,
-    startLng: -157.8581,
-    endLat: 40.7128,
-    endLng: -74.006,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 3,
-    startLat: -6.2088,
-    startLng: 106.8456,
-    endLat: 51.5072,
-    endLng: -0.1276,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 4,
-    startLat: 11.986597,
-    startLng: 8.571831,
-    endLat: -15.595412,
-    endLng: -56.05918,
-    arcAlt: 0.5,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 4,
-    startLat: -34.6037,
-    startLng: -58.3816,
-    endLat: 22.3193,
-    endLng: 114.1694,
-    arcAlt: 0.7,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 4,
-    startLat: 51.5072,
-    startLng: -0.1276,
-    endLat: 48.8566,
-    endLng: -2.3522,
-    arcAlt: 0.1,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 5,
-    startLat: 14.5995,
-    startLng: 120.9842,
-    endLat: 51.5072,
-    endLng: -0.1276,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 5,
-    startLat: 1.3521,
-    startLng: 103.8198,
-    endLat: -33.8688,
-    endLng: 151.2093,
-    arcAlt: 0.2,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 5,
-    startLat: 34.0522,
-    startLng: -118.2437,
-    endLat: 48.8566,
-    endLng: -2.3522,
-    arcAlt: 0.2,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 6,
-    startLat: -15.432563,
-    startLng: 28.315853,
-    endLat: 1.094136,
-    endLng: -63.34546,
-    arcAlt: 0.7,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 6,
-    startLat: 37.5665,
-    startLng: 126.978,
-    endLat: 35.6762,
-    endLng: 139.6503,
-    arcAlt: 0.1,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 6,
-    startLat: 22.3193,
-    startLng: 114.1694,
-    endLat: 51.5072,
-    endLng: -0.1276,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 7,
-    startLat: -19.885592,
-    startLng: -43.951191,
-    endLat: -15.595412,
-    endLng: -56.05918,
-    arcAlt: 0.1,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 7,
-    startLat: 48.8566,
-    startLng: -2.3522,
-    endLat: 52.52,
-    endLng: 13.405,
-    arcAlt: 0.1,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 7,
-    startLat: 52.52,
-    startLng: 13.405,
-    endLat: 34.0522,
-    endLng: -118.2437,
-    arcAlt: 0.2,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 8,
-    startLat: -8.833221,
-    startLng: 13.264837,
-    endLat: -33.936138,
-    endLng: 18.436529,
-    arcAlt: 0.2,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 8,
-    startLat: 49.2827,
-    startLng: -123.1207,
-    endLat: 52.3676,
-    endLng: 4.9041,
-    arcAlt: 0.2,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 8,
-    startLat: 1.3521,
-    startLng: 103.8198,
-    endLat: 40.7128,
-    endLng: -74.006,
-    arcAlt: 0.5,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 9,
-    startLat: 51.5072,
-    startLng: -0.1276,
-    endLat: 34.0522,
-    endLng: -118.2437,
-    arcAlt: 0.2,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 9,
-    startLat: 22.3193,
-    startLng: 114.1694,
-    endLat: -22.9068,
-    endLng: -43.1729,
-    arcAlt: 0.7,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 9,
-    startLat: 1.3521,
-    startLng: 103.8198,
-    endLat: -34.6037,
-    endLng: -58.3816,
-    arcAlt: 0.5,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 10,
-    startLat: -22.9068,
-    startLng: -43.1729,
-    endLat: 28.6139,
-    endLng: 77.209,
-    arcAlt: 0.7,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 10,
-    startLat: 34.0522,
-    startLng: -118.2437,
-    endLat: 31.2304,
-    endLng: 121.4737,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 10,
-    startLat: -6.2088,
-    startLng: 106.8456,
-    endLat: 52.3676,
-    endLng: 4.9041,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 11,
-    startLat: 41.9028,
-    startLng: 12.4964,
-    endLat: 34.0522,
-    endLng: -118.2437,
-    arcAlt: 0.2,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 11,
-    startLat: -6.2088,
-    startLng: 106.8456,
-    endLat: 31.2304,
-    endLng: 121.4737,
-    arcAlt: 0.2,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 11,
-    startLat: 22.3193,
-    startLng: 114.1694,
-    endLat: 1.3521,
-    endLng: 103.8198,
-    arcAlt: 0.2,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 12,
-    startLat: 34.0522,
-    startLng: -118.2437,
-    endLat: 37.7749,
-    endLng: -122.4194,
-    arcAlt: 0.1,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 12,
-    startLat: 35.6762,
-    startLng: 139.6503,
-    endLat: 22.3193,
-    endLng: 114.1694,
-    arcAlt: 0.2,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 12,
-    startLat: 22.3193,
-    startLng: 114.1694,
-    endLat: 34.0522,
-    endLng: -118.2437,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 13,
-    startLat: 52.52,
-    startLng: 13.405,
-    endLat: 22.3193,
-    endLng: 114.1694,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 13,
-    startLat: 11.986597,
-    startLng: 8.571831,
-    endLat: 35.6762,
-    endLng: 139.6503,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 13,
-    startLat: -22.9068,
-    startLng: -43.1729,
-    endLat: -34.6037,
-    endLng: -58.3816,
-    arcAlt: 0.1,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-  {
-    order: 14,
-    startLat: -33.936138,
-    startLng: 18.436529,
-    endLat: 21.395643,
-    endLng: 39.883798,
-    arcAlt: 0.3,
-    color: colors[Math.floor(Math.random() * (colors.length - 1))],
-  },
-];
-
-// Component for label and input container
-const LabelInputContainer = ({ children, className }) => {
-  return (
-    <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {children}
-    </div>
-  );
-};
-
-// Component for bottom gradient
-const BottomGradient = () => {
-  return (
-    <>
-      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-    </>
-  );
-};
-
+import { useUpsideDown } from '../contexts/UpsideDownContext';
 const ContactMe = memo(() => {
+  const { isUpsideDown } = useUpsideDown();
+
+  const globeConfig = {
+    pointSize: 4,
+    globeColor: isUpsideDown ? "#5c0000" : "#062056",
+    showAtmosphere: true,
+    atmosphereColor: isUpsideDown ? "#ff0000" : "#FFFFFF",
+    atmosphereAltitude: 0.1,
+    emissive: isUpsideDown ? "#5c0000" : "#062056",
+    emissiveIntensity: 0.1,
+    shininess: 0.9,
+    polygonColor: "rgba(255,255,255,0.7)",
+    ambientLight: isUpsideDown ? "#dc2626" : "#38bdf8",
+    directionalLeftLight: "#ffffff",
+    directionalTopLight: "#ffffff",
+    pointLight: "#ffffff",
+    arcTime: 1000,
+    arcLength: 0.9,
+    rings: 1,
+    maxRings: 3,
+    initialPosition: { lat: 22.3193, lng: 114.1694 },
+    autoRotate: true,
+    autoRotateSpeed: 0.5,
+  };
+
+  const colors = isUpsideDown ? ["#dc2626", "#b91c1c", "#991b1b"] : ["#06b6d4", "#3b82f6", "#6366f1"];
+  const sampleArcs = [
+    {
+      order: 1,
+      startLat: -19.885592,
+      startLng: -43.951191,
+      endLat: -22.9068,
+      endLng: -43.1729,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 1,
+      startLat: 28.6139,
+      startLng: 77.209,
+      endLat: 3.139,
+      endLng: 101.6869,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 1,
+      startLat: -19.885592,
+      startLng: -43.951191,
+      endLat: -1.303396,
+      endLng: 36.852443,
+      arcAlt: 0.5,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 2,
+      startLat: 1.3521,
+      startLng: 103.8198,
+      endLat: 35.6762,
+      endLng: 139.6503,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 2,
+      startLat: 51.5072,
+      startLng: -0.1276,
+      endLat: 3.139,
+      endLng: 101.6869,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 2,
+      startLat: -15.785493,
+      startLng: -47.909029,
+      endLat: 36.162809,
+      endLng: -115.119411,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 3,
+      startLat: -33.8688,
+      startLng: 151.2093,
+      endLat: 22.3193,
+      endLng: 114.1694,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 3,
+      startLat: 21.3099,
+      startLng: -157.8581,
+      endLat: 40.7128,
+      endLng: -74.006,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 3,
+      startLat: -6.2088,
+      startLng: 106.8456,
+      endLat: 51.5072,
+      endLng: -0.1276,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 4,
+      startLat: 11.986597,
+      startLng: 8.571831,
+      endLat: -15.595412,
+      endLng: -56.05918,
+      arcAlt: 0.5,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 4,
+      startLat: -34.6037,
+      startLng: -58.3816,
+      endLat: 22.3193,
+      endLng: 114.1694,
+      arcAlt: 0.7,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 4,
+      startLat: 51.5072,
+      startLng: -0.1276,
+      endLat: 48.8566,
+      endLng: -2.3522,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 5,
+      startLat: 14.5995,
+      startLng: 120.9842,
+      endLat: 51.5072,
+      endLng: -0.1276,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 5,
+      startLat: 1.3521,
+      startLng: 103.8198,
+      endLat: -33.8688,
+      endLng: 151.2093,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 5,
+      startLat: 34.0522,
+      startLng: -118.2437,
+      endLat: 48.8566,
+      endLng: -2.3522,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 6,
+      startLat: -15.432563,
+      startLng: 28.315853,
+      endLat: 1.094136,
+      endLng: -63.34546,
+      arcAlt: 0.7,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 6,
+      startLat: 37.5665,
+      startLng: 126.978,
+      endLat: 35.6762,
+      endLng: 139.6503,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 6,
+      startLat: 22.3193,
+      startLng: 114.1694,
+      endLat: 51.5072,
+      endLng: -0.1276,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 7,
+      startLat: -19.885592,
+      startLng: -43.951191,
+      endLat: -15.595412,
+      endLng: -56.05918,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 7,
+      startLat: 48.8566,
+      startLng: -2.3522,
+      endLat: 52.52,
+      endLng: 13.405,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 7,
+      startLat: 52.52,
+      startLng: 13.405,
+      endLat: 34.0522,
+      endLng: -118.2437,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 8,
+      startLat: -8.833221,
+      startLng: 13.264837,
+      endLat: -33.936138,
+      endLng: 18.436529,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 8,
+      startLat: 49.2827,
+      startLng: -123.1207,
+      endLat: 52.3676,
+      endLng: 4.9041,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 8,
+      startLat: 1.3521,
+      startLng: 103.8198,
+      endLat: 40.7128,
+      endLng: -74.006,
+      arcAlt: 0.5,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 9,
+      startLat: 51.5072,
+      startLng: -0.1276,
+      endLat: 34.0522,
+      endLng: -118.2437,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 9,
+      startLat: 22.3193,
+      startLng: 114.1694,
+      endLat: -22.9068,
+      endLng: -43.1729,
+      arcAlt: 0.7,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 9,
+      startLat: 1.3521,
+      startLng: 103.8198,
+      endLat: -34.6037,
+      endLng: -58.3816,
+      arcAlt: 0.5,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 10,
+      startLat: -22.9068,
+      startLng: -43.1729,
+      endLat: 28.6139,
+      endLng: 77.209,
+      arcAlt: 0.7,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 10,
+      startLat: 34.0522,
+      startLng: -118.2437,
+      endLat: 31.2304,
+      endLng: 121.4737,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 10,
+      startLat: -6.2088,
+      startLng: 106.8456,
+      endLat: 52.3676,
+      endLng: 4.9041,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 11,
+      startLat: 41.9028,
+      startLng: 12.4964,
+      endLat: 34.0522,
+      endLng: -118.2437,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 11,
+      startLat: -6.2088,
+      startLng: 106.8456,
+      endLat: 31.2304,
+      endLng: 121.4737,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 11,
+      startLat: 22.3193,
+      startLng: 114.1694,
+      endLat: 1.3521,
+      endLng: 103.8198,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 12,
+      startLat: 34.0522,
+      startLng: -118.2437,
+      endLat: 37.7749,
+      endLng: -122.4194,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 12,
+      startLat: 35.6762,
+      startLng: 139.6503,
+      endLat: 22.3193,
+      endLng: 114.1694,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 12,
+      startLat: 22.3193,
+      startLng: 114.1694,
+      endLat: 34.0522,
+      endLng: -118.2437,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 13,
+      startLat: 52.52,
+      startLng: 13.405,
+      endLat: 22.3193,
+      endLng: 114.1694,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 13,
+      startLat: 11.986597,
+      startLng: 8.571831,
+      endLat: 35.6762,
+      endLng: 139.6503,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 13,
+      startLat: -22.9068,
+      startLng: -43.1729,
+      endLat: -34.6037,
+      endLng: -58.3816,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 14,
+      startLat: -33.936138,
+      startLng: 18.436529,
+      endLat: 21.395643,
+      endLng: 39.883798,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+  ];
+
+  // Component for label and input container
+  const LabelInputContainer = ({ children, className }) => {
+    return (
+      <div className={cn("flex flex-col space-y-2 w-full", className)}>
+        {children}
+      </div>
+    );
+  };
+
+  // Component for bottom gradient
+  const BottomGradient = ({ isUpsideDown }) => {
+    return (
+      <>
+        <span className={`group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 ${isUpsideDown ? 'bg-gradient-to-r from-transparent via-red-500 to-transparent' : 'bg-gradient-to-r from-transparent via-cyan-500 to-transparent'}`} />
+        <span className={`group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 ${isUpsideDown ? 'bg-gradient-to-r from-transparent via-red-700 to-transparent' : 'bg-gradient-to-r from-transparent via-indigo-500 to-transparent'}`} />
+      </>
+    );
+  };
+
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('error'); // 'error' or 'success'
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [activeLetters, setActiveLetters] = useState({});  // Track active letters for 5sec persistence
+  const [byersMessage, setByersMessage] = useState(''); // Message for Byers Lights
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -425,6 +431,67 @@ const ContactMe = memo(() => {
     subject: '',
     message: ''
   });
+
+  // Handle Byers Lights typing - each letter lights up
+  const handleByersInput = (e) => {
+    const newValue = e.target.value.toUpperCase();
+    const oldValue = byersMessage;
+    setByersMessage(newValue);
+    byersMessageRef.current = newValue;
+
+    // If a new letter was added, activate it via typing logic
+    if (newValue.length > oldValue.length) {
+      const newLetter = newValue[newValue.length - 1];
+      if (/[A-Z]/.test(newLetter)) {
+        handleTypingActivate(newLetter);
+      }
+    }
+  };
+
+  const handleByersKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      setByersMessage('');
+      byersMessageRef.current = '';
+      setActiveLetters({});
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    }
+  };
+
+
+  const timeoutRef = useRef(null);
+  const byersMessageRef = useRef('');
+
+  // TYPING: Stays active until 3 seconds of inactivity, then ALL clear
+  const handleTypingActivate = (letter) => {
+    setActiveLetters(prev => ({ ...prev, [letter]: true }));
+
+    // Clear existing timeout to reset the batch timer
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // Set new timeout to clear ALL active letters after 3 seconds of inactivity
+    timeoutRef.current = setTimeout(() => {
+      setActiveLetters({});
+    }, 3000);
+  };
+
+  // HOVER: Active for 1 second then turns off (independent of typing batch)
+  const handleHoverActivate = (letter) => {
+    // Only activate if not already participating in a typing sequence (optional, but cleaner)
+    setActiveLetters(prev => ({ ...prev, [letter]: true }));
+
+    setTimeout(() => {
+      // Only turn off if it hasn't been refreshed by typing logic (simple check)
+      // AND if it's NOT currently in the typed message
+      setActiveLetters(prev => {
+        if (byersMessageRef.current.includes(letter)) {
+          return prev; // Keep it on if it's part of the message
+        }
+        return { ...prev, [letter]: false };
+      });
+    }, 1000);
+  };
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -452,20 +519,20 @@ const ContactMe = memo(() => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Check if any field is empty
     const isEmpty = Object.values(formData).some(value => value.trim() === '');
-    
+
     if (isEmpty) {
       showToastMessage("Please fill all fields before submitting!", "error");
       return;
     }
-    
+
     console.log("Form submitted with data:", formData);
-    
+
     // Show success message and redirect to LinkedIn
     showToastMessage("Form submitted successfully! Redirecting to LinkedIn...", "success", "https://www.linkedin.com/in/s-rahul-885613312");
-    
+
     // Reset form after successful submission
     setFormData({
       name: '',
@@ -474,169 +541,315 @@ const ContactMe = memo(() => {
       subject: '',
       message: ''
     });
-    
+
     // Here you can add your actual form submission logic (API call, etc.)
   }
-  return (
-        <div className='relative w-full overflow-hidden'>
-            {/* Toast Notification */}
-            {showToast && (
-                <div className={`fixed top-4 right-4 z-50 ${toastType === 'error' ? 'bg-red-500' : 'bg-green-500'} text-white px-6 py-3 rounded-lg shadow-lg animate-bounce`}>
-                    <div className="flex items-center space-x-2">
-                        <span>{toastType === 'error' ? '⚠️' : '✅'}</span>
-                        <span>{toastMessage}</span>
-                    </div>
-                </div>
-            )}
-            <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent px-4 sm:px-6 md:px-10 lg:px-12 pt-20 sm:pt-32 md:pt-40 mb-4 sm:mb-6 text-center' style={{
-              backgroundImage: 'linear-gradient(135deg, #3b82f6, #06b6d4, #00d9ff, #3b82f6)',
-              backgroundSize: '200% 200%',
-              animation: 'gradientShift 1s ease infinite',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}>
-              Contact Me
-            </h1>
-            <style jsx>{`
-              @keyframes gradientShift {
-                0%, 100% {
-                  background-position: 0% 50%;
-                }
-                50% {
-                  background-position: 100% 50%;
-                }
-              }
-            `}</style>
-            
-            {/* Contact Us Section */}
-            <div 
-              className='h-[600px] mt-[10px] my-10 text-white relative overflow-hidden'
-              onMouseMove={handleMouseMove}
-            >
+  // Render Normal Mode View (Globe + Form)
+  const renderNormalView = () => (
+    <>
+      <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent px-4 sm:px-6 md:px-10 lg:px-12 pt-20 sm:pt-32 md:pt-40 mb-4 sm:mb-6 text-center' style={{
+        backgroundImage: 'linear-gradient(135deg, #3b82f6, #06b6d4, #00d9ff, #3b82f6)',
+        backgroundSize: '200% 200%',
+        animation: 'gradientShift 1s ease infinite',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+      }}>
+        Contact Me
+      </h1>
+      <style jsx>{`
+        @keyframes gradientShift {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+      `}</style>
 
-                {/* BlobCursor Background Effect - Like Hero Section */}
-                <div className='absolute inset-0' style={{ zIndex: 1, pointerEvents: 'none' }}>
-                    <BlobCursor
-                        blobType="circle"
-                        fillColor="#3b82f6"
-                        trailCount={3}
-                        sizes={[50, 80, 60]}
-                        innerSizes={[20, 30, 25]}
-                        innerColor="rgba(6, 182, 212, 0.8)"
-                        opacities={[0.6, 0.6, 0.6]}
-                        shadowColor="rgba(59, 130, 246, 0.3)"
-                        shadowBlur={5}
-                        shadowOffsetX={5}
-                        shadowOffsetY={5}
-                        filterStdDeviation={15}
-                        useFilter={true}
-                        fastDuration={0.1}
-                        slowDuration={0.5}
-                        zIndex={1}
-                        mousePosition={mousePosition}
-    />
-    </div>
-
-                {/* Lanyard Background Effect */}
-                <div className='absolute inset-0 w-full h-full' style={{ zIndex: 1.5 }}>
-                    {/* <Lanyard gravity={[0, -40, 0]} /> */}
-                </div>
-
-                  {/* Contact Content - Overlay like Hero Section */}
-                  <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-auto p-[10px]">
-                     <div className='flex flex-col lg:flex-row justify-center items-center gap-8 lg:gap-40 w-full h-full'>
-                          {/* Globe - Hidden on tablet and smaller screens */}
-                          <div className='hidden lg:block pointer-events-auto relative overflow-hidden w-[500px] h-[500px]'>
-                              <Suspense fallback={<div className="flex items-center justify-center h-full text-white">Loading Globe...</div>}>
-                                  <World data={sampleArcs} globeConfig={globeConfig} />
-                              </Suspense>
-                          </div>
-                         <ElectricBorder
-                             color="#7df9ff"
-                             speed={1}
-                             chaos={0.5}
-                             thickness={2}
-                             style={{ borderRadius: 16 }}
-                         >
-                             <div className='pt-4 pr-4 pl-4 sm:pt-[30px] sm:pr-[30px] sm:pl-[30px] w-full max-w-[700px] sm:w-[700px]'>
- 
-      <form className="my-4 sm:my-8 min-h-[350px] sm:h-[350px]" onSubmit={handleSubmit}>
-        <div className="mb-4 flex flex-col space-y-2 sm:space-y-2 md:flex-row md:space-y-0 md:space-x-2">
-            <LabelInputContainer>
-             {/* <Label htmlFor="name" className='text-white'>Name</Label> */}
-             <Input 
-               id="name" 
-               placeholder="Your Name" 
-               type="text" 
-               value={formData.name}
-               onChange={handleInputChange}
-               className="focus-visible:ring-4 focus-visible:ring-blue-500 hover:ring-2 hover:ring-blue-400 transition-all duration-200" 
-             />
-            </LabelInputContainer>
-            <LabelInputContainer>
-             <Input 
-               id="phone" 
-               placeholder="Phone Number" 
-               type="number" 
-               value={formData.phone}
-               onChange={handleInputChange}
-               className="focus-visible:ring-4 focus-visible:ring-blue-500 hover:ring-2 hover:ring-blue-400 transition-all duration-200 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
-             />
-            </LabelInputContainer>
-        </div>
-        <div className="mb-4 flex flex-col space-y-2 sm:space-y-2 md:flex-row md:space-y-0 md:space-x-2">
-          <LabelInputContainer className="mb-4">
-          {/* <Label htmlFor="email" className='text-white'>Email Address</Label> */}
-          <Input 
-            id="email" 
-            placeholder="Your E-mail" 
-            type="email" 
-            value={formData.email}
-            onChange={handleInputChange}
-            className="focus-visible:ring-4 focus-visible:ring-blue-500 hover:ring-2 hover:ring-blue-400 transition-all duration-200" 
+      <div
+        className='h-[600px] mt-[10px] my-10 text-white relative overflow-hidden'
+        onMouseMove={handleMouseMove}
+      >
+        {/* BlobCursor Background Effect */}
+        <div className='absolute inset-0' style={{ zIndex: 1, pointerEvents: 'none' }}>
+          <BlobCursor
+            blobType="circle"
+            fillColor="#3b82f6"
+            trailCount={3}
+            sizes={[50, 80, 60]}
+            innerSizes={[20, 30, 25]}
+            innerColor="rgba(6, 182, 212, 0.8)"
+            opacities={[0.6, 0.6, 0.6]}
+            shadowColor="rgba(59, 130, 246, 0.3)"
+            shadowBlur={5}
+            shadowOffsetX={5}
+            shadowOffsetY={5}
+            filterStdDeviation={15}
+            useFilter={true}
+            fastDuration={0.1}
+            slowDuration={0.5}
+            zIndex={1}
+            mousePosition={mousePosition}
           />
-          </LabelInputContainer>
-          <LabelInputContainer>
-            <Input 
-              id="subject" 
-              placeholder="Subject" 
-              type="text" 
-              value={formData.subject}
-              onChange={handleInputChange}
-              className="focus-visible:ring-4 focus-visible:ring-blue-500 hover:ring-2 hover:ring-blue-400 transition-all duration-200 " 
-            />
-          </LabelInputContainer>
         </div>
-        
-         <LabelInputContainer className="mb-4">
-           {/* <Label htmlFor="password" className='text-white'>Password</Label> */}
-            <textarea 
-              id="message" 
-              placeholder="Message" 
-              value={formData.message}
-              onChange={handleInputChange}
-              className="flex h-24 sm:h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 focus-visible:ring-offset-2 hover:ring-2 hover:ring-blue-400 disabled:cursor-not-allowed disabled:opacity-50 resize-none transition-all duration-200 text-black"
-              style={{ paddingTop: '8px' }}
-            />
-         </LabelInputContainer>
 
- 
-        <button
-          className="group/btn relative block h-10 sm:h-13 w-full rounded-md bg-gradient-to-bl from-blue-100 to-blue-00 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] cursor-pointer text-sm sm:text-base"
-          type="submit"
-        >
-          Submit {" "} &rarr;
-          <BottomGradient />
-        </button>
- 
+        {/* Contact Content */}
+        <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-auto p-[10px]">
+          <div className='flex flex-col lg:flex-row justify-center items-center gap-4 lg:gap-10 w-full h-full'>
+            <div className='hidden lg:block pointer-events-auto relative overflow-hidden w-[500px] h-[500px]'>
+              <Suspense fallback={<div className="flex items-center justify-center h-full text-white">Loading Globe...</div>}>
+                <World data={sampleArcs} globeConfig={globeConfig} />
+              </Suspense>
+            </div>
+            <ElectricBorder
+              color="#7df9ff"
+              speed={1}
+              chaos={0.5}
+              thickness={2}
+              style={{ borderRadius: 16 }}
+            >
+              <div className='pt-4 pr-4 pl-4 sm:pt-[30px] sm:pr-[30px] sm:pl-[30px] w-full max-w-[700px] sm:w-[700px]'>
+                <form className="my-4 sm:my-8 min-h-[350px] sm:h-[350px]" onSubmit={handleSubmit}>
+                  <div className="mb-4 flex flex-col space-y-2 sm:space-y-2 md:flex-row md:space-y-0 md:space-x-2">
+                    <LabelInputContainer>
+                      <Input
+                        id="name"
+                        placeholder="Your Name"
+                        type="text"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className="transition-all duration-200 focus-visible:ring-4 focus-visible:ring-blue-500 hover:ring-2 hover:ring-blue-400"
+                      />
+                    </LabelInputContainer>
+                    <LabelInputContainer>
+                      <Input
+                        id="phone"
+                        placeholder="Phone Number"
+                        type="number"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className="transition-all duration-200 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus-visible:ring-4 focus-visible:ring-blue-500 hover:ring-2 hover:ring-blue-400"
+                      />
+                    </LabelInputContainer>
+                  </div>
+                  <LabelInputContainer className="mb-4">
+                    <Input
+                      id="email"
+                      placeholder="Email Address"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="transition-all duration-200 focus-visible:ring-4 focus-visible:ring-blue-500 hover:ring-2 hover:ring-blue-400"
+                    />
+                  </LabelInputContainer>
+                  <LabelInputContainer className="mb-4">
+                    <Input
+                      id="subject"
+                      placeholder="Subject"
+                      type="text"
+                      value={formData.subject}
+                      onChange={handleInputChange}
+                      className="transition-all duration-200 focus-visible:ring-4 focus-visible:ring-blue-500 hover:ring-2 hover:ring-blue-400"
+                    />
+                  </LabelInputContainer>
+                  <LabelInputContainer className="mb-8">
+                    <textarea
+                      id="message"
+                      placeholder="Your Message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      className="shadow-input dark:shadow-[0px_0px_1px_1px_#262626] flex min-h-[80px] sm:min-h-[100px] w-full rounded-md border-none bg-gray-50 px-3 py-2 text-sm transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 focus-visible:ring-4 focus-visible:ring-blue-500 hover:ring-2 hover:ring-blue-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:placeholder:text-neutral-600 resize-none text-white"
+                    />
+                  </LabelInputContainer>
 
-      </form>
-  
-                            </div>
-                        </ElectricBorder>
-                    </div>
-                </div>
+                  <button
+                    className="group/btn relative block h-10 sm:h-13 w-full rounded-md bg-gradient-to-bl from-blue-100 to-blue-00 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] cursor-pointer text-sm sm:text-base"
+                    type="submit"
+                  >
+                    Submit {" "} &rarr;
+                    <BottomGradient isUpsideDown={false} />
+                  </button>
+                </form>
+              </div>
+            </ElectricBorder>
+          </div>
         </div>
+      </div>
+    </>
+  );
+
+  // Render Upside Down Mode View (Byers Lights Wall)
+  const renderUpsideDownView = () => (
+    <div className='relative w-full h-[800px] mt-10 overflow-hidden flex items-center justify-center'
+      style={{
+        background: 'radial-gradient(ellipse at center, #1a1208 0%, #0d0a05 40%, #050403 100%)',
+        boxShadow: 'inset 0 0 150px rgba(0,0,0,0.9)'
+      }}
+    >
+      {/* Vintage wallpaper pattern overlay */}
+      <div
+        className="absolute inset-0 opacity-10 pointer-events-none"
+        style={{
+          backgroundImage: `repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 50px,
+            rgba(139, 90, 43, 0.1) 50px,
+            rgba(139, 90, 43, 0.1) 51px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 50px,
+            rgba(139, 90, 43, 0.1) 50px,
+            rgba(139, 90, 43, 0.1) 51px
+          )`
+        }}
+      />
+
+      <div className="relative w-full max-w-[1200px] h-[600px] p-10 flex flex-col items-center justify-center pb-32">
+        {/* Row 1: A-H */}
+        <div className="relative w-full flex justify-center gap-[4vw]">
+          {/* Wire Thread */}
+          <div className="absolute top-[8px] left-[5%] right-[5%] h-[2px] bg-gray-800/80 rounded-full box-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ filter: 'blur(0.5px)' }} />
+
+          {'ABCDEFGH'.split('').map((letter, i) => (
+            <div
+              key={letter}
+              onMouseEnter={() => handleHoverActivate(letter)}
+              className="relative flex flex-col items-center cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95 will-change-transform"
+            >
+              {/* Wire Connector */}
+              <div className="absolute -top-2 w-[2px] h-4 bg-gray-800/80" />
+
+              <div
+                className={`relative z-10 w-4 h-4 rounded-full transition-all duration-150 ease-out mb-4 ${activeLetters[letter] ? 'scale-[2.5] brightness-150' : 'scale-100 opacity-60'}`}
+                style={{
+                  backgroundColor: ['#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i],
+                  boxShadow: activeLetters[letter]
+                    ? `0 0 20px ${['#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i]}, 0 0 40px ${['#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i]}, 0 0 60px ${['#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i]}`
+                    : `inset -2px -2px 4px rgba(0,0,0,0.5), 0 0 5px ${['#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i]}`
+                }}
+              />
+              <span
+                className={`text-6xl sm:text-7xl md:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'text-white/20'}`}
+                style={{
+                  fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
+                  fontWeight: 'normal',
+                  color: activeLetters[letter] ? ['#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i] : undefined
+                }}
+              >
+                {letter}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Row 2: I-Q */}
+        <div className="relative w-full flex justify-center gap-[4vw] mt-16 pl-[2vw]">
+          {/* Wire Thread */}
+          <div className="absolute top-[8px] left-[5%] right-[5%] h-[2px] bg-gray-800/80 rounded-full box-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ filter: 'blur(0.5px)' }} />
+
+          {'IJKLMNOPQ'.split('').map((letter, i) => (
+            <div
+              key={letter}
+              onMouseEnter={() => handleHoverActivate(letter)}
+              className="relative flex flex-col items-center cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95 will-change-transform"
+            >
+              {/* Wire Connector */}
+              <div className="absolute -top-2 w-[2px] h-4 bg-gray-800/80" />
+
+              <div
+                className={`relative z-10 w-4 h-4 rounded-full transition-all duration-150 ease-out mb-4 ${activeLetters[letter] ? 'scale-[2.5] brightness-150' : 'scale-100 opacity-60'}`}
+                style={{
+                  backgroundColor: ['#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7'][i],
+                  boxShadow: activeLetters[letter]
+                    ? `0 0 20px ${['#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7'][i]}, 0 0 40px ${['#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7'][i]}, 0 0 60px ${['#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7'][i]}`
+                    : `inset -2px -2px 4px rgba(0,0,0,0.5), 0 0 5px ${['#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7'][i]}`
+                }}
+              />
+              <span
+                className={`text-6xl sm:text-7xl md:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'text-white/20'}`}
+                style={{
+                  fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
+                  fontWeight: 'normal',
+                  color: activeLetters[letter] ? ['#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7'][i] : undefined
+                }}
+              >
+                {letter}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Row 3: R-Z */}
+        <div className="relative w-full flex justify-center gap-[4vw] mt-16">
+          {/* Wire Thread */}
+          <div className="absolute top-[8px] left-[5%] right-[5%] h-[2px] bg-gray-800/80 rounded-full box-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ filter: 'blur(0.5px)' }} />
+
+          {'RSTUVWXYZ'.split('').map((letter, i) => (
+            <div
+              key={letter}
+              onMouseEnter={() => handleLetterActivate(letter)}
+              className="relative flex flex-col items-center cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95 will-change-transform"
+            >
+              {/* Wire Connector */}
+              <div className="absolute -top-2 w-[2px] h-4 bg-gray-800/80" />
+
+              <div
+                className={`relative z-10 w-4 h-4 rounded-full transition-all duration-150 ease-out mb-4 ${activeLetters[letter] ? 'scale-[2.5] brightness-150' : 'scale-100 opacity-60'}`}
+                style={{
+                  backgroundColor: ['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444'][i],
+                  boxShadow: activeLetters[letter]
+                    ? `0 0 20px ${['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444'][i]}, 0 0 40px ${['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444'][i]}, 0 0 60px ${['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444'][i]}`
+                    : `inset -2px -2px 4px rgba(0,0,0,0.5), 0 0 5px ${['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444'][i]}`
+                }}
+              />
+              <span
+                className={`text-6xl sm:text-7xl md:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'text-white/20'}`}
+                style={{
+                  fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
+                  fontWeight: 'normal',
+                  color: activeLetters[letter] ? ['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444'][i] : undefined
+                }}
+              >
+                {letter}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Typing Input */}
+        <div className="absolute bottom-5 left-0 right-0 px-20">
+          <input
+            type="text"
+            value={byersMessage}
+            onChange={handleByersInput}
+            onKeyDown={handleByersKeyDown}
+            placeholder="Type here..."
+            className="w-full bg-transparent border-b border-amber-900/50 text-white text-center py-3 px-6 focus:outline-none focus:border-white/40 placeholder:text-gray-600 transition-all duration-300"
+            style={{ fontFamily: 'monospace', fontSize: '16px', letterSpacing: '4px' }}
+            maxLength={50}
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className='relative w-full overflow-hidden'>
+      {/* Toast Notification */}
+      {showToast && (
+        <div className={`fixed top-4 right-4 z-50 ${toastType === 'error' ? 'bg-red-500' : 'bg-green-500'} text-white px-6 py-3 rounded-lg shadow-lg animate-bounce`}>
+          <div className="flex items-center space-x-2">
+            <span>{toastType === 'error' ? '⚠️' : '✅'}</span>
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
+
+      {isUpsideDown ? renderUpsideDownView() : renderNormalView()}
     </div>
   )
 })
