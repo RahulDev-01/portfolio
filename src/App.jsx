@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, memo, useCallback, useState, useEffect, useMemo } from 'react'
 import './App.css'
 import { debounce, throttle, preloadImages, measurePerformance, logMemoryUsage } from './utils/performance'
-import { UpsideDownProvider } from './contexts/UpsideDownContext'
+import { UpsideDownProvider, useUpsideDown } from './contexts/UpsideDownContext'
 // import { debounce, throttle, preloadImages, measurePerformance, logMemoryUsage } from './utils/performance'
 // Lazy load heavy components with preloading
 const Footer = lazy(() => import('./Components/Footer/Footer'))
@@ -41,21 +41,24 @@ const preloadCriticalImages = () => {
 }
 
 // Loading component
-const LoadingSpinner = memo(() => (
-  <div className="flex items-center justify-center min-h-screen bg-[#060010]">
-    <div className="relative">
-      <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <img
-          src="/FavIcon.png"
-          alt="Loading"
-          className="w-8 h-8 animate-spin"
-          style={{ animationDirection: 'reverse' }}
-        />
+const LoadingSpinner = memo(() => {
+  const { isUpsideDown } = useUpsideDown();
+  return (
+    <div className={`flex items-center justify-center min-h-screen ${isUpsideDown ? 'bg-[#0a0000]' : 'bg-[#060010]'}`}>
+      <div className="relative">
+        <div className={`w-16 h-16 border-4 ${isUpsideDown ? 'border-red-900/30 border-t-red-600' : 'border-blue-500/30 border-t-blue-500'} rounded-full animate-spin`}></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <img
+            src="/FavIcon.png"
+            alt="Loading"
+            className="w-8 h-8 animate-spin"
+            style={{ animationDirection: 'reverse' }}
+          />
+        </div>
       </div>
     </div>
-  </div>
-))
+  );
+})
 
 // Error boundary component
 class ErrorBoundary extends React.Component {
