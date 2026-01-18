@@ -687,7 +687,7 @@ const ContactMe = memo(() => {
 
   // Render Upside Down Mode View (Byers Lights Wall)
   const renderUpsideDownView = () => (
-    <div className='relative w-full h-[800px] overflow-hidden flex items-center justify-center'
+    <div className='relative w-full min-h-[900px] overflow-hidden flex items-center justify-center'
       style={{
         background: 'linear-gradient(to bottom, #1a0505 0%, #000000 100%)',
         boxShadow: 'inset 0 0 150px rgba(0,0,0,0.9)'
@@ -714,7 +714,7 @@ const ContactMe = memo(() => {
         }}
       />
 
-      <div className="relative w-full max-w-[1200px] h-[600px] p-10 flex flex-col items-center justify-center pb-32">
+      <div className="relative w-full max-w-[1200px] min-h-[600px] p-10 flex flex-col items-center justify-center pb-10">
         {/* Heading */}
         <h2 className="text-xl sm:text-2xl md:text-4xl font-black bg-clip-text text-transparent mb-24 text-center tracking-[0.2em] uppercase whitespace-nowrap" style={{
           backgroundImage: 'linear-gradient(to bottom, #ef4444, #7f1d1d)',
@@ -728,7 +728,7 @@ const ContactMe = memo(() => {
         {/* Row 1: A-H */}
         <div className="relative w-full flex justify-center gap-[4vw]">
           {/* Wire Thread */}
-          <div className="absolute top-[8px] left-[5%] right-[5%] h-[2px] bg-gray-800/80 rounded-full box-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ filter: 'blur(0.5px)' }} />
+          <div className="absolute top-[8px] left-[5%] right-[5%] h-[2px] bg-neutral-900/90 rounded-full box-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ filter: 'blur(0.5px)' }} />
 
           {'ABCDEFGH'.split('').map((letter, i) => (
             <div
@@ -737,15 +737,15 @@ const ContactMe = memo(() => {
               className="relative flex flex-col items-center cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95 will-change-transform"
             >
               {/* Wire Connector */}
-              <div className="absolute -top-2 w-[2px] h-4 bg-gray-800/80" />
+              <div className="absolute -top-2 w-[2px] h-4 bg-neutral-900/90" />
 
               <div
                 className={`relative z-10 w-4 h-4 rounded-full transition-all duration-150 ease-out mb-4 ${activeLetters[letter] ? 'scale-[2.5] brightness-150' : 'scale-100 opacity-60'}`}
                 style={{
-                  backgroundColor: ['#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i],
+                  backgroundColor: ['#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7'][i],
                   boxShadow: activeLetters[letter]
-                    ? `0 0 20px ${['#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i]}, 0 0 40px ${['#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i]}, 0 0 60px ${['#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i]}`
-                    : `inset -2px -2px 4px rgba(0,0,0,0.5), 0 0 5px ${['#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i]}`
+                    ? `0 0 20px ${['#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7'][i]}, 0 0 40px ${['#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7'][i]}, 0 0 60px ${['#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7'][i]}`
+                    : `inset -2px -2px 4px rgba(0,0,0,0.5), 0 0 5px ${['#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7'][i]}`
                 }}
               />
               <span
@@ -753,7 +753,7 @@ const ContactMe = memo(() => {
                 style={{
                   fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
                   fontWeight: 'normal',
-                  color: activeLetters[letter] ? ['#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i] : undefined
+                  color: activeLetters[letter] ? ['#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7'][i] : undefined
                 }}
               >
                 {letter}
@@ -765,7 +765,7 @@ const ContactMe = memo(() => {
         {/* Row 2: I-Q */}
         <div className="relative w-full flex justify-center gap-[4vw] mt-16 pl-[2vw]">
           {/* Wire Thread */}
-          <div className="absolute top-[8px] left-[5%] right-[5%] h-[2px] bg-gray-800/80 rounded-full box-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ filter: 'blur(0.5px)' }} />
+          <div className="absolute top-[8px] left-[5%] right-[5%] h-[2px] bg-neutral-900/90 rounded-full box-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ filter: 'blur(0.5px)' }} />
 
           {'IJKLMNOPQ'.split('').map((letter, i) => (
             <div
@@ -774,15 +774,15 @@ const ContactMe = memo(() => {
               className="relative flex flex-col items-center cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95 will-change-transform"
             >
               {/* Wire Connector */}
-              <div className="absolute -top-2 w-[2px] h-4 bg-gray-800/80" />
+              <div className="absolute -top-2 w-[2px] h-4 bg-neutral-900/90" />
 
               <div
                 className={`relative z-10 w-4 h-4 rounded-full transition-all duration-150 ease-out mb-4 ${activeLetters[letter] ? 'scale-[2.5] brightness-150' : 'scale-100 opacity-60'}`}
                 style={{
-                  backgroundColor: ['#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7'][i],
+                  backgroundColor: ['#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24'][i],
                   boxShadow: activeLetters[letter]
-                    ? `0 0 20px ${['#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7'][i]}, 0 0 40px ${['#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7'][i]}, 0 0 60px ${['#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7'][i]}`
-                    : `inset -2px -2px 4px rgba(0,0,0,0.5), 0 0 5px ${['#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7'][i]}`
+                    ? `0 0 20px ${['#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24'][i]}, 0 0 40px ${['#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24'][i]}, 0 0 60px ${['#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24'][i]}`
+                    : `inset -2px -2px 4px rgba(0,0,0,0.5), 0 0 5px ${['#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24'][i]}`
                 }}
               />
               <span
@@ -790,7 +790,7 @@ const ContactMe = memo(() => {
                 style={{
                   fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
                   fontWeight: 'normal',
-                  color: activeLetters[letter] ? ['#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7'][i] : undefined
+                  color: activeLetters[letter] ? ['#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24'][i] : undefined
                 }}
               >
                 {letter}
@@ -802,24 +802,24 @@ const ContactMe = memo(() => {
         {/* Row 3: R-Z */}
         <div className="relative w-full flex justify-center gap-[4vw] mt-16">
           {/* Wire Thread */}
-          <div className="absolute top-[8px] left-[5%] right-[5%] h-[2px] bg-gray-800/80 rounded-full box-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ filter: 'blur(0.5px)' }} />
+          <div className="absolute top-[8px] left-[5%] right-[5%] h-[2px] bg-neutral-900/90 rounded-full box-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ filter: 'blur(0.5px)' }} />
 
           {'RSTUVWXYZ'.split('').map((letter, i) => (
             <div
               key={letter}
-              onMouseEnter={() => handleLetterActivate(letter)}
+              onMouseEnter={() => handleHoverActivate(letter)}
               className="relative flex flex-col items-center cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95 will-change-transform"
             >
               {/* Wire Connector */}
-              <div className="absolute -top-2 w-[2px] h-4 bg-gray-800/80" />
+              <div className="absolute -top-2 w-[2px] h-4 bg-neutral-900/90" />
 
               <div
                 className={`relative z-10 w-4 h-4 rounded-full transition-all duration-150 ease-out mb-4 ${activeLetters[letter] ? 'scale-[2.5] brightness-150' : 'scale-100 opacity-60'}`}
                 style={{
-                  backgroundColor: ['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444'][i],
+                  backgroundColor: ['#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i],
                   boxShadow: activeLetters[letter]
-                    ? `0 0 20px ${['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444'][i]}, 0 0 40px ${['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444'][i]}, 0 0 60px ${['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444'][i]}`
-                    : `inset -2px -2px 4px rgba(0,0,0,0.5), 0 0 5px ${['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444'][i]}`
+                    ? `0 0 20px ${['#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i]}, 0 0 40px ${['#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i]}, 0 0 60px ${['#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i]}`
+                    : `inset -2px -2px 4px rgba(0,0,0,0.5), 0 0 5px ${['#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i]}`
                 }}
               />
               <span
@@ -827,7 +827,7 @@ const ContactMe = memo(() => {
                 style={{
                   fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
                   fontWeight: 'normal',
-                  color: activeLetters[letter] ? ['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#3b82f6', '#a855f7', '#ef4444'][i] : undefined
+                  color: activeLetters[letter] ? ['#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i] : undefined
                 }}
               >
                 {letter}
@@ -836,18 +836,27 @@ const ContactMe = memo(() => {
           ))}
         </div>
 
-        {/* Typing Input */}
-        <div className="absolute bottom-5 left-0 right-0 px-20">
-          <input
-            type="text"
-            value={byersMessage}
-            onChange={handleByersInput}
-            onKeyDown={handleByersKeyDown}
-            placeholder="Type here..."
-            className="w-full bg-transparent border-b border-amber-900/50 text-white text-center py-3 px-6 focus:outline-none focus:border-white/40 placeholder:text-gray-600 transition-all duration-300"
-            style={{ fontFamily: 'monospace', fontSize: '16px', letterSpacing: '4px' }}
-            maxLength={50}
-          />
+        {/* Typing Input - Positioned RELATIVE to flow to prevent overlap */}
+        <div className="relative mt-24 mb-10 w-full flex justify-center px-4">
+          <div className="relative w-full max-w-2xl">
+            <input
+              type="text"
+              value={byersMessage}
+              onChange={handleByersInput}
+              onKeyDown={handleByersKeyDown}
+              placeholder="TRANSMIT MESSAGE..."
+              className="w-full bg-black/40 border-2 border-red-900/50 text-red-100 text-center py-4 px-6 focus:outline-none focus:border-red-500/50 focus:bg-black/60 placeholder:text-red-900/30 transition-all duration-300 rounded-lg backdrop-blur-sm"
+              style={{
+                fontFamily: "'ITC Benguiat', 'Times New Roman', serif",
+                fontSize: '24px',
+                letterSpacing: '0.2em',
+                textShadow: '0 0 10px rgba(220, 38, 38, 0.5)'
+              }}
+              maxLength={20}
+            />
+            {/* Blinking Cursor Indicator (Visual flair) */}
+            <div className={`absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-red-600 shadow-[0_0_10px_#dc2626] ${byersMessage ? 'opacity-100 animate-pulse' : 'opacity-0'}`} />
+          </div>
         </div>
       </div>
     </div>
