@@ -13,6 +13,7 @@ export const useUpsideDown = () => {
 export const UpsideDownProvider = ({ children }) => {
     const [isUpsideDown, setIsUpsideDown] = useState(false);
     const [isTransitioning, setIsTransitioning] = useState(false);
+    const [isFooterHovered, setIsFooterHovered] = useState(false);
 
     const toggleUpsideDown = () => {
         setIsTransitioning(true);
@@ -28,7 +29,9 @@ export const UpsideDownProvider = ({ children }) => {
             isUpsideDown,
             isTransitioning,
             toggleUpsideDown,
-            completeTransition
+            completeTransition,
+            isFooterHovered,
+            setIsFooterHovered
         }}>
             {children}
         </UpsideDownContext.Provider>
