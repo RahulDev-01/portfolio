@@ -98,21 +98,44 @@ function Footer() {
         }
       `}</style>
 
-      <div className='relative w-full'
+      <div className='relative w-full h-[500px] md:h-[1000px] group'
         style={{
-          height: '1000px',
           overflow: 'hidden',
-          backgroundColor: isUpsideDown ? '#0a0000' : '#060010'
+          backgroundColor: isUpsideDown ? '#0a0000' : '#060010',
+          '--x': '0px',
+          '--y': '0px'
         }}
         onMouseLeave={handleFooterMouseLeave}
         onMouseEnter={handleFooterMouseEnter}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          e.currentTarget.style.setProperty('--x', `${x}px`);
+          e.currentTarget.style.setProperty('--y', `${y}px`);
+        }}
       >
+        {/* Normal World GitHub Background */}
+        {!isUpsideDown && (
+          <div
+            className="absolute inset-0 z-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none"
+            style={{
+              backgroundImage: 'url(/image.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              maskImage: 'radial-gradient(circle 200px at var(--x) var(--y), black 20%, transparent 100%)',
+              WebkitMaskImage: 'radial-gradient(circle 200px at var(--x) var(--y), black 20%, transparent 100%)'
+            }}
+          />
+        )}
+
         {/* Helper Video Background */}
         <video
           ref={videoRef}
           src="/Videos/Stranger_Things_5_Vecna_Finds_Max..._Netflix_1080P.mp4"
           loop
           muted={false}
+          playsInline
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
           style={{
             opacity: isUpsideDown ? 0.6 : 0,
@@ -144,8 +167,16 @@ function Footer() {
           justifyContent: 'center',
           color: 'white',
           fontSize: '2rem',
-          zIndex: 6
+          zIndex: 6,
+          overflow: 'hidden' // Clip vines to border radius
         }}>
+          {isUpsideDown && (
+            <img
+              src="/footer_horizontal_tentacles.png"
+              className="absolute left-0 bottom-0 w-full h-auto object-cover opacity-90 pointer-events-none mix-blend-multiply"
+              style={{ maxHeight: '100%' }}
+            />
+          )}
           {/* Your content here */}
           <nav className='w-full'>
             <div className='flex items-center w-full px-8 overflow-hidden gap-8'>
