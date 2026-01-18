@@ -13,6 +13,7 @@ const Projects = lazy(() => import('./Projects/Projects'))
 const Experience = lazy(() => import('./Components/Experience/Experience'))
 const ContactMe = lazy(() => import('./ContactMe/ContactMe'))
 import MuteButton from './Components/ui/MuteButton'
+import UpsideDownAudio from './Components/ui/UpsideDownAudio'
 // Preload components for better performance
 const preloadComponents = () => {
   import('./Components/Footer/Footer')
@@ -215,6 +216,7 @@ function App() {
     <UpsideDownProvider>
       <ErrorBoundary>
         <MuteButton />
+        <UpsideDownAudio />
         <div className='h-full w-full bg-[#060010] overflow-x-hidden'>
           {/* Mobile Alert - Only visible on mobile screens */}
           {showMobileAlert && (

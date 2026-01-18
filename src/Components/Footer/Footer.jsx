@@ -5,9 +5,39 @@ import { IconBrandLinkedin, IconMail, IconBrandGithub, IconFileText } from '@tab
 import { useUpsideDown } from '../../contexts/UpsideDownContext';
 
 function Footer() {
-  const { isUpsideDown } = useUpsideDown();
-  const revealImgRef = useRef(null);
+  const { isUpsideDown, setIsFooterHovered } = useUpsideDown();
+  const videoRef = useRef(null);
   const [toast, setToast] = useState({ show: false, message: '' });
+
+  const handleFooterMouseEnter = () => {
+    setIsFooterHovered(true);
+    if (videoRef.current && isUpsideDown) {
+      if (videoRef.current.currentTime < 0.5) {
+        videoRef.current.currentTime = 24;
+      }
+      videoRef.current.volume = 0; // Start muted
+      videoRef.current.play().catch(e => console.log("Video play failed", e));
+
+      // Quick volume fade in
+      let vol = 0;
+      const fade = setInterval(() => {
+        if (vol < 1) {
+          vol += 0.1;
+          videoRef.current.volume = Math.min(1, vol);
+        } else {
+          clearInterval(fade);
+        }
+      }, 50);
+    }
+  };
+
+  const handleFooterMouseLeave = () => {
+    setIsFooterHovered(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      // Do NOT reset currentTime - allows resuming from pause point
+    }
+  };
 
   const showToast = (message) => {
     setToast({ show: true, message });
@@ -68,37 +98,35 @@ function Footer() {
         }
       `}</style>
 
-      <div className='mt-10'
+      <div className='relative w-full'
         style={{
           height: '1000px',
-          position: 'relative',
           overflow: 'hidden',
           backgroundColor: isUpsideDown ? '#0a0000' : '#060010'
         }}
-        onMouseMove={(e) => {
-          const el = revealImgRef.current;
-          if (el) {
-            const imgRect = el.getBoundingClientRect();
-            const x = e.clientX - imgRect.left;
-            const y = e.clientY - imgRect.top;
-            el.style.setProperty('--mx', `${x}px`);
-            el.style.setProperty('--my', `${y}px`);
-          }
-        }}
-        onMouseLeave={() => {
-          const el = revealImgRef.current;
-          if (el) {
-            el.style.setProperty('--mx', '-9999px');
-            el.style.setProperty('--my', '-9999px');
-          }
-        }}
+        onMouseLeave={handleFooterMouseLeave}
+        onMouseEnter={handleFooterMouseEnter}
       >
+        {/* Helper Video Background */}
+        <video
+          ref={videoRef}
+          src="/Videos/Stranger_Things_5_Vecna_Finds_Max..._Netflix_1080P.mp4"
+          loop
+          muted={false}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
+          style={{
+            opacity: isUpsideDown ? 0.6 : 0,
+            zIndex: 0,
+            filter: 'brightness(0.98) contrast(1.1) sepia(0.2)'
+          }}
+        />
         <LaserFlow
           horizontalBeamOffset={0.3}
           verticalBeamOffset={-0.4}
-          color={isUpsideDown ? "#dc2626" : "#274DA5"}
-          flowSpeed={1.0}
-          wispSpeed={25.0}
+          color={isUpsideDown ? "#7f1d1d" : "#274DA5"}
+          flowSpeed={isUpsideDown ? 0.2 : 1.0}
+          wispSpeed={isUpsideDown ? 5.0 : 25.0}
+          fogIntensity={isUpsideDown ? 0.8 : 0.45}
         />
 
         <div style={{
@@ -142,31 +170,17 @@ function Footer() {
           />
         </div>
 
-        <img
-          ref={revealImgRef}
-          src="/image.png"
-          alt="Reveal effect"
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            transform: 'none',
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'center',
-            zIndex: 5,
-            mixBlendMode: 'screen',
-            opacity: 0.5,
-            pointerEvents: 'none',
-            '--mx': '-9999px',
-            '--my': '-9999px',
-            WebkitMaskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
-            maskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
-            WebkitMaskRepeat: 'no-repeat',
-            maskRepeat: 'no-repeat'
-          }}
-        />
+
+
+        {/* Upside Down Vines Overlay */}
+        {isUpsideDown && (
+          <div className="absolute inset-0 z-[7] pointer-events-none opacity-80" style={{
+            backgroundImage: 'url(/stranger_things_vines_1767352200308.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            mixBlendMode: 'multiply'
+          }} />
+        )}
       </div>
     </>
   )
