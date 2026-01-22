@@ -1,8 +1,8 @@
-import React, { Suspense, lazy, memo, useCallback, useState, useEffect, useMemo } from 'react'
+import React, { Suspense, lazy, memo, useCallback, useState, useEffect } from 'react'
 import './App.css'
-import { debounce, throttle, preloadImages, measurePerformance, logMemoryUsage } from './utils/performance'
+import { debounce, preloadImages, logMemoryUsage } from './utils/performance'
 import { UpsideDownProvider, useUpsideDown } from './contexts/UpsideDownContext'
-// import { debounce, throttle, preloadImages, measurePerformance, logMemoryUsage } from './utils/performance'
+
 // Lazy load heavy components with preloading
 const Footer = lazy(() => import('./Components/Footer/Footer'))
 const Header = lazy(() => import('./Components/Header/Header'))
@@ -14,6 +14,7 @@ const Experience = lazy(() => import('./Components/Experience/Experience'))
 const ContactMe = lazy(() => import('./ContactMe/ContactMe'))
 import MuteButton from './Components/ui/MuteButton'
 import UpsideDownAudio from './Components/ui/UpsideDownAudio'
+
 // Preload components for better performance
 const preloadComponents = () => {
   import('./Components/Footer/Footer')
@@ -128,7 +129,6 @@ const useIntersectionObserver = (ref, options = {}) => {
 }
 
 // Optimized component wrapper
-// Optimized component wrapper
 const OptimizedComponent = memo(({ children, fallback = <LoadingSpinner /> }) => (
   <ErrorBoundary>
     <Suspense fallback={fallback}>
@@ -171,18 +171,14 @@ function App() {
 
   // Optimized mobile detection with debouncing
   useEffect(() => {
-    let timeoutId
-    const debouncedCheckMobile = () => {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(checkMobile, 100)
-    }
+    const debouncedCheckMobile = debounce(checkMobile, 100)
 
     checkMobile()
     window.addEventListener('resize', debouncedCheckMobile)
 
     return () => {
       window.removeEventListener('resize', debouncedCheckMobile)
-      clearTimeout(timeoutId)
+      debouncedCheckMobile.cancel()
     }
   }, [checkMobile])
 
@@ -287,10 +283,6 @@ function App() {
               <ContactMe />
             </GroupLoader>
           </div>
-
-          {/* <SectionLoader id="nasa-section">
-          <NasaLive apiKey="1GQwQtqzaLGX0IQ4QIVu7rGwlW3qupujpObykRQP" />
-        </SectionLoader> */}
 
           <GroupLoader triggerResult={isContactVisible} id="footer-section">
             <Footer />

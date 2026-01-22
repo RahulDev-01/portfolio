@@ -3,7 +3,7 @@
 // Debounce function for performance
 export const debounce = (func, wait) => {
   let timeout;
-  return function executedFunction(...args) {
+  const executedFunction = function(...args) {
     const later = () => {
       clearTimeout(timeout);
       func(...args);
@@ -11,6 +11,12 @@ export const debounce = (func, wait) => {
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
+
+  executedFunction.cancel = () => {
+    clearTimeout(timeout);
+  };
+
+  return executedFunction;
 };
 
 // Throttle function for performance
