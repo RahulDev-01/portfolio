@@ -170,13 +170,7 @@ function Footer() {
           zIndex: 6,
           overflow: 'hidden' // Clip vines to border radius
         }}>
-          {isUpsideDown && (
-            <img
-              src="/footer_horizontal_tentacles.png"
-              className="absolute left-0 bottom-0 w-full h-auto object-cover opacity-90 pointer-events-none mix-blend-multiply"
-              style={{ maxHeight: '100%' }}
-            />
-          )}
+
           {/* Your content here */}
           <nav className='w-full'>
             <div className='flex items-center w-full px-8 overflow-hidden gap-8'>
