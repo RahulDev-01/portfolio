@@ -16,7 +16,7 @@ function GlobeScene({ data, globeConfig }) {
       .bumpImageUrl("//unpkg.com/three-globe/example/img/earth-topology.png");
 
     // Add hex polygons for dotted pattern like the image
-    fetch('./data/globe.json')
+    fetch('/data/globe.json')
       .then(res => res.json())
       .then(countries => {
         globe
