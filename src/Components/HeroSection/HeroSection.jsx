@@ -206,11 +206,11 @@ const HeroSection = memo(() => {
                   <div ref={titleRef} style={{ position: 'relative', display: 'inline-block' }}>
                     {isUpsideDown ? (
                       <GlitchText className={'mt-2 sm:mt-3 text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center md:text-left text-red-300'}>
-                        I'm Savvana Rahul a
+                        I'm Savvana Rahul
                       </GlitchText>
                     ) : (
                       <VariableProximity
-                        label={`I'm Savvan Rahul a `}
+                        label={`I'm Savvana Rahul`}
                         className={'mt-2 sm:mt-3 text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center md:text-left'}
                         containerRef={titleRef}
                         {...variableProximityProps}
