@@ -665,12 +665,12 @@ const MagicBento = ({
                   <img
                     src="/navbar_tentacle_left.png"
                     alt=""
-                    className="absolute -left-4 -bottom-4 w-12 sm:w-16 md:w-20 opacity-90 pointer-events-none z-20 mix-blend-multiply"
+                    className="absolute -left-6 -bottom-6 w-16 sm:w-20 md:w-24 opacity-100 pointer-events-none z-50 brightness-125"
                   />
                   <img
                     src="/navbar_tentacle_right.png"
                     alt=""
-                    className="absolute -right-4 -top-2 w-12 sm:w-16 md:w-20 opacity-90 pointer-events-none z-20 mix-blend-multiply"
+                    className="absolute -right-6 -top-4 w-16 sm:w-20 md:w-24 opacity-100 pointer-events-none z-50 brightness-125"
                   />
                 </>
               )}
