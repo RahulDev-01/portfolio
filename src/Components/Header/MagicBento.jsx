@@ -324,8 +324,8 @@ const ParticleCard = ({
   return (
     <div
       ref={cardRef}
-      className={`${className} relative overflow-hidden`}
-      style={{ ...style, position: 'relative', overflow: 'hidden' }}
+      className={`${className} relative`}
+      style={{ position: 'relative', overflow: 'hidden', ...style }}
     >
       {children}
     </div>
@@ -660,6 +660,20 @@ const MagicBento = ({
           >
             <div className="flex items-center justify-center h-8 w-32 sm:h-10 sm:w-40 md:h-12 md:w-48 overflow-visible relative">
               <TextHoverEffect text="PORTFOLIO" auto intervalMs={5000} refreshEveryMs={5000} redMode={isUpsideDown} />
+              {isUpsideDown && (
+                <>
+                  <img
+                    src="/navbar_tentacle_left.png"
+                    alt=""
+                    className="absolute -left-4 -bottom-4 w-12 sm:w-16 md:w-20 opacity-90 pointer-events-none z-20 mix-blend-multiply"
+                  />
+                  <img
+                    src="/navbar_tentacle_right.png"
+                    alt=""
+                    className="absolute -right-4 -top-2 w-12 sm:w-16 md:w-20 opacity-90 pointer-events-none z-20 mix-blend-multiply"
+                  />
+                </>
+              )}
             </div>
           </ParticleCard>
           <div className="flex-1 flex items-center gap-2 sm:gap-4 justify-end mr-1 sm:mr-2 overflow-x-auto no-scrollbar md:gap-8 md:mr-10">
