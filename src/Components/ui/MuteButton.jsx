@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useUpsideDown } from '../../contexts/UpsideDownContext';
 
 // Access the global audio from VShapedPortalTransition
 const MuteButton = () => {
+    const { isUpsideDown } = useUpsideDown();
     const [isMuted, setIsMuted] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
-        // Check periodically if audio exists and is playing
-        const checkAudio = setInterval(() => {
+        // Reset muted state when entering upside down mode
+        if (isUpsideDown) {
             const audio = window.strangerThingsAudio;
-            if (audio && !audio.paused) {
-                setIsVisible(true);
+            if (audio) {
+                setIsMuted(audio.muted);
             }
-        }, 500);
-
-        return () => clearInterval(checkAudio);
-    }, []);
+        }
+    }, [isUpsideDown]);
 
     const toggleMute = () => {
         const audio = window.strangerThingsAudio;
@@ -25,7 +24,8 @@ const MuteButton = () => {
         }
     };
 
-    if (!isVisible) return null;
+    // Only show when in upside down mode
+    if (!isUpsideDown) return null;
 
     return (
         <>
