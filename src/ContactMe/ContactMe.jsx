@@ -689,7 +689,7 @@ const ContactMe = memo(() => {
 
   // Render Upside Down Mode View (Byers Lights Wall)
   const renderUpsideDownView = () => (
-    <div className='relative w-full min-h-screen overflow-hidden flex items-center justify-center'
+    <div className='relative w-full min-h-[100vh] md:min-h-screen overflow-hidden flex items-center justify-center py-8 sm:py-12'
       style={{
         background: 'linear-gradient(to bottom, #1a0505 0%, #000000 100%)',
         boxShadow: 'inset 0 0 150px rgba(0,0,0,0.9)'
@@ -716,9 +716,9 @@ const ContactMe = memo(() => {
         }}
       />
 
-      <div className="relative w-full max-w-[1200px] min-h-[600px] p-10 flex flex-col items-center justify-center pb-10">
+      <div className="relative w-full max-w-[1200px] min-h-[400px] sm:min-h-[500px] md:min-h-[600px] p-4 sm:p-6 md:p-10 flex flex-col items-center justify-center">
         {/* Heading */}
-        <h2 className="text-xl sm:text-2xl md:text-4xl font-black bg-clip-text text-transparent mb-24 text-center tracking-[0.2em] uppercase whitespace-nowrap" style={{
+        <h2 className="text-base sm:text-xl md:text-2xl lg:text-4xl font-black bg-clip-text text-transparent mb-8 sm:mb-12 md:mb-16 lg:mb-24 text-center tracking-[0.15em] sm:tracking-[0.2em] uppercase" style={{
           backgroundImage: 'linear-gradient(to bottom, #ef4444, #7f1d1d)',
           fontFamily: "'ITC Benguiat', 'Times New Roman', serif", // Stranger Things style
           textShadow: '0 0 5px rgba(220, 38, 38, 0.4), 1px 1px 0px rgba(0,0,0,0.8)',
@@ -728,7 +728,7 @@ const ContactMe = memo(() => {
         </h2>
 
         {/* Row 1: A-H */}
-        <div className="relative w-full flex justify-center gap-3 sm:gap-6 md:gap-[4vw]">
+        <div className="relative w-full flex justify-center gap-2 sm:gap-4 md:gap-6 lg:gap-[4vw]">
           {/* Wire Thread */}
           <div className="absolute top-[8px] left-[5%] right-[5%] h-[2px] bg-neutral-900/90 rounded-full box-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ filter: 'blur(0.5px)' }} />
 
@@ -742,7 +742,7 @@ const ContactMe = memo(() => {
               <div className="absolute -top-1 sm:-top-2 w-[1px] sm:w-[2px] h-2 sm:h-4 bg-neutral-900/90" />
 
               <div
-                className={`relative z-10 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 rounded-full transition-all duration-150 ease-out mb-1 sm:mb-2 md:mb-4 ${activeLetters[letter] ? 'scale-[2.5] brightness-150' : 'scale-100 opacity-60'}`}
+                className={`relative z-10 w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 lg:w-4 lg:h-4 rounded-full transition-all duration-150 ease-out mb-1 sm:mb-1.5 md:mb-2 lg:mb-4 ${activeLetters[letter] ? 'scale-[2.5] brightness-150' : 'scale-100 opacity-60'}`}
                 style={{
                   backgroundColor: ['#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7'][i],
                   boxShadow: activeLetters[letter]
@@ -751,7 +751,7 @@ const ContactMe = memo(() => {
                 }}
               />
               <span
-                className={`text-3xl sm:text-5xl md:text-7xl lg:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'text-white/20'}`}
+                className={`text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'text-white/20'}`}
                 style={{
                   fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
                   fontWeight: 'normal',
@@ -765,7 +765,7 @@ const ContactMe = memo(() => {
         </div>
 
         {/* Row 2: I-Q */}
-        <div className="relative w-full flex justify-center gap-3 sm:gap-6 md:gap-[4vw] mt-8 sm:mt-12 md:mt-16 pl-[2vw]">
+        <div className="relative w-full flex justify-center gap-2 sm:gap-4 md:gap-6 lg:gap-[4vw] mt-4 sm:mt-6 md:mt-10 lg:mt-16 pl-[2vw]">
           {/* Wire Thread */}
           <div className="absolute top-[8px] left-[5%] right-[5%] h-[2px] bg-neutral-900/90 rounded-full box-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ filter: 'blur(0.5px)' }} />
 
@@ -779,7 +779,7 @@ const ContactMe = memo(() => {
               <div className="absolute -top-1 sm:-top-2 w-[1px] sm:w-[2px] h-2 sm:h-4 bg-neutral-900/90" />
 
               <div
-                className={`relative z-10 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 rounded-full transition-all duration-150 ease-out mb-1 sm:mb-2 md:mb-4 ${activeLetters[letter] ? 'scale-[2.5] brightness-150' : 'scale-100 opacity-60'}`}
+                className={`relative z-10 w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 lg:w-4 lg:h-4 rounded-full transition-all duration-150 ease-out mb-1 sm:mb-1.5 md:mb-2 lg:mb-4 ${activeLetters[letter] ? 'scale-[2.5] brightness-150' : 'scale-100 opacity-60'}`}
                 style={{
                   backgroundColor: ['#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24'][i],
                   boxShadow: activeLetters[letter]
@@ -788,7 +788,7 @@ const ContactMe = memo(() => {
                 }}
               />
               <span
-                className={`text-3xl sm:text-5xl md:text-7xl lg:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'text-white/20'}`}
+                className={`text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'text-white/20'}`}
                 style={{
                   fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
                   fontWeight: 'normal',
@@ -802,7 +802,7 @@ const ContactMe = memo(() => {
         </div>
 
         {/* Row 3: R-Z */}
-        <div className="relative w-full flex justify-center gap-3 sm:gap-6 md:gap-[4vw] mt-8 sm:mt-12 md:mt-16">
+        <div className="relative w-full flex justify-center gap-2 sm:gap-4 md:gap-6 lg:gap-[4vw] mt-4 sm:mt-6 md:mt-10 lg:mt-16">
           {/* Wire Thread */}
           <div className="absolute top-[8px] left-[5%] right-[5%] h-[2px] bg-neutral-900/90 rounded-full box-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ filter: 'blur(0.5px)' }} />
 
@@ -816,7 +816,7 @@ const ContactMe = memo(() => {
               <div className="absolute -top-1 sm:-top-2 w-[1px] sm:w-[2px] h-2 sm:h-4 bg-neutral-900/90" />
 
               <div
-                className={`relative z-10 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 rounded-full transition-all duration-150 ease-out mb-1 sm:mb-2 md:mb-4 ${activeLetters[letter] ? 'scale-[2.5] brightness-150' : 'scale-100 opacity-60'}`}
+                className={`relative z-10 w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 lg:w-4 lg:h-4 rounded-full transition-all duration-150 ease-out mb-1 sm:mb-1.5 md:mb-2 lg:mb-4 ${activeLetters[letter] ? 'scale-[2.5] brightness-150' : 'scale-100 opacity-60'}`}
                 style={{
                   backgroundColor: ['#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e', '#a855f7', '#ef4444', '#fbbf24', '#22c55e'][i],
                   boxShadow: activeLetters[letter]
@@ -825,7 +825,7 @@ const ContactMe = memo(() => {
                 }}
               />
               <span
-                className={`text-3xl sm:text-5xl md:text-7xl lg:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'text-white/20'}`}
+                className={`text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'text-white/20'}`}
                 style={{
                   fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
                   fontWeight: 'normal',
@@ -839,7 +839,7 @@ const ContactMe = memo(() => {
         </div>
 
         {/* Typing Input - Positioned RELATIVE to flow to prevent overlap */}
-        <div className="relative mt-24 mb-10 w-full flex justify-center px-4">
+        <div className="relative mt-8 sm:mt-12 md:mt-16 lg:mt-24 mb-6 sm:mb-8 md:mb-10 w-full flex justify-center px-4">
           <div className="relative w-full max-w-2xl">
             <input
               type="text"
