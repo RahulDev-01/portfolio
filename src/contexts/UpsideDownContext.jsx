@@ -21,7 +21,22 @@ export const UpsideDownProvider = ({ children }) => {
 
     const completeTransition = () => {
         setIsTransitioning(false);
+        const wasUpsideDown = isUpsideDown;
         setIsUpsideDown(prev => !prev);
+
+        // If we're escaping FROM upside down (wasUpsideDown is true), stop the audio
+        if (wasUpsideDown) {
+            stopAudio();
+        }
+    };
+
+    const stopAudio = () => {
+        const audio = window.strangerThingsAudio;
+        if (audio) {
+            audio.pause();
+            audio.currentTime = 0;
+            audio.volume = 0;
+        }
     };
 
     return (
@@ -31,7 +46,8 @@ export const UpsideDownProvider = ({ children }) => {
             toggleUpsideDown,
             completeTransition,
             isFooterHovered,
-            setIsFooterHovered
+            setIsFooterHovered,
+            stopAudio
         }}>
             {children}
         </UpsideDownContext.Provider>
