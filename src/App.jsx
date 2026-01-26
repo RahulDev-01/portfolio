@@ -152,6 +152,46 @@ const GroupLoader = ({ children, triggerResult, id, className = "" }) => {
   )
 }
 
+// Dynamic Scrollbar Styles Component
+const ScrollbarStyles = () => {
+  const { isUpsideDown } = useUpsideDown();
+
+  return (
+    <style>{`
+      /* Scrollbar styling for Webkit browsers (Chrome, Safari, Edge) */
+      ::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: ${isUpsideDown ? '#1a0000' : '#060010'};
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: ${isUpsideDown ? 'linear-gradient(180deg, #dc2626, #991b1b)' : 'linear-gradient(180deg, #3b82f6, #1d4ed8)'};
+        border-radius: 6px;
+        border: 2px solid ${isUpsideDown ? '#1a0000' : '#060010'};
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: ${isUpsideDown ? 'linear-gradient(180deg, #ef4444, #b91c1c)' : 'linear-gradient(180deg, #60a5fa, #2563eb)'};
+      }
+
+      ::-webkit-scrollbar-thumb:active {
+        background: ${isUpsideDown ? '#dc2626' : '#3b82f6'};
+      }
+
+      /* Scrollbar styling for Firefox */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: ${isUpsideDown ? '#dc2626 #1a0000' : '#3b82f6 #060010'};
+      }
+    `}</style>
+  );
+};
+
+
 function App() {
   const [isMobile, setIsMobile] = useState(false)
   const [showMobileAlert, setShowMobileAlert] = useState(false)
@@ -214,6 +254,7 @@ function App() {
   return (
     <UpsideDownProvider>
       <ErrorBoundary>
+        <ScrollbarStyles />
         <MuteButton />
         <UpsideDownAudio />
         <div className='h-full w-full bg-[#060010] overflow-x-hidden'>
