@@ -662,15 +662,25 @@ const MagicBento = ({
               <TextHoverEffect text="PORTFOLIO" auto intervalMs={5000} refreshEveryMs={5000} redMode={isUpsideDown} />
               {isUpsideDown && (
                 <>
+                  {/* Left vine */}
                   <img
-                    src="/navbar_tentacle_left.png"
+                    src="/vine_left.png"
                     alt=""
-                    className="absolute -left-6 -bottom-6 w-16 sm:w-20 md:w-24 opacity-100 pointer-events-none z-50 brightness-125"
+                    className="absolute -left-8 top-1/2 -translate-y-1/2 w-12 sm:w-16 md:w-20 h-auto opacity-90 pointer-events-none z-50 brightness-150 contrast-125"
+                    style={{
+                      filter: 'brightness(1.5) contrast(1.2)',
+                      transform: 'translateY(-50%) rotate(0deg)'
+                    }}
                   />
+                  {/* Right vine */}
                   <img
-                    src="/navbar_tentacle_right.png"
+                    src="/vine_left.png"
                     alt=""
-                    className="absolute -right-6 -top-4 w-16 sm:w-20 md:w-24 opacity-100 pointer-events-none z-50 brightness-125"
+                    className="absolute -right-8 top-1/2 -translate-y-1/2 w-12 sm:w-16 md:w-20 h-auto opacity-90 pointer-events-none z-50 brightness-150 contrast-125"
+                    style={{
+                      filter: 'brightness(1.5) contrast(1.2)',
+                      transform: 'translateY(-50%) rotate(180deg)'
+                    }}
                   />
                 </>
               )}
