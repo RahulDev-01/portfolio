@@ -14,6 +14,10 @@ const Experience = lazy(() => import('./Components/Experience/Experience'))
 const ContactMe = lazy(() => import('./ContactMe/ContactMe'))
 import MuteButton from './Components/ui/MuteButton'
 import UpsideDownAudio from './Components/ui/UpsideDownAudio'
+import CustomCursor from './Components/ui/CustomCursor'
+import EasterEggs from './Components/ui/EasterEggs'
+import Demogorgon from './Components/ui/Demogorgon'
+import VecnasClock from './Components/ui/VecnasClock'
 
 // Preload components for better performance
 const preloadComponents = () => {
@@ -257,6 +261,10 @@ function App() {
         <ScrollbarStyles />
         <MuteButton />
         <UpsideDownAudio />
+        <CustomCursor enabled={true} particleCount={8} glowIntensity={0.8} />
+        <EasterEggs />
+        <Demogorgon appearanceChance={0.08} minInterval={30000} maxInterval={60000} soundEnabled={true} />
+        <VecnasClock showInterval={180000} enableChimes={true} />
         <div className='h-full w-full bg-[#060010] overflow-x-hidden'>
           {/* Mobile Alert - Only visible on mobile screens */}
           {showMobileAlert && (
