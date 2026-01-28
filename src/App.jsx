@@ -261,7 +261,7 @@ function App() {
         <ScrollbarStyles />
         <MuteButton />
         <UpsideDownAudio />
-        <CustomCursor enabled={true} glowIntensity={0.8} />
+        <CustomCursor enabled={false} glowIntensity={0.8} />
         <EasterEggs />
         <Demogorgon appearanceChance={0.08} minInterval={30000} maxInterval={60000} soundEnabled={true} />
         <VecnasClock showInterval={180000} enableChimes={true} />
