@@ -694,7 +694,7 @@ const MagicBento = ({
                 } ${enableBorderGlow ? 'card--border-glow' : ''}`;
 
               const cardStyle = {
-                backgroundColor: 'transparent',
+                backgroundColor: isUpsideDown ? '#0a0000' : 'transparent',
                 borderColor: 'transparent',
                 color: 'var(--white)',
                 '--glow-x': '50%',
