@@ -5,7 +5,7 @@ import { IconBrandLinkedin, IconMail, IconBrandGithub, IconFileText } from '@tab
 import { useUpsideDown } from '../../contexts/UpsideDownContext';
 
 function Footer() {
-  const { isUpsideDown, setIsFooterHovered } = useUpsideDown();
+  const { isUpsideDown, setIsFooterHovered, toggleUpsideDown } = useUpsideDown();
   const videoRef = useRef(null);
   const [toast, setToast] = useState({ show: false, message: '' });
 
@@ -115,6 +115,42 @@ function Footer() {
           e.currentTarget.style.setProperty('--y', `${y}px`);
         }}
       >
+        {/* Upside Down Button - Vertical on Right */}
+        <button
+          onClick={toggleUpsideDown}
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 pointer-events-auto
+                     bg-gradient-to-b from-red-900/80 via-black/90 to-red-950/80
+                     hover:from-red-800 hover:via-red-950 hover:to-black
+                     text-white font-bold
+                     px-2 py-4 sm:px-2.5 sm:py-6
+                     rounded-l-xl
+                     shadow-[0_0_20px_rgba(139,0,0,0.5)]
+                     hover:shadow-[0_0_30px_rgba(220,38,38,0.8)]
+                     border-l-2 border-t-2 border-b-2 border-red-700/50
+                     hover:border-red-500
+                     transition-all duration-300
+                     group
+                     overflow-hidden cursor-pointer"
+          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+        >
+          <span className="relative z-10 text-sm sm:text-base md:text-lg tracking-wider
+                           transition-all duration-300
+                           drop-shadow-[0_0_8px_rgba(220,38,38,0.8)]">
+            {isUpsideDown ? "ESCAPE THE UPSIDE DOWN" : "ENTER INTO UPSIDE DOWN"}
+          </span>
+
+          {/* Animated particles effect */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <div className="absolute top-0 left-1/2 w-1 h-1 bg-red-400 rounded-full animate-ping"></div>
+            <div className="absolute bottom-0 left-1/2 w-1 h-1 bg-red-400 rounded-full animate-ping" style={{ animationDelay: '0.3s' }}></div>
+          </div>
+
+          {/* Glitch effect overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-red-500/20 to-transparent 
+                          opacity-0 group-hover:opacity-100 transition-opacity duration-200
+                          group-hover:animate-pulse"></div>
+        </button>
+
         {/* Normal World GitHub Background */}
         {!isUpsideDown && (
           <div
