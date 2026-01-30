@@ -624,6 +624,38 @@ const MagicBento = ({
               min-height: 180px;
             }
           }
+          
+          /* Enhanced cursor tracking and blinking animation */
+          @keyframes blink-glow {
+            0%, 100% { 
+              opacity: 1;
+              box-shadow: 0 0 10px rgba(${activeGlowColor}, 0.5);
+            }
+            50% { 
+              opacity: 0.7;
+              box-shadow: 0 0 20px rgba(${activeGlowColor}, 0.8);
+            }
+          }
+          
+          .card {
+            cursor: pointer !important;
+            pointer-events: auto !important;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+          }
+          
+          .card:hover {
+            animation: blink-glow 0.8s ease-in-out infinite;
+          }
+          
+          .card:active {
+            transform: scale(0.98) translateY(-0.5px);
+          }
+          
+          /* Improve cursor precision */
+          .card * {
+            pointer-events: none;
+          }
         `}
       </style>
 
