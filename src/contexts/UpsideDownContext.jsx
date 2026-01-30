@@ -16,6 +16,26 @@ export const UpsideDownProvider = ({ children }) => {
     const [isFooterHovered, setIsFooterHovered] = useState(false);
 
     const toggleUpsideDown = () => {
+        // Force scroll to top FIRST before starting transition
+        // Use multiple methods to ensure it works
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+
+        // Also try scrollIntoView on hero section
+        requestAnimationFrame(() => {
+            const heroSection = document.getElementById('hero-section');
+            if (heroSection) {
+                heroSection.scrollIntoView({ behavior: 'auto', block: 'start' });
+            }
+
+            // Double-check scroll position
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+        });
+
+        // Start transition after ensuring scroll
         setIsTransitioning(true);
     };
 
