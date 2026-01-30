@@ -727,6 +727,22 @@ const ContactMe = memo(() => {
           Send a Signal to the Home World
         </h2>
 
+        {/* CSS for improved cursor precision */}
+        <style jsx>{`
+          /* Improve cursor precision with larger hit areas */
+          .letter-container {
+            padding: 12px;
+            margin: -12px;
+            cursor: pointer !important;
+            pointer-events: auto !important;
+            user-select: none;
+          }
+          
+          .letter-container * {
+            pointer-events: none;
+          }
+        `}</style>
+
         {/* Row 1: A-H */}
         <div className="relative w-full flex justify-center gap-2 sm:gap-4 md:gap-6 lg:gap-[4vw]">
           {/* Wire Thread */}
@@ -736,7 +752,7 @@ const ContactMe = memo(() => {
             <div
               key={letter}
               onMouseEnter={() => handleHoverActivate(letter)}
-              className="relative flex flex-col items-center cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95 will-change-transform"
+              className="letter-container relative flex flex-col items-center transition-transform duration-200 hover:scale-110 active:scale-95 will-change-transform"
             >
               {/* Wire Connector */}
               <div className="absolute -top-1 sm:-top-2 w-[1px] sm:w-[2px] h-2 sm:h-4 bg-neutral-900/90" />
@@ -751,7 +767,7 @@ const ContactMe = memo(() => {
                 }}
               />
               <span
-                className={`text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'text-white/20'}`}
+                className={`text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? '' : 'text-white/20'}`}
                 style={{
                   fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
                   fontWeight: 'normal',
@@ -773,7 +789,7 @@ const ContactMe = memo(() => {
             <div
               key={letter}
               onMouseEnter={() => handleHoverActivate(letter)}
-              className="relative flex flex-col items-center cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95 will-change-transform"
+              className="letter-container relative flex flex-col items-center transition-transform duration-200 hover:scale-110 active:scale-95 will-change-transform"
             >
               {/* Wire Connector */}
               <div className="absolute -top-1 sm:-top-2 w-[1px] sm:w-[2px] h-2 sm:h-4 bg-neutral-900/90" />
@@ -788,7 +804,7 @@ const ContactMe = memo(() => {
                 }}
               />
               <span
-                className={`text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'text-white/20'}`}
+                className={`text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? '' : 'text-white/20'}`}
                 style={{
                   fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
                   fontWeight: 'normal',
@@ -810,7 +826,7 @@ const ContactMe = memo(() => {
             <div
               key={letter}
               onMouseEnter={() => handleHoverActivate(letter)}
-              className="relative flex flex-col items-center cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95 will-change-transform"
+              className="letter-container relative flex flex-col items-center transition-transform duration-200 hover:scale-110 active:scale-95 will-change-transform"
             >
               {/* Wire Connector */}
               <div className="absolute -top-1 sm:-top-2 w-[1px] sm:w-[2px] h-2 sm:h-4 bg-neutral-900/90" />
@@ -825,7 +841,7 @@ const ContactMe = memo(() => {
                 }}
               />
               <span
-                className={`text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? 'drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'text-white/20'}`}
+                className={`text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl transition-all duration-200 ease-out ${activeLetters[letter] ? '' : 'text-white/20'}`}
                 style={{
                   fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
                   fontWeight: 'normal',
