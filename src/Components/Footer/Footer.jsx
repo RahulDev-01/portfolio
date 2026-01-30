@@ -101,7 +101,7 @@ function Footer() {
       <div className='relative w-full h-[500px] md:h-[1000px] group'
         style={{
           overflow: 'hidden',
-          backgroundColor: isUpsideDown ? '#0a0000' : '#060010',
+          backgroundColor: `${isUpsideDown ? '#0a0000' : '#060010'} !important`,
           '--x': '0px',
           '--y': '0px'
         }}
@@ -195,7 +195,7 @@ function Footer() {
           transform: 'translateX(-50%)',
           width: '100%',
           height: '10%',
-          backgroundColor: isUpsideDown ? '#0a0000' : '#060010',
+          backgroundColor: `${isUpsideDown ? '#0a0000' : '#060010'} !important`,
           borderRadius: '20px',
           border: `2px solid ${isUpsideDown ? '#dc2626' : '#274DA5'}`,
           display: 'flex',
