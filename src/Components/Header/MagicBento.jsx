@@ -31,11 +31,11 @@ const cardData = [
     title: 'Projects',
     sectionId: 'projects-section'
   },
-  {
-    color: '#060010',
-    title: 'Experience',
-    sectionId: 'experience-section'
-  },
+  // {
+  //   color: '#060010',
+  //   title: 'Experience',
+  //   sectionId: 'experience-section'
+  // },
   {
     color: '#060010',
     title: 'Contact Me',

@@ -10,7 +10,7 @@ const HeroSection = lazy(() => import('./Components/HeroSection/HeroSection'))
 const AboutMe = lazy(() => import('./Components/AboutMe/AboutMe'))
 const Skills = lazy(() => import('./Skills/Skills'))
 const Projects = lazy(() => import('./Projects/Projects'))
-const Experience = lazy(() => import('./Components/Experience/Experience'))
+// const Experience = lazy(() => import('./Components/Experience/Experience'))
 const ContactMe = lazy(() => import('./ContactMe/ContactMe'))
 import MuteButton from './Components/ui/MuteButton'
 import UpsideDownAudio from './Components/ui/UpsideDownAudio'
@@ -25,7 +25,7 @@ const preloadComponents = () => {
   import('./Components/AboutMe/AboutMe')
   import('./Skills/Skills')
   import('./Projects/Projects')
-  import('./Components/Experience/Experience')
+  // import('./Components/Experience/Experience')
   import('./ContactMe/ContactMe')
 }
 
@@ -321,9 +321,9 @@ function App() {
             </GroupLoader>
           </div>
 
-          <GroupLoader triggerResult={isProjectsVisible} id="experience-section">
+          {/* <GroupLoader triggerResult={isProjectsVisible} id="experience-section">
             <Experience />
-          </GroupLoader>
+          </GroupLoader> */}
 
           {/* GROUP 3: Contact & Footer */}
           {/* Trigger for Group 3 */}
