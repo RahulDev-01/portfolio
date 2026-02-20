@@ -3,9 +3,11 @@ import LaserFlow from './LaserFlow'
 import Dock from '../ui/Dock'
 import { IconBrandLinkedin, IconMail, IconBrandGithub, IconFileText } from '@tabler/icons-react'
 import { useUpsideDown } from '../../contexts/UpsideDownContext';
+import useDeviceCapability from '../../hooks/useDeviceCapability';
 
 function Footer() {
   const { isUpsideDown, setIsFooterHovered, toggleUpsideDown } = useUpsideDown();
+  const { tier } = useDeviceCapability();
   const videoRef = useRef(null);
   const [toast, setToast] = useState({ show: false, message: '' });
 
@@ -186,6 +188,7 @@ function Footer() {
           flowSpeed={isUpsideDown ? 0.2 : 1.0}
           wispSpeed={isUpsideDown ? 5.0 : 25.0}
           fogIntensity={isUpsideDown ? 0.8 : 0.45}
+          dpr={tier === 'low' ? 0.5 : tier === 'medium' ? 1 : undefined}
         />
 
         <div style={{

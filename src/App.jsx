@@ -2,6 +2,7 @@ import React, { Suspense, lazy, memo, useCallback, useState, useEffect } from 'r
 import './App.css'
 import { debounce, preloadImages, logMemoryUsage } from './utils/performance'
 import { UpsideDownProvider, useUpsideDown } from './contexts/UpsideDownContext'
+import useDeviceCapability from './hooks/useDeviceCapability'
 
 // Lazy load heavy components with preloading
 const Footer = lazy(() => import('./Components/Footer/Footer'))
@@ -199,6 +200,7 @@ const ScrollbarStyles = () => {
 function App() {
   const [isMobile, setIsMobile] = useState(false)
   const [showMobileAlert, setShowMobileAlert] = useState(false)
+  const { tier, reducedMotion } = useDeviceCapability()
 
   // Memoized mobile detection function
   const checkMobile = useCallback(() => {
@@ -262,9 +264,16 @@ function App() {
         <MuteButton />
         <UpsideDownAudio />
         <CustomCursor enabled={false} glowIntensity={0.8} />
-        <EasterEggs />
-        <Demogorgon appearanceChance={0.08} minInterval={30000} maxInterval={60000} soundEnabled={true} />
-        <VecnasClock showInterval={180000} enableChimes={true} />
+        {tier !== 'low' && !reducedMotion && <EasterEggs />}
+        {tier !== 'low' && !reducedMotion && (
+          <Demogorgon
+            appearanceChance={tier === 'medium' ? 0.04 : 0.08}
+            minInterval={tier === 'medium' ? 120000 : 30000}
+            maxInterval={tier === 'medium' ? 180000 : 60000}
+            soundEnabled={true}
+          />
+        )}
+        {tier !== 'low' && !reducedMotion && <VecnasClock showInterval={180000} enableChimes={true} />}
         <div className='h-full w-full bg-[#060010] overflow-x-hidden'>
           {/* Mobile Alert - Only visible on mobile screens */}
           {showMobileAlert && (

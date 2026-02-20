@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import useDeviceCapability from '../../hooks/useDeviceCapability'
 
 const InteractiveBackground = ({ redMode = false }) => {
     const canvasRef = useRef(null)
@@ -6,8 +7,13 @@ const InteractiveBackground = ({ redMode = false }) => {
     const sporesRef = useRef([])
     const mouseRef = useRef({ x: 0, y: 0 })
     const animationFrameRef = useRef(null)
+    const isVisibleRef = useRef(true)
+    const { tier, reducedMotion } = useDeviceCapability()
 
     useEffect(() => {
+        // On low tier or reduced motion, skip canvas animation entirely
+        if (tier === 'low' || reducedMotion) return
+
         const canvas = canvasRef.current
         if (!canvas) return
 
@@ -39,15 +45,12 @@ const InteractiveBackground = ({ redMode = false }) => {
             }
 
             update(mouse) {
-                // Move particle
                 this.x += this.vx
                 this.y += this.vy
 
-                // Bounce off edges
                 if (this.x < 0 || this.x > canvas.width) this.vx *= -1
                 if (this.y < 0 || this.y > canvas.height) this.vy *= -1
 
-                // Mouse interaction - attract to cursor
                 const dx = mouse.x - this.x
                 const dy = mouse.y - this.y
                 const distance = Math.sqrt(dx * dx + dy * dy)
@@ -58,7 +61,6 @@ const InteractiveBackground = ({ redMode = false }) => {
                     this.vy += (dy / distance) * force * 0.1
                 }
 
-                // Limit velocity
                 const maxSpeed = 2
                 const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy)
                 if (speed > maxSpeed) {
@@ -66,7 +68,6 @@ const InteractiveBackground = ({ redMode = false }) => {
                     this.vy = (this.vy / speed) * maxSpeed
                 }
 
-                // Slowly return to normal speed
                 this.vx *= 0.99
                 this.vy *= 0.99
             }
@@ -87,7 +88,7 @@ const InteractiveBackground = ({ redMode = false }) => {
                 this.x = Math.random() * canvas.width
                 this.y = Math.random() * canvas.height
                 this.vx = (Math.random() - 0.5) * 0.3
-                this.vy = -Math.random() * 0.5 - 0.2 // Slowly float upward
+                this.vy = -Math.random() * 0.5 - 0.2
                 this.radius = Math.random() * 2 + 0.5
                 this.opacity = Math.random() * 0.3 + 0.1
                 this.color = redMode ? '#dc2626' : '#8b5cf6'
@@ -96,8 +97,6 @@ const InteractiveBackground = ({ redMode = false }) => {
             update() {
                 this.x += this.vx
                 this.y += this.vy
-
-                // Wrap around edges
                 if (this.x < 0) this.x = canvas.width
                 if (this.x > canvas.width) this.x = 0
                 if (this.y < 0) this.y = canvas.height
@@ -114,17 +113,19 @@ const InteractiveBackground = ({ redMode = false }) => {
             }
         }
 
-        // Clear and reinitialize particles when redMode changes - OPTIMIZED for performance
+        // Tier-based particle and spore limits
+        const maxParticleMultiplier = tier === 'medium' ? 0.5 : 1
+        const maxSporeMultiplier = tier === 'medium' ? 0.5 : 1
+
         particles.length = 0
-        const particleCount = Math.floor((canvas.width * canvas.height) / 20000)
-        for (let i = 0; i < Math.min(particleCount, 50); i++) {
+        const particleCount = Math.floor((canvas.width * canvas.height) / 20000 * maxParticleMultiplier)
+        for (let i = 0; i < Math.min(particleCount, tier === 'medium' ? 25 : 50); i++) {
             particles.push(new Particle())
         }
 
-        // Clear and reinitialize floating spores when redMode changes - OPTIMIZED for performance
         spores.length = 0
-        const sporeCount = Math.floor((canvas.width * canvas.height) / 10000)
-        for (let i = 0; i < Math.min(sporeCount, 100); i++) {
+        const sporeCount = Math.floor((canvas.width * canvas.height) / 10000 * maxSporeMultiplier)
+        for (let i = 0; i < Math.min(sporeCount, tier === 'medium' ? 40 : 100); i++) {
             spores.push(new FloatingSpore())
         }
 
@@ -142,29 +143,44 @@ const InteractiveBackground = ({ redMode = false }) => {
             const rect = canvas.getBoundingClientRect()
             const x = e.clientX - rect.left
             const y = e.clientY - rect.top
-            for (let i = 0; i < 5; i++) {
+            const clickCount = tier === 'medium' ? 3 : 5
+            for (let i = 0; i < clickCount; i++) {
                 particles.push(new Particle(x, y))
             }
-            // Limit total particles
-            if (particles.length > 150) {
-                particles.splice(0, particles.length - 150)
+            const maxTotal = tier === 'medium' ? 60 : 150
+            if (particles.length > maxTotal) {
+                particles.splice(0, particles.length - maxTotal)
             }
         }
 
         canvas.addEventListener('mousemove', handleMouseMove)
         canvas.addEventListener('click', handleClick)
 
+        // IntersectionObserver to pause when off-screen
+        const observer = new IntersectionObserver(
+            ([entry]) => { isVisibleRef.current = entry.isIntersecting },
+            { threshold: 0 }
+        )
+        observer.observe(canvas)
+
+        // Throttle connection distance checks on medium
+        const connectionDistance = tier === 'medium' ? 100 : 150
+
         // Animation loop
         const animate = () => {
+            if (!isVisibleRef.current) {
+                // Still schedule the next frame but skip work
+                animationFrameRef.current = requestAnimationFrame(animate)
+                return
+            }
+
             ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-            // Update and draw floating spores first (background layer)
             spores.forEach(spore => {
                 spore.update()
                 spore.draw()
             })
 
-            // Update and draw particles
             particles.forEach(particle => {
                 particle.update(mouseRef.current)
                 particle.draw()
@@ -179,8 +195,8 @@ const InteractiveBackground = ({ redMode = false }) => {
                     const dy = particles[i].y - particles[j].y
                     const distance = Math.sqrt(dx * dx + dy * dy)
 
-                    if (distance < 150) {
-                        ctx.globalAlpha = (1 - distance / 150) * 0.5
+                    if (distance < connectionDistance) {
+                        ctx.globalAlpha = (1 - distance / connectionDistance) * 0.5
                         ctx.beginPath()
                         ctx.moveTo(particles[i].x, particles[i].y)
                         ctx.lineTo(particles[j].x, particles[j].y)
@@ -195,16 +211,36 @@ const InteractiveBackground = ({ redMode = false }) => {
 
         animate()
 
-        // Cleanup
         return () => {
             window.removeEventListener('resize', resizeCanvas)
             canvas.removeEventListener('mousemove', handleMouseMove)
             canvas.removeEventListener('click', handleClick)
+            observer.disconnect()
             if (animationFrameRef.current) {
                 cancelAnimationFrame(animationFrameRef.current)
             }
         }
-    }, [redMode])
+    }, [redMode, tier, reducedMotion])
+
+    // On low tier, render a static gradient fallback instead of canvas
+    if (tier === 'low' || reducedMotion) {
+        return (
+            <div
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 1,
+                    background: redMode
+                        ? 'radial-gradient(ellipse at 30% 50%, rgba(220,38,38,0.08) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(185,28,28,0.06) 0%, transparent 60%)'
+                        : 'radial-gradient(ellipse at 30% 50%, rgba(59,130,246,0.08) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(139,92,246,0.06) 0%, transparent 60%)',
+                    pointerEvents: 'none'
+                }}
+            />
+        )
+    }
 
     return (
         <>
@@ -220,27 +256,6 @@ const InteractiveBackground = ({ redMode = false }) => {
                     pointerEvents: 'auto'
                 }}
             />
-            {/* Floating particle image overlay - disabled until background is properly removed */}
-            {/* {redMode && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        backgroundImage: 'url(/air_particles.png)',
-                        backgroundSize: '800px 800px',
-                        backgroundRepeat: 'repeat',
-                        opacity: 0.4,
-                        zIndex: 2,
-                        pointerEvents: 'none',
-                        animation: 'floatParticles 60s linear infinite',
-                        mixBlendMode: 'color-dodge',
-                        filter: 'saturate(3) brightness(0.6)'
-                    }}
-                />
-            )} */}
         </>
     )
 }

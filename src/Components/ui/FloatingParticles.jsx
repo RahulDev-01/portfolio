@@ -1,44 +1,58 @@
 import React, { useEffect, useRef } from 'react';
+import useDeviceCapability from '../../hooks/useDeviceCapability';
 
 const FloatingParticles = ({ count = 50 }) => {
-    const containerRef = useRef(null);
+  const containerRef = useRef(null);
+  const { tier, reducedMotion } = useDeviceCapability();
 
-    useEffect(() => {
-        if (!containerRef.current) return;
+  // Adjust count based on device capability
+  const adjustedCount = reducedMotion
+    ? 0
+    : tier === 'low'
+      ? 0
+      : tier === 'medium'
+        ? Math.min(count, 15)
+        : count;
 
-        const particles = [];
-        for (let i = 0; i < count; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'upside-down-particle';
+  useEffect(() => {
+    if (!containerRef.current || adjustedCount === 0) return;
 
-            // Random positioning
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.animationDelay = `${Math.random() * 10}s`;
-            particle.style.animationDuration = `${15 + Math.random() * 15}s`;
+    const particles = [];
+    for (let i = 0; i < adjustedCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'upside-down-particle';
 
-            // Random size with variety
-            const size = Math.random() * 4 + 2;
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
+      // Random positioning
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.animationDelay = `${Math.random() * 10}s`;
+      particle.style.animationDuration = `${15 + Math.random() * 15}s`;
 
-            // Some particles glow more
-            const glowIntensity = Math.random();
-            if (glowIntensity > 0.8) {
-                particle.classList.add('glow-particle');
-            }
+      // Random size with variety
+      const size = Math.random() * 4 + 2;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
 
-            containerRef.current.appendChild(particle);
-            particles.push(particle);
-        }
+      // Some particles glow more
+      const glowIntensity = Math.random();
+      if (glowIntensity > 0.8) {
+        particle.classList.add('glow-particle');
+      }
 
-        return () => {
-            particles.forEach(p => p.remove());
-        };
-    }, [count]);
+      containerRef.current.appendChild(particle);
+      particles.push(particle);
+    }
 
-    return (
-        <div ref={containerRef} className="upside-down-particles-container">
-            <style>{`
+    return () => {
+      particles.forEach(p => p.remove());
+    };
+  }, [adjustedCount]);
+
+  // Skip rendering entirely on low tier
+  if (adjustedCount === 0) return null;
+
+  return (
+    <div ref={containerRef} className="upside-down-particles-container">
+      <style>{`
         .upside-down-particles-container {
           position: absolute;
           inset: 0;
@@ -54,13 +68,11 @@ const FloatingParticles = ({ count = 50 }) => {
           border-radius: 50%;
           animation: float-up linear infinite;
           opacity: 0;
-          box-shadow: 0 0 10px rgba(220, 38, 38, 0.6);
+          will-change: transform, opacity;
         }
         
         .glow-particle {
           background: radial-gradient(circle, rgba(255, 100, 100, 0.9) 0%, rgba(220, 38, 38, 0.6) 50%, transparent 100%);
-          box-shadow: 0 0 20px rgba(255, 100, 100, 0.8),
-                      0 0 30px rgba(220, 38, 38, 0.4);
         }
         
         @keyframes float-up {
@@ -80,8 +92,8 @@ const FloatingParticles = ({ count = 50 }) => {
           }
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default FloatingParticles;

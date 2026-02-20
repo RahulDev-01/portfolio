@@ -7,13 +7,14 @@ import VShapedPortalTransition from '../ui/VShapedPortalTransition';
 import StrangerVines, { VineRing } from '../ui/StrangerVines';
 import StrangerThingsLoader from '../ui/StrangerThingsLoader';
 import UpsideDownAudio from '../ui/UpsideDownAudio';
-// import React, { Suspense } from 'react';
+import useDeviceCapability from '../../hooks/useDeviceCapability';
 const LiquidEther = React.lazy(() => import('../ui/LiquidEther'));
 import SplitText from "../ui/SplitText";
 import TextType from '../ui/TextType';
 
 const HeroSection = memo(() => {
   const { isUpsideDown, isTransitioning, toggleUpsideDown, completeTransition } = useUpsideDown();
+  const { tier, reducedMotion } = useDeviceCapability();
   const containerRef = useRef(null);
   const titleRef = useRef(null);
   const desc1Ref = useRef(null);
@@ -21,19 +22,21 @@ const HeroSection = memo(() => {
   const [reloadKey, setReloadKey] = useState(0);
   const [isVPHover, setIsVPHover] = useState(false);
 
-  // Memoize the reload effect to prevent unnecessary re-renders
+  // SplitText reload interval: slower on medium, disabled on low
   useEffect(() => {
+    if (tier === 'low' || reducedMotion) return; // no re-render on low-end
+    const delay = tier === 'medium' ? 8000 : 3000;
     const interval = setInterval(() => {
       setReloadKey(prev => prev + 1);
-    }, 3000);
+    }, delay);
     return () => clearInterval(interval);
-  }, []);
+  }, [tier, reducedMotion]);
 
   // Memoize hover handlers to prevent re-renders
   const handleVPMouseEnter = useCallback(() => setIsVPHover(true), []);
   const handleVPMouseLeave = useCallback(() => setIsVPHover(false), []);
 
-  // Memoize LiquidEther props to prevent re-renders
+  // Memoize LiquidEther props – lower resolution on weaker devices
   const liquidEtherProps = useMemo(() => ({
     className: '',
     style: {},
@@ -42,9 +45,9 @@ const HeroSection = memo(() => {
     cursorSize: 70,
     isViscous: false,
     viscous: 30,
-    iterationsViscous: 32,
-    iterationsPoisson: 32,
-    resolution: 0.5,
+    iterationsViscous: tier === 'low' ? 8 : tier === 'medium' ? 16 : 32,
+    iterationsPoisson: tier === 'low' ? 8 : tier === 'medium' ? 16 : 32,
+    resolution: tier === 'low' ? 0.25 : tier === 'medium' ? 0.35 : 0.5,
     isBounce: false,
     autoDemo: true,
     autoSpeed: isUpsideDown ? 0.8 : 0.5,
@@ -52,7 +55,7 @@ const HeroSection = memo(() => {
     takeoverDuration: 0.25,
     autoResumeDelay: 1000,
     autoRampDuration: 0.6,
-  }), [isVPHover, isUpsideDown]);
+  }), [isVPHover, isUpsideDown, tier]);
 
   // Memoize VariableProximity props
   const variableProximityProps = useMemo(() => ({
@@ -110,7 +113,7 @@ const HeroSection = memo(() => {
       )}
 
       {/* Floating Particles - Only in Upside Down mode */}
-      {isUpsideDown && <FloatingParticles count={40} />}
+      {isUpsideDown && <FloatingParticles count={tier === 'low' ? 0 : tier === 'medium' ? 15 : 40} />}
 
       {/* Stranger Things Loading Screen - Shows only when ENTERING Upside Down */}
       {isTransitioning && isUpsideDown && <StrangerThingsLoader />}

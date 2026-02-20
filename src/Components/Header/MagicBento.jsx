@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { TextHoverEffect } from '../ui/text-hover-effect';
 import { useUpsideDown } from '../../contexts/UpsideDownContext';
+import useDeviceCapability from '../../hooks/useDeviceCapability';
 
 const DEFAULT_PARTICLE_COUNT = 12;
 const DEFAULT_SPOTLIGHT_RADIUS = 300;
@@ -487,10 +488,15 @@ const MagicBento = ({
   onNavigate = null
 }) => {
   const { isUpsideDown } = useUpsideDown();
+  const { tier, reducedMotion } = useDeviceCapability();
   const gridRef = useRef(null);
   const isMobile = useMobileDetection();
-  // Always allow animations regardless of screen size
-  const shouldDisableAnimations = disableAnimations;
+  // Disable GSAP animations on low tier
+  const shouldDisableAnimations = disableAnimations || tier === 'low' || reducedMotion;
+  // Reduce particle count on medium tier
+  const effectiveParticleCount = tier === 'low' ? 0 : tier === 'medium' ? 4 : particleCount;
+  // Disable border glow on low tier
+  const effectiveBorderGlow = tier === 'low' ? false : enableBorderGlow;
 
   // Change glow color based on Upside Down mode
   const activeGlowColor = isUpsideDown ? '220, 38, 38' : glowColor;
@@ -629,11 +635,9 @@ const MagicBento = ({
           @keyframes blink-glow {
             0%, 100% { 
               opacity: 1;
-              box-shadow: 0 0 10px rgba(${activeGlowColor}, 0.5);
             }
             50% { 
               opacity: 0.7;
-              box-shadow: 0 0 20px rgba(${activeGlowColor}, 0.8);
             }
           }
           
@@ -723,7 +727,7 @@ const MagicBento = ({
               const baseClassName = `card group flex items-center justify-center relative px-2 py-1 h-8 sm:px-3 sm:py-1 sm:h-9 md:px-5 md:py-2 md:h-10 rounded-[6px] sm:rounded-[8px] border border-solid font-light cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-0.5 ${isUpsideDown
                 ? 'hover:shadow-[0_0_20px_rgba(220,38,38,0.6)] hover:border-red-500 border-red-900/50'
                 : 'hover:shadow-[0_8px_15px_rgba(0,0,0,0.15)] hover:border-[#274DA5]'
-                } ${enableBorderGlow ? 'card--border-glow' : ''}`;
+                } ${effectiveBorderGlow ? 'card--border-glow' : ''}`;
 
               const cardStyle = {
                 backgroundColor: isUpsideDown ? '#0a0000' : 'transparent',
@@ -742,7 +746,7 @@ const MagicBento = ({
                     className={baseClassName}
                     style={cardStyle}
                     disableAnimations={shouldDisableAnimations}
-                    particleCount={particleCount}
+                    particleCount={effectiveParticleCount}
                     glowColor={activeGlowColor}
                     enableTilt={enableTilt}
                     clickEffect={clickEffect}

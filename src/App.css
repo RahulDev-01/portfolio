@@ -57,3 +57,18 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateZ(0);
   will-change: transform;
 }
+
+/* Layout containment for major sections – improves paint perf */
+#about-section,
+#skills-section,
+#projects-section,
+#experience-section,
+#contact-section,
+#footer-section {
+  contain: content;
+}
+
+/* Smooth scroll as baseline, disabled in reduced-motion above */
+html {
+  scroll-behavior: smooth;
+}
